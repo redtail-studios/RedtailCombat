@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Redtail — Scraping & Report Pipeline Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #0f0e18;
+    color: #e0d8f0;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 48px 32px 80px;
+  }
+  .page-wrap { max-width: 900px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .brand { font-size: 10px; letter-spacing: 5px; text-transform: uppercase; color: #e07a68; margin-bottom: 10px; }
+  h1 { font-size: 26px; font-weight: 300; color: #c8b4e8; letter-spacing: -0.3px; margin-bottom: 6px; }
+  .sub { font-size: 13px; color: #5a5070; margin-bottom: 48px; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 52px; }
+  .section-head {
+    font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    color: #e07a68; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-head::after { content:''; flex:1; height:1px; background:linear-gradient(to right,rgba(224,122,104,0.3),transparent); }
+
+  /* ── Step card ── */
+  .step {
+    background: #111019; border: 1px solid #1e1b30;
+    border-radius: 14px; padding: 24px 28px;
+    margin-bottom: 16px; position: relative;
+  }
+  .step-num {
+    position: absolute; top: -12px; left: 24px;
+    background: #e07a68; color: #fff;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 100px;
+    letter-spacing: 0.5px;
+  }
+  .step h3 { font-size: 15px; font-weight: 700; color: #c8b4e8; margin-bottom: 8px; }
+  .step p  { font-size: 13px; color: #8a8098; margin-bottom: 10px; }
+  .step ul { list-style: none; }
+  .step ul li { font-size: 13px; color: #8a8098; padding: 3px 0 3px 16px; position: relative; }
+  .step ul li::before { content: '·'; position: absolute; left: 4px; color: #c8b4e8; }
+
+  /* ── Code blocks ── */
+  pre, code {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+  }
+  pre {
+    background: #0a0910; border: 1px solid #1e1b30;
+    border-radius: 8px; padding: 16px 20px;
+    font-size: 12px; color: #b0a8d0;
+    overflow-x: auto; margin: 10px 0 4px;
+    line-height: 1.7;
+  }
+  .comment { color: #5a5070; }
+  .kw  { color: #c084fc; }
+  .str { color: #86efac; }
+  .num { color: #fbbf24; }
+  code.inline {
+    background: #1a1728; border: 1px solid #2a2448;
+    border-radius: 4px; padding: 2px 7px;
+    font-size: 12px; color: #c4b5fd;
+  }
+
+  /* ── Source cards ── */
+  .sources { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+  .src {
+    background: #111019; border: 1px solid #1e1b30;
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .src-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .src-icon { font-size: 20px; }
+  .src-name { font-size: 13px; font-weight: 700; color: #c8b4e8; }
+  .src-badge {
+    font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    padding: 2px 7px; border-radius: 100px;
+    text-transform: uppercase;
+  }
+  .free   { background: #0b1f10; color: #4ade80; border: 1px solid #166534; }
+  .needs  { background: #1e1b4b; color: #818cf8; border: 1px solid #3730a3; }
+  .src p  { font-size: 12px; color: #6a6080; line-height: 1.5; }
+  .src ul { list-style: none; margin-top: 6px; }
+  .src ul li { font-size: 12px; color: #6a6080; padding: 1px 0 1px 14px; position: relative; }
+  .src ul li::before { content: '→'; position: absolute; left: 0; color: #5a5070; font-size: 10px; }
+
+  /* ── Pipeline diagram ── */
+  .pipeline {
+    display: flex; align-items: center;
+    gap: 0; margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .pipe-node {
+    background: #16132a; border: 1px solid #2a2448;
+    border-radius: 8px; padding: 12px 16px;
+    text-align: center; min-width: 120px;
+  }
+  .pipe-node .icon { font-size: 20px; margin-bottom: 4px; }
+  .pipe-node .label { font-size: 11px; font-weight: 600; color: #c8b4e8; }
+  .pipe-node .sub   { font-size: 10px; color: #5a5070; margin-top: 2px; }
+  .pipe-arrow { font-size: 20px; color: #3a3050; padding: 0 8px; }
+
+  /* ── File tree ── */
+  .file-tree {
+    background: #0a0910; border: 1px solid #1e1b30;
+    border-radius: 8px; padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #8a8098;
+    line-height: 2;
+  }
+  .ft-dir  { color: #c8b4e8; font-weight: 600; }
+  .ft-file { color: #8a8098; }
+  .ft-note { color: #4a4060; font-size: 11px; }
+
+  /* ── Info callout ── */
+  .callout {
+    border-radius: 10px; padding: 16px 20px;
+    margin: 12px 0;
+    display: flex; gap: 14px;
+  }
+  .callout.blue  { background: #0a1020; border: 1px solid #1e3a6e; }
+  .callout.green { background: #081510; border: 1px solid #1a4a1a; }
+  .callout.amber { background: #180e00; border: 1px solid #5a3a00; }
+  .callout .ci   { font-size: 20px; flex-shrink: 0; }
+  .callout .ct   { font-size: 12.5px; color: #7a90b0; line-height: 1.6; }
+  .callout.green .ct { color: #6aaa6a; }
+  .callout.amber .ct { color: #a08020; }
+  .callout strong { color: #c8b4e8; }
+
+  .foot { margin-top: 48px; font-size: 11px; color: #3a3050; text-align: right; }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<div class="brand">Redtail · Technical Lead</div>
+<h1>Scraping Pipeline &amp; Report Generation — Step-by-Step Guide</h1>
+<p class="sub">How to scrape gaming data locally, save it, and auto-generate the Redtail Intelligence Report. Free. Python. No paid subscriptions.</p>
+
+
+<!-- ══════════ OVERVIEW ══════════ -->
+<div class="section">
+  <div class="section-head">Pipeline Overview</div>
+
+  <div class="pipeline">
+    <div class="pipe-node"><div class="icon">📡</div><div class="label">Scrape</div><div class="sub">Reddit, Steam, Stores</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-node"><div class="icon">💾</div><div class="label">Save</div><div class="sub">JSON files locally</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-node"><div class="icon">🧠</div><div class="label">Analyse</div><div class="sub">VADER + keywords</div></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-node"><div class="icon">📄</div><div class="label">Report</div><div class="sub">HTML → PDF</div></div>
+  </div>
+
+  <div class="file-tree">
+    <span class="ft-dir">scraper/</span><br/>
+    &nbsp;&nbsp;<span class="ft-dir">scrapers/</span><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">reddit_scraper.py</span> &nbsp;<span class="ft-note">← Reddit posts + comments</span><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">steam_scraper.py</span> &nbsp;<span class="ft-note">← Steam game data + reviews</span><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">googleplay_scraper.py</span> &nbsp;<span class="ft-note">← Android app reviews</span><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">appstore_scraper.py</span> &nbsp;<span class="ft-note">← iOS app reviews</span><br/>
+    &nbsp;&nbsp;<span class="ft-dir">analysis/</span><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">sentiment.py</span> &nbsp;<span class="ft-note">← VADER sentiment + trend scoring</span><br/>
+    &nbsp;&nbsp;<span class="ft-dir">report/</span><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-file">generate_report.py</span> &nbsp;<span class="ft-note">← builds HTML report</span><br/>
+    &nbsp;&nbsp;<span class="ft-dir">data/</span> &nbsp;<span class="ft-note">← scraped JSON files saved here</span><br/>
+    &nbsp;&nbsp;<span class="ft-dir">output/</span> &nbsp;<span class="ft-note">← generated HTML reports saved here</span><br/>
+    &nbsp;&nbsp;<span class="ft-file">main.py</span> &nbsp;<span class="ft-note">← runs everything in one command</span><br/>
+    &nbsp;&nbsp;<span class="ft-file">config.py</span> &nbsp;<span class="ft-note">← edit subreddits, game IDs, keywords here</span><br/>
+    &nbsp;&nbsp;<span class="ft-file">.env</span> &nbsp;<span class="ft-note">← API keys (Reddit only)</span><br/>
+    &nbsp;&nbsp;<span class="ft-file">requirements.txt</span>
+  </div>
+</div>
+
+
+<!-- ══════════ DATA SOURCES ══════════ -->
+<div class="section">
+  <div class="section-head">Data Sources — What to Scrape &amp; Why</div>
+
+  <div class="sources">
+    <div class="src">
+      <div class="src-head">
+        <div class="src-icon">💬</div>
+        <div>
+          <div class="src-name">Reddit</div>
+          <span class="src-badge needs">Needs free API key</span>
+        </div>
+      </div>
+      <p>Best source for honest, unfiltered player opinion. Players complain, wishlist, and compare games in detail.</p>
+      <ul>
+        <li>r/gaming, r/AndroidGaming, r/FightingGames</li>
+        <li>r/patientgamers, r/MobileGaming, r/iosgaming</li>
+        <li>Gets: post titles, body text, top comments, upvote counts</li>
+        <li>Tool: <code class="inline">praw</code> (Python Reddit API Wrapper)</li>
+        <li>Cost: Free. 100 requests/min on free tier</li>
+      </ul>
+    </div>
+    <div class="src">
+      <div class="src-head">
+        <div class="src-icon">🎮</div>
+        <div>
+          <div class="src-name">Steam</div>
+          <span class="src-badge free">No key needed</span>
+        </div>
+      </div>
+      <p>Rich review data for PC games. Useful for competitive and fighting game benchmarks.</p>
+      <ul>
+        <li>SteamSpy API: genre rankings, ownership estimates, tags</li>
+        <li>Steam Reviews API: recent + all-time player reviews</li>
+        <li>Gets: review text, play hours, voted helpful, positive/negative</li>
+        <li>Tool: <code class="inline">requests</code> to SteamSpy + Steam APIs</li>
+        <li>Cost: Free. No auth required for either API</li>
+      </ul>
+    </div>
+    <div class="src">
+      <div class="src-head">
+        <div class="src-icon">📱</div>
+        <div>
+          <div class="src-name">Google Play</div>
+          <span class="src-badge free">No key needed</span>
+        </div>
+      </div>
+      <p>Mobile-first data. Reviews from Android players on competitor games in your genre.</p>
+      <ul>
+        <li>Search by keyword → find top competitor apps automatically</li>
+        <li>Gets: review text, star rating, thumbs-up count, install count</li>
+        <li>Tool: <code class="inline">google-play-scraper</code> package</li>
+        <li>Cost: Free. No account or API key needed</li>
+      </ul>
+    </div>
+    <div class="src">
+      <div class="src-head">
+        <div class="src-icon">🍎</div>
+        <div>
+          <div class="src-name">Apple App Store</div>
+          <span class="src-badge free">No key needed</span>
+        </div>
+      </div>
+      <p>iOS player reviews. Complements Google Play data — iOS players skew different demographics.</p>
+      <ul>
+        <li>Need the app name + numeric ID from the App Store URL</li>
+        <li>Gets: review text, star rating, review title</li>
+        <li>Tool: <code class="inline">app-store-scraper</code> package</li>
+        <li>Cost: Free. No account or API key needed</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout amber" style="margin-top:14px">
+    <div class="ci">⚠️</div>
+    <div class="ct"><strong>Not included (require paid plans):</strong> Sensortower (download estimates), Twitter/X API (creator signals), YouTube Data API beyond 10K units/day. Everything above covers ~70% of signal needs for free.</div>
+  </div>
+</div>
+
+
+<!-- ══════════ STEP 1: INSTALL ══════════ -->
+<div class="section">
+  <div class="section-head">Step 1 — Set Up Your Environment</div>
+
+  <div class="step">
+    <div class="step-num">1A</div>
+    <h3>Create a Python virtual environment</h3>
+    <p>Keep dependencies isolated from your system Python.</p>
+    <pre><span class="comment"># In your terminal, navigate to the scraper folder:</span>
+cd /Users/amrithap/Desktop/amritha_project/video_game/scraper
+
+<span class="comment"># Create virtual environment</span>
+python3 -m venv venv
+
+<span class="comment"># Activate it (Mac/Linux)</span>
+source venv/bin/activate
+
+<span class="comment"># Your terminal should now show (venv) at the start</span></pre>
+  </div>
+
+  <div class="step">
+    <div class="step-num">1B</div>
+    <h3>Install all dependencies</h3>
+    <pre>pip install -r requirements.txt</pre>
+    <p>This installs: <code class="inline">praw</code> · <code class="inline">requests</code> · <code class="inline">beautifulsoup4</code> · <code class="inline">google-play-scraper</code> · <code class="inline">app-store-scraper</code> · <code class="inline">vaderSentiment</code> · <code class="inline">pandas</code> · <code class="inline">jinja2</code> · <code class="inline">tqdm</code></p>
+  </div>
+</div>
+
+
+<!-- ══════════ STEP 2: REDDIT API ══════════ -->
+<div class="section">
+  <div class="section-head">Step 2 — Get Your Free Reddit API Key (5 minutes)</div>
+
+  <div class="step">
+    <div class="step-num">2A</div>
+    <h3>Create a Reddit app</h3>
+    <ul>
+      <li>Go to: <strong>reddit.com/prefs/apps</strong> (log in first)</li>
+      <li>Scroll down → click <strong>"create app"</strong> or <strong>"create another app"</strong></li>
+      <li>Name: <code class="inline">RedtailScraper</code></li>
+      <li>Type: select <strong>script</strong></li>
+      <li>Description: anything (e.g. "market research")</li>
+      <li>Redirect URI: <code class="inline">http://localhost:8080</code></li>
+      <li>Click <strong>Create app</strong></li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2B</div>
+    <h3>Copy your credentials into <code class="inline">.env</code></h3>
+    <p>After creating the app you'll see two values:</p>
+    <pre><span class="comment"># The short string under your app name = client_id</span>
+<span class="comment"># The "secret" field = client_secret</span>
+
+<span class="comment"># Copy .env.example to .env</span>
+cp .env.example .env
+
+<span class="comment"># Open .env and fill in:</span>
+REDDIT_CLIENT_ID=<span class="str">abc123xyz</span>
+REDDIT_CLIENT_SECRET=<span class="str">your_secret_here</span>
+REDDIT_USER_AGENT=<span class="str">RedtailScraper/1.0</span></pre>
+    <div class="callout green" style="margin-top:8px">
+      <div class="ci">✓</div>
+      <div class="ct">Reddit free tier allows 60 requests/minute. At that rate, scraping 7 subreddits with 100 posts each takes about 2–3 minutes. No credit card, no approval needed.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ STEP 3: CONFIG ══════════ -->
+<div class="section">
+  <div class="section-head">Step 3 — Configure What to Research</div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <h3>Edit <code class="inline">config.py</code> for your target genre</h3>
+    <p>The defaults are set for "mobile fighting game" research (which matches Redtail's first title). To research a different genre, change these values:</p>
+    <pre><span class="comment"># config.py — edit these for your genre:</span>
+
+SUBREDDITS = [
+  <span class="str">"gaming"</span>,
+  <span class="str">"AndroidGaming"</span>,
+  <span class="str">"FightingGames"</span>,  <span class="comment"># ← change to your genre</span>
+  <span class="str">"MobileGaming"</span>,
+]
+
+STEAM_GENRE_TAG = <span class="str">"Fighting"</span>  <span class="comment"># ← SteamSpy genre tag</span>
+
+GOOGLE_PLAY_QUERY = <span class="str">"mobile fighting game pvp"</span>  <span class="comment"># ← search query</span>
+
+<span class="comment"># Signal keywords drive the bar chart scores in the report</span>
+<span class="comment"># Add or edit keywords to match your research focus</span>
+SIGNAL_KEYWORDS = {
+  <span class="str">"Short-session preference"</span>: [<span class="str">"quick"</span>, <span class="str">"fast"</span>, <span class="str">"short match"</span>],
+  <span class="str">"Competitive fighting demand"</span>: [<span class="str">"pvp"</span>, <span class="str">"1v1"</span>, <span class="str">"ranked"</span>],
+  <span class="comment"># ... add more signals as needed</span>
+}</pre>
+  </div>
+</div>
+
+
+<!-- ══════════ STEP 4: RUN ══════════ -->
+<div class="section">
+  <div class="section-head">Step 4 — Run the Pipeline</div>
+
+  <div class="step">
+    <div class="step-num">4A</div>
+    <h3>Full run — all scrapers + report</h3>
+    <pre><span class="comment"># Make sure your venv is active, then:</span>
+cd /Users/amrithap/Desktop/amritha_project/video_game/scraper
+python main.py</pre>
+    <p>This runs all 4 scrapers sequentially, saves JSON to <code class="inline">data/</code>, runs analysis, and generates the report in <code class="inline">output/</code>. Takes 5–10 minutes depending on network speed.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4B</div>
+    <h3>Skip Reddit if you don't have an API key yet</h3>
+    <pre>python main.py --skip-reddit</pre>
+    <p>Steam + Google Play + App Store all work with zero credentials. You can start generating reports immediately.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4C</div>
+    <h3>Regenerate the report without re-scraping</h3>
+    <pre><span class="comment"># Once data is scraped, edit config.py and regenerate the report instantly:</span>
+python main.py --report-only</pre>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4D</div>
+    <h3>Run a single scraper to test</h3>
+    <pre><span class="comment"># Test Steam scraper only:</span>
+cd scraper
+python -m scrapers.steam_scraper
+
+<span class="comment"># Test Google Play only:</span>
+python -m scrapers.googleplay_scraper
+
+<span class="comment"># Test analysis only (needs data/ files):</span>
+python -m analysis.sentiment</pre>
+  </div>
+</div>
+
+
+<!-- ══════════ STEP 5: OUTPUT ══════════ -->
+<div class="section">
+  <div class="section-head">Step 5 — Understand What Gets Saved</div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <h3>Files created after a full run</h3>
+    <pre>data/
+  reddit_data.json      <span class="comment"># posts + comments + sentiment scores</span>
+  steam_data.json       <span class="comment"># game data + review texts + VADER sentiment</span>
+  googleplay_data.json  <span class="comment"># competitor apps + reviews + ratings</span>
+  appstore_data.json    <span class="comment"># iOS app reviews + ratings</span>
+  analysis_results.json <span class="comment"># signal scores, scorecard, competitor snapshot</span>
+
+output/
+  redtail_insight_report_20260324_1430.html  <span class="comment"># ← THE REPORT</span></pre>
+
+    <div class="callout blue" style="margin-top:10px">
+      <div class="ci">📄</div>
+      <div class="ct"><strong>To export as PDF:</strong> Open the HTML file in Chrome → press <strong>Cmd+P</strong> (Mac) or <strong>Ctrl+P</strong> (Windows) → change destination to <strong>"Save as PDF"</strong> → Save. The report is designed to print cleanly at A4 / Letter size.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ HOW SCORES WORK ══════════ -->
+<div class="section">
+  <div class="section-head">How the Scores Are Calculated (No LLM Needed)</div>
+
+  <div class="step">
+    <div class="step-num">📊</div>
+    <h3>Trend Strength Scores (bar chart, 0–10)</h3>
+    <p>For each signal in <code class="inline">SIGNAL_KEYWORDS</code>, the analyser counts how many scraped text items contain at least one of the signal's keywords. That hit count is normalised against total items and scaled to 0–10 relative to the strongest signal.</p>
+    <pre><span class="comment"># Example: 500 total items scraped</span>
+<span class="comment"># "pvp", "1v1", "ranked" found in 210 items → 42% hit rate → score ~9.2</span>
+<span class="comment"># "co-op", "guild" found in 40 items → 8% hit rate → score ~1.8</span>
+
+<span class="comment"># The scores reflect what players are ACTUALLY talking about most.</span></pre>
+  </div>
+
+  <div class="step">
+    <div class="step-num">📈</div>
+    <h3>Opportunity Score &amp; Confidence</h3>
+    <p>The Overall Opportunity Score is a weighted composite:</p>
+    <pre><span class="comment"># opportunity = (demand * 0.4) + (monetization * 0.3) + (growth_velocity * 0.3)</span>
+<span class="comment"># confidence  = 50 + (total_items / 200 * 30) + (positive_sentiment_ratio * 15)</span>
+
+<span class="comment"># More data = higher confidence. Scrape more → better report.</span>
+<span class="comment"># Target: 1000+ items for reliable scores.</span></pre>
+    <div class="callout green" style="margin-top:8px">
+      <div class="ci">💡</div>
+      <div class="ct"><strong>To improve scores:</strong> Increase <code class="inline">REDDIT_POST_LIMIT</code> to 200, add more subreddits, increase <code class="inline">GOOGLE_PLAY_REVIEWS</code> to 200. The more text you collect, the more reliable the signal scores become.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ QUICK REFERENCE ══════════ -->
+<div class="section">
+  <div class="section-head">Quick Command Reference</div>
+  <div class="step">
+    <div class="step-num">📋</div>
+    <h3>All commands</h3>
+    <pre><span class="comment"># One-time setup</span>
+cd scraper
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env  <span class="comment"># then add your Reddit API key</span>
+
+<span class="comment"># Run full pipeline</span>
+python main.py
+
+<span class="comment"># Run without Reddit (no API key needed)</span>
+python main.py --skip-reddit
+
+<span class="comment"># Only regenerate report (no scraping)</span>
+python main.py --report-only
+
+<span class="comment"># Check saved data</span>
+ls data/
+
+<span class="comment"># Open report</span>
+open output/*.html   <span class="comment"># Mac — opens in default browser</span></pre>
+  </div>
+</div>
+
+<div class="foot">Redtail Pre-Seed · March 2026 · Confidential · Amritha Parimala — Technical Lead</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Redtail — Data Flow Architecture</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #17151f;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 44px 24px 60px;
+  }
+  .header { text-align: center; margin-bottom: 36px; }
+  .brand {
+    font-size: 11px; letter-spacing: 5px;
+    text-transform: uppercase; color: #e07a68; margin-bottom: 10px;
+  }
+  h1 { font-size: 24px; font-weight: 300; color: #c8b4e8; letter-spacing: -0.3px; }
+  .sub { font-size: 13px; color: #5e5870; margin-top: 6px; }
+  .card {
+    background: #111019;
+    border: 1px solid #262038;
+    border-radius: 20px;
+    padding: 44px 36px;
+    width: 100%;
+    max-width: 1400px;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.7);
+  }
+  .mermaid { display: flex; justify-content: center; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 20px;
+    justify-content: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #1e1b2e;
+  }
+  .li {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: #6b6080;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .foot { margin-top: 28px; font-size: 11px; color: #3a3550; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">Redtail</div>
+  <h1>Intelligence Engine — Data Flow Architecture</h1>
+  <p class="sub">Signal-to-game pipeline: from raw data sources to shipped titles and back</p>
+</div>
+
+<div class="card">
+  <div class="mermaid">
+%%{init:{
+  "theme":"base",
+  "flowchart":{"curve":"basis","padding":20,"nodeSpacing":40,"rankSpacing":60},
+  "themeVariables":{
+    "background":"#111019",
+    "primaryColor":"#211840",
+    "primaryBorderColor":"#6644aa",
+    "primaryTextColor":"#ddd0f8",
+    "secondaryColor":"#1a1630",
+    "tertiaryColor":"#1e1a2e",
+    "lineColor":"#6644aa",
+    "textColor":"#c0b4d8",
+    "clusterBkg":"#16132a",
+    "clusterBorder":"#2e2850",
+    "titleColor":"#c0a8e8",
+    "edgeLabelBackground":"#1a1630",
+    "fontFamily":"SF Pro Display,-apple-system,BlinkMacSystemFont,sans-serif",
+    "fontSize":"13px"
+  }
+}}%%
+flowchart LR
+    classDef free  fill:#0b1f10,stroke:#22c55e,color:#bbf7d0,stroke-width:1.5px
+    classDef paid  fill:#0a0b22,stroke:#6366f1,color:#c7d2fe,stroke-width:1.5px
+    classDef db    fill:#160e2e,stroke:#8b5cf6,color:#ddd6fe,stroke-width:2px
+    classDef ai    fill:#190e30,stroke:#a855f7,color:#ede9fe,stroke-width:1.5px
+    classDef pipe  fill:#1a1030,stroke:#9333ea,color:#e9d5ff,stroke-width:1.5px
+    classDef game  fill:#1c0e06,stroke:#f97316,color:#fed7aa,stroke-width:1.5px
+    classDef post  fill:#041420,stroke:#0ea5e9,color:#bae6fd,stroke-width:1.5px
+
+    subgraph SRC1["  🆓  Free Sources  (~$0/mo)  "]
+        direction TB
+        R["Reddit\nPRAW"]:::free
+        YT["YouTube\nData API v3"]:::free
+        ST["Steam + App Stores\nSteamSpy + scrapers"]:::free
+        TW["Twitch + Discord\nIRC + discord.py"]:::free
+        MC["Metacritic, IGN\nRSS + scrapers"]:::free
+    end
+
+    subgraph SRC2["  💳  Paid Sources  (~$670–1,800/mo)  "]
+        direction TB
+        SNS["Sensortower\n$500–1,500/mo"]:::paid
+        APF["Apify + Browse.ai\n$70–200/mo"]:::paid
+        TX["Twitter/X API\n$100/mo"]:::paid
+    end
+
+    DB[("🗄️  Signal DB\nSupabase / Postgres\n~$25/mo")]:::db
+
+    subgraph AIENG["  🤖  AI Engine  "]
+        direction TB
+        CL["Claude API\nSynthesis · Reasoning"]:::ai
+        LI["LlamaIndex + LangChain\nIndexing · Agent Routing"]:::ai
+    end
+
+    ORC["⚙️  Orchestration\nMake.com + Crew AI"]:::pipe
+
+    subgraph GPIPE["  🎮  Game Pipeline  "]
+        direction TB
+        SC["Concept Scoring\nRetention · Monet. · Confidence"]:::game
+        SIM["Unity ML-Agents\n10K+ AI Simulations"]:::game
+        PM["PM Review\n+ Production Build"]:::game
+    end
+
+    subgraph POST["  📱  Post-Launch  "]
+        direction TB
+        APP["App Store\nGoogle Play"]:::post
+        ANA["Firebase\nGame Analytics"]:::post
+        LRN["Learning Agents\nRetrain Models"]:::post
+    end
+
+    SRC1 --> DB
+    SRC2 --> DB
+    DB  --> CL
+    CL  --> LI
+    LI  --> ORC
+    ORC --> SC
+    SC  --> SIM
+    SIM --> PM
+    PM  --> APP
+    APP --> ANA
+    ANA --> LRN
+    LRN -->|"🔄  Feedback Loop — each game improves the engine"| DB
+  </div>
+
+  <div class="legend">
+    <div class="li"><div class="dot" style="background:#0b1f10;border:1.5px solid #22c55e"></div>Free scraping (~$0/mo)</div>
+    <div class="li"><div class="dot" style="background:#0a0b22;border:1.5px solid #6366f1"></div>Paid APIs (~$670–1,800/mo)</div>
+    <div class="li"><div class="dot" style="background:#160e2e;border:1.5px solid #8b5cf6"></div>Signal database</div>
+    <div class="li"><div class="dot" style="background:#190e30;border:1.5px solid #a855f7"></div>AI processing layer</div>
+    <div class="li"><div class="dot" style="background:#1c0e06;border:1.5px solid #f97316"></div>Game build pipeline</div>
+    <div class="li"><div class="dot" style="background:#041420;border:1.5px solid #0ea5e9"></div>Post-launch analytics</div>
+  </div>
+</div>
+
+<p class="foot">Redtail Pre-Seed · February 2026 · Confidential</p>
+
+<script>mermaid.initialize({ startOnLoad: true });</script>
+</body>
+</html>

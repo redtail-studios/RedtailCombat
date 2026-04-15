@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Redtail — AWS Architecture & Cost Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0f0e18;
+    color: #e0d8f0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 48px 32px 72px;
+  }
+
+  /* ── Page header ── */
+  .page-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; }
+  .brand-line { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #e07a68; margin-bottom: 8px; }
+  .page-top h1 { font-size: 26px; font-weight: 300; color: #c8b4e8; letter-spacing: -0.3px; }
+  .page-top .meta { font-size: 11px; color: #4a4560; text-align: right; line-height: 1.8; }
+
+  /* ── Section titles ── */
+  .section { margin-bottom: 48px; }
+  .section-title {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: #e07a68; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(to right, rgba(224,122,104,0.3), transparent);
+  }
+
+  /* ── Why AWS box ── */
+  .why-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-bottom: 24px;
+  }
+  .why-card {
+    background: #16132a; border: 1px solid #2a2448;
+    border-radius: 12px; padding: 20px;
+  }
+  .why-card h3 { font-size: 13px; font-weight: 700; color: #c8b4e8; margin-bottom: 8px; }
+  .why-card p { font-size: 12px; color: #8a8098; line-height: 1.6; }
+  .highlight-box {
+    background: linear-gradient(135deg, #1a102e, #10182e);
+    border: 1px solid #4040a0;
+    border-radius: 12px; padding: 18px 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .highlight-box .icon { font-size: 28px; flex-shrink: 0; }
+  .highlight-box h3 { font-size: 14px; font-weight: 700; color: #8888f8; margin-bottom: 4px; }
+  .highlight-box p { font-size: 12px; color: #6868c0; }
+
+  /* ── Architecture diagram ── */
+  .arch-card {
+    background: #111019; border: 1px solid #231f38;
+    border-radius: 16px; padding: 36px;
+  }
+  .mermaid { display: flex; justify-content: center; }
+
+  /* ── Service table ── */
+  .service-table { width: 100%; border-collapse: collapse; }
+  .service-table th {
+    background: #1a1628; color: #8a8098;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid #2a2448;
+  }
+  .service-table td {
+    padding: 12px 14px; border-bottom: 1px solid #1a1628;
+    vertical-align: top; font-size: 13px;
+  }
+  .service-table tr:hover td { background: #13101e; }
+  .service-name { font-weight: 600; color: #c8b4e8; }
+  .service-use { color: #8a8098; font-size: 12px; margin-top: 3px; }
+  .phase-badge {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 100px;
+    letter-spacing: 0.5px;
+  }
+  .phase-1 { background: #0b1f10; color: #4ade80; border: 1px solid #166534; }
+  .phase-2 { background: #0e0c28; color: #818cf8; border: 1px solid #3730a3; }
+  .phase-3 { background: #2a0c05; color: #fb923c; border: 1px solid #92400e; }
+  .cost-cell { font-weight: 700; color: #e0d8f0; }
+  .cost-note { font-size: 11px; color: #5a5070; margin-top: 2px; }
+
+  /* ── Phase timeline ── */
+  .phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .phase-card { border-radius: 12px; padding: 20px; }
+  .phase-card.p1 { background: #0b1f10; border: 1px solid #166534; }
+  .phase-card.p2 { background: #0e0c28; border: 1px solid #3730a3; }
+  .phase-card.p3 { background: #2a0c05; border: 1px solid #92400e; }
+  .phase-num { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .p1 .phase-num { color: #4ade80; }
+  .p2 .phase-num { color: #818cf8; }
+  .p3 .phase-num { color: #fb923c; }
+  .phase-period { font-size: 15px; font-weight: 700; color: #e0d8f0; margin-bottom: 10px; }
+  .phase-cost { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .p1 .phase-cost { color: #4ade80; }
+  .p2 .phase-cost { color: #818cf8; }
+  .p3 .phase-cost { color: #fb923c; }
+  .phase-items { list-style: none; }
+  .phase-items li { font-size: 12px; color: #8a8098; padding: 3px 0; padding-left: 14px; position: relative; }
+  .phase-items li::before { content: '·'; position: absolute; left: 4px; }
+
+  /* ── Cost summary ── */
+  .cost-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .cost-tile {
+    background: #16132a; border: 1px solid #2a2448;
+    border-radius: 12px; padding: 20px; text-align: center;
+  }
+  .cost-tile .tile-label { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #5a5070; margin-bottom: 8px; }
+  .cost-tile .tile-value { font-size: 24px; font-weight: 700; color: #c8b4e8; }
+  .cost-tile .tile-sub { font-size: 11px; color: #5a5070; margin-top: 4px; }
+
+  /* ── Activation callout ── */
+  .activate-banner {
+    background: linear-gradient(135deg, #101a10, #101810);
+    border: 1px solid #1a4a1a;
+    border-radius: 14px;
+    padding: 24px 28px;
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .activate-banner .icon { font-size: 32px; flex-shrink: 0; }
+  .activate-banner h3 { font-size: 15px; font-weight: 700; color: #4ade80; margin-bottom: 6px; }
+  .activate-banner p { font-size: 12.5px; color: #6aaa6a; line-height: 1.6; }
+  .activate-banner ul { list-style: none; margin-top: 8px; }
+  .activate-banner ul li { font-size: 12px; color: #4a8a4a; padding: 2px 0; padding-left: 14px; position: relative; }
+  .activate-banner ul li::before { content: '✓'; position: absolute; left: 0; color: #4ade80; font-size: 10px; }
+
+  /* ── Decision rationale ── */
+  .compare { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .compare-card { border-radius: 12px; padding: 18px; background: #16132a; border: 1px solid #2a2448; }
+  .compare-card.winner { border-color: #4ade80; background: #0b1f10; }
+  .compare-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .compare-card.winner h4 { color: #4ade80; }
+  .compare-card:not(.winner) h4 { color: #8a8098; }
+  .compare-list { list-style: none; }
+  .compare-list li { font-size: 12px; color: #6a6080; padding: 3px 0 3px 16px; position: relative; }
+  .compare-list li.pro { color: #8a8098; }
+  .compare-list li.pro::before { content: '+'; position: absolute; left: 0; color: #4ade80; }
+  .compare-list li.con::before { content: '–'; position: absolute; left: 0; color: #e07a68; }
+  .winner .compare-list li.pro { color: #4a8a4a; }
+
+  .foot { margin-top: 32px; font-size: 10px; color: #3a3050; text-align: right; }
+</style>
+</head>
+<body>
+
+<div class="page-top">
+  <div>
+    <div class="brand-line">Redtail · Technical Lead</div>
+    <h1>AWS Architecture &amp; Infrastructure Cost Analysis</h1>
+    <div style="font-size:12px;color:#5a5070;margin-top:6px;">Complete cloud strategy for the Redtail Intelligence Engine</div>
+  </div>
+  <div class="meta">
+    Amritha Parimala · Technical Lead<br/>
+    Pre-Seed Round · February 2026<br/>
+    Confidential
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════ WHY AWS ══════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Why AWS</div>
+
+  <div class="why-grid">
+    <div class="why-card">
+      <h3>Startup Ecosystem</h3>
+      <p>AWS Activate gives early-stage startups $5K–$25K in free credits. As a Cornell-backed team, Redtail likely qualifies for the Founders tier — effectively making our entire server bill $0 for Year 1.</p>
+    </div>
+    <div class="why-card">
+      <h3>Python-Native Tooling</h3>
+      <p>All our scrapers, Claude integrations, and LangChain/LlamaIndex agents are Python. AWS Lambda + EC2 have the deepest Python support, the most mature boto3 SDK, and the largest community of examples.</p>
+    </div>
+    <div class="why-card">
+      <h3>Scale-When-Ready</h3>
+      <p>Start with a $35/mo t3.medium. When Game 3 ships, auto-scale to multiple instances without changing any code. No infrastructure rewrite as we grow from prototype to production.</p>
+    </div>
+    <div class="why-card">
+      <h3>Managed Services = Less Ops</h3>
+      <p>Lambda handles cron jobs (no server to maintain). SQS handles job queuing. CloudWatch handles monitoring. A 4-person team shouldn't be managing DevOps — AWS handles it for us.</p>
+    </div>
+    <div class="why-card">
+      <h3>Cheapest Compute Per Dollar</h3>
+      <p>EC2 Spot Instances for non-critical scraping jobs cut costs by 70–90%. S3 at $0.023/GB is the cheapest durable storage available. Lambda is free for first 1M requests/month.</p>
+    </div>
+    <div class="why-card">
+      <h3>Future-Proof for AI/ML</h3>
+      <p>When we're ready for custom model training (Year 2), SageMaker is on the same platform. No migration needed. Bedrock also offers Claude API access directly through AWS billing.</p>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <div class="icon">🚀</div>
+    <div>
+      <h3>AWS Activate — Apply Immediately</h3>
+      <p>The AWS Activate Founders program offers <strong style="color:#a0a0f8">$5,000–$25,000 in free AWS credits</strong> for early-stage startups. Cornell affiliation + pre-seed funding makes Redtail eligible. At our burn rate of $40–155/mo on AWS, this covers the entire 12-month server cost. Application takes 30 minutes at aws.amazon.com/activate.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════ ARCHITECTURE DIAGRAM ══════════════════════════════ -->
+<div class="section">
+  <div class="section-title">AWS Architecture Diagram</div>
+  <div class="arch-card">
+    <div class="mermaid">
+%%{init:{
+  "theme":"base",
+  "flowchart":{"curve":"basis","padding":18,"nodeSpacing":35,"rankSpacing":55},
+  "themeVariables":{
+    "background":"#111019","primaryColor":"#1e1040","primaryBorderColor":"#5533aa",
+    "primaryTextColor":"#ddd0f8","secondaryColor":"#16132a","tertiaryColor":"#1a1530",
+    "lineColor":"#5533aa","textColor":"#b0a0d0","clusterBkg":"#14112a",
+    "clusterBorder":"#2e2858","titleColor":"#b8a0e0","edgeLabelBackground":"#14112a",
+    "fontFamily":"Inter,-apple-system,sans-serif","fontSize":"12px"
+  }
+}}%%
+flowchart TD
+    classDef ext  fill:#0a1a0a,stroke:#22c55e,color:#bbf7d0,stroke-width:1.5px
+    classDef ec2  fill:#1a0a28,stroke:#c084fc,color:#ede9fe,stroke-width:2px
+    classDef lam  fill:#0a1428,stroke:#60a5fa,color:#bfdbfe,stroke-width:1.5px
+    classDef stor fill:#1a1428,stroke:#818cf8,color:#e0e7ff,stroke-width:1.5px
+    classDef db   fill:#1a1010,stroke:#f97316,color:#fed7aa,stroke-width:1.5px
+    classDef ai   fill:#200a38,stroke:#e879f9,color:#fae8ff,stroke-width:1.5px
+    classDef out  fill:#081420,stroke:#0ea5e9,color:#bae6fd,stroke-width:1.5px
+
+    subgraph EXT["External Data Sources"]
+        direction LR
+        R["Reddit · YouTube\nSteam · Discord"]:::ext
+        P["Sensortower · Apify\nBrowse.ai · Twitter/X"]:::ext
+    end
+
+    subgraph COMPUTE["AWS EC2 (Main Workhorse)"]
+        direction TB
+        SC["Python Scraper Agents\nCrew AI Orchestrator"]:::ec2
+        AG["LangChain + LlamaIndex\nAgent Pipeline"]:::ec2
+    end
+
+    subgraph SERVERLESS["AWS Lambda (Scheduled Triggers)"]
+        direction LR
+        CJ["Cron Jobs\nEvery 6 hrs"]:::lam
+        TR["Event Triggers\nOn new data"]:::lam
+    end
+
+    subgraph STORAGE["AWS S3 (Raw Data Archive)"]
+        S3["Scraped Data Dumps\nJSON / Parquet  ·  $0.023/GB"]:::stor
+    end
+
+    subgraph QUEUE["AWS SQS (Job Queue)"]
+        SQ["Scrape Jobs\nAnalysis Tasks"]:::stor
+    end
+
+    subgraph DATA["Databases"]
+        direction LR
+        SB["Supabase\nPostgres\nSignal DB"]:::db
+        RD["Upstash\nRedis\nCache"]:::db
+    end
+
+    subgraph AIENG["AI Processing (External APIs)"]
+        CL["Claude API\nSynthesis · Concepts"]:::ai
+        MK["Make.com + Crew AI\nWorkflow · Multi-Agent"]:::ai
+    end
+
+    subgraph POST["Post-Launch Analytics"]
+        direction LR
+        FB["Firebase\nD1/D7/D30"]:::out
+        GA["Game Analytics\nARPU · Sessions"]:::out
+        CW["CloudWatch\nMonitoring · Logs"]:::out
+    end
+
+    EXT -->|"raw signals"| CJ
+    CJ  -->|"trigger"| SQ
+    SQ  -->|"jobs"| SC
+    SC  -->|"scraped data"| S3
+    S3  -->|"batch load"| SB
+    TR  -->|"on new data"| AG
+    SB  -->|"query"| AG
+    AG  -->|"cache hits"| RD
+    RD  -->|"cache miss → fetch"| SB
+    AG  -->|"synthesis requests"| CL
+    CL  -->|"insights + scores"| MK
+    MK  -->|"validated concepts"| SB
+    SB  -->|"post-launch data"| FB
+    FB  -->|"learning feed"| CL
+    SC  -.->|"logs"| CW
+    AG  -.->|"logs"| CW
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════ SERVICE BREAKDOWN ══════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Service-by-Service Breakdown</div>
+  <table class="service-table">
+    <thead>
+      <tr>
+        <th>AWS Service</th>
+        <th>What We Use It For</th>
+        <th>Phase</th>
+        <th>Monthly Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="service-name">EC2 (Elastic Compute)</div>
+          <div class="service-use">t3.medium → t3.large → t3.xlarge</div>
+        </td>
+        <td style="color:#9090b0;font-size:12px;">The main workhorse. Runs 24/7 Python scraper agents, Crew AI orchestrator, LangChain agent pipeline, and Supabase connection pooler. Everything that needs to always be "on" lives here.</td>
+        <td><span class="phase-badge phase-1">Phase 1</span></td>
+        <td>
+          <div class="cost-cell">$35 → $70 → $140</div>
+          <div class="cost-note">Scales with number of active titles</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="service-name">Lambda</div>
+          <div class="service-use">Scheduled cron triggers</div>
+        </td>
+        <td style="color:#9090b0;font-size:12px;">Fires scraping jobs every 6 hours, triggers analysis pipelines when new data lands in S3. No server to maintain — just a function that wakes up on a schedule. First 1M requests/month are free.</td>
+        <td><span class="phase-badge phase-1">Phase 1</span></td>
+        <td>
+          <div class="cost-cell">~$5/mo</div>
+          <div class="cost-note">First 1M requests free forever</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="service-name">S3</div>
+          <div class="service-use">Raw data archive & staging</div>
+        </td>
+        <td style="color:#9090b0;font-size:12px;">Stores all raw scraped data (Reddit dumps, YouTube comment exports, Steam review exports) as JSON or Parquet files before they're cleaned and loaded into Supabase. Acts as a data lake — cheap, durable, queryable with Athena later.</td>
+        <td><span class="phase-badge phase-1">Phase 1</span></td>
+        <td>
+          <div class="cost-cell">~$3–8/mo</div>
+          <div class="cost-note">$0.023/GB · first 5GB free</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="service-name">SQS (Simple Queue Service)</div>
+          <div class="service-use">Job queue for async agents</div>
+        </td>
+        <td style="color:#9090b0;font-size:12px;">When Lambda fires a scrape trigger, it drops a job into SQS. EC2 scraper agents pick up jobs from the queue. Prevents agents from stepping on each other, handles retries automatically. First 1M requests/month free.</td>
+        <td><span class="phase-badge phase-1">Phase 1</span></td>
+        <td>
+          <div class="cost-cell">~$0–2/mo</div>
+          <div class="cost-note">First 1M requests free forever</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="service-name">CloudWatch</div>
+          <div class="service-use">Monitoring, logs, alerts</div>
+        </td>
+        <td style="color:#9090b0;font-size:12px;">Collects logs from EC2 scrapers and Lambda functions. Alerts us if a scraper fails or an agent crashes. Dashboards for API usage, error rates, and data pipeline health. Mostly within the free tier for our scale.</td>
+        <td><span class="phase-badge phase-1">Phase 1</span></td>
+        <td>
+          <div class="cost-cell">~$0–3/mo</div>
+          <div class="cost-note">Largely within free tier</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="service-name">IAM + Secrets Manager</div>
+          <div class="service-use">Security & API key management</div>
+        </td>
+        <td style="color:#9090b0;font-size:12px;">All API keys (Claude, Sensortower, Apify, Twitter/X) stored in Secrets Manager — never hardcoded. IAM roles control exactly what each Lambda and EC2 instance can access. Non-negotiable security baseline.</td>
+        <td><span class="phase-badge phase-1">Phase 1</span></td>
+        <td>
+          <div class="cost-cell">~$2/mo</div>
+          <div class="cost-note">$0.40/secret/month · 5 secrets</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="service-name">RDS / Supabase</div>
+          <div class="service-use">Primary signal database</div>
+        </td>
+        <td style="color:#9090b0;font-size:12px;">We use Supabase (managed Postgres) rather than native RDS to save costs early. Supabase free tier handles M1–M3. Upgrade to $25/mo Pro plan at M4 when data volume and concurrent agent queries increase.</td>
+        <td><span class="phase-badge phase-2">Phase 2</span></td>
+        <td>
+          <div class="cost-cell">$0 → $25/mo</div>
+          <div class="cost-note">Free tier covers first 3 months</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="service-name">ElastiCache / Upstash Redis</div>
+          <div class="service-use">Agent response caching</div>
+        </td>
+        <td style="color:#9090b0;font-size:12px;">Claude API calls are expensive. When an agent has already synthesized "what do Reddit users say about idle game monetization," we cache the result for 24 hours. This alone can reduce Claude API costs by 20–40% at scale.</td>
+        <td><span class="phase-badge phase-2">Phase 2</span></td>
+        <td>
+          <div class="cost-cell">$0 → $10/mo</div>
+          <div class="cost-note">Upstash serverless Redis</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="service-name">EC2 Auto Scaling / ECS Fargate</div>
+          <div class="service-use">Scale compute with titles</div>
+        </td>
+        <td style="color:#9090b0;font-size:12px;">Phase 3 migration: move from a single EC2 instance to containerized agents on ECS Fargate. Each scraper agent becomes its own container — spin up 10 in parallel during heavy scraping, scale back to 1 overnight. Pay only for what you use.</td>
+        <td><span class="phase-badge phase-3">Phase 3</span></td>
+        <td>
+          <div class="cost-cell">~$100–200/mo</div>
+          <div class="cost-note">Replaces single EC2 at scale</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ══════════════════════════════ PHASE TIMELINE ══════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Infrastructure Phases</div>
+  <div class="phases">
+    <div class="phase-card p1">
+      <div class="phase-num">Phase 1</div>
+      <div class="phase-period">Months 1–3 · Pre-Launch</div>
+      <div class="phase-cost">~$40/mo AWS</div>
+      <ul class="phase-items">
+        <li>Single EC2 t3.medium ($35/mo)</li>
+        <li>Lambda scheduled triggers (~$5/mo)</li>
+        <li>S3 for raw data archival (~$3/mo)</li>
+        <li>SQS job queue (free tier)</li>
+        <li>CloudWatch monitoring (free tier)</li>
+        <li>Supabase free tier (500MB DB)</li>
+        <li>Redis Upstash free tier</li>
+        <li>Goal: scrapers running, agents tested</li>
+      </ul>
+    </div>
+    <div class="phase-card p2">
+      <div class="phase-num">Phase 2</div>
+      <div class="phase-period">Months 4–6 · Post Game 1 Launch</div>
+      <div class="phase-cost">~$80/mo AWS</div>
+      <ul class="phase-items">
+        <li>Upgrade to EC2 t3.large ($70/mo)</li>
+        <li>Lambda + S3 bump ($10/mo)</li>
+        <li>Supabase Pro plan ($25/mo, in DB)</li>
+        <li>Upstash Redis paid ($10/mo, in DB)</li>
+        <li>Add Sensortower + Twitter/X (in Others)</li>
+        <li>Firebase post-launch analytics (free)</li>
+        <li>Game Analytics integration (free)</li>
+        <li>Goal: real player data flowing in</li>
+      </ul>
+    </div>
+    <div class="phase-card p3">
+      <div class="phase-num">Phase 3</div>
+      <div class="phase-period">Months 7–12 · Multi-Title Scale</div>
+      <div class="phase-cost">~$155/mo AWS</div>
+      <ul class="phase-items">
+        <li>EC2 t3.xlarge or 2x t3.large ($140/mo)</li>
+        <li>Lambda + S3 + SQS at scale ($15/mo)</li>
+        <li>Consider ECS Fargate migration</li>
+        <li>AWS Bedrock for Claude (consolidate billing)</li>
+        <li>SageMaker experiments (Year 2 prep)</li>
+        <li>Multiple game analytics streams live</li>
+        <li>Goal: intelligence loop fully operational</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════ COST SUMMARY ══════════════════════════════ -->
+<div class="section">
+  <div class="section-title">12-Month Cost Summary</div>
+  <div class="cost-summary">
+    <div class="cost-tile">
+      <div class="tile-label">Total Infra (12 mo)</div>
+      <div class="tile-value">$13,147</div>
+      <div class="tile-sub">AI Agents + Servers + DBs + Others</div>
+    </div>
+    <div class="cost-tile">
+      <div class="tile-label">% of Pre-Seed Budget</div>
+      <div class="tile-value">10.9%</div>
+      <div class="tile-sub">of $120K total pre-seed</div>
+    </div>
+    <div class="cost-tile">
+      <div class="tile-label">Months 1–3 Burn Rate</div>
+      <div class="tile-value">~$370/mo</div>
+      <div class="tile-sub">Core tools only, free tiers active</div>
+    </div>
+    <div class="cost-tile">
+      <div class="tile-label">After AWS Activate</div>
+      <div class="tile-value">$11,857</div>
+      <div class="tile-sub">~$1,290 AWS costs offset by credits</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════ AWS ACTIVATE ══════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Action Item — AWS Activate</div>
+  <div class="activate-banner">
+    <div class="icon">💡</div>
+    <div>
+      <h3>Apply for AWS Activate Founders Program — Today</h3>
+      <p>AWS Activate offers free credits, training, and support to early-stage startups. At Redtail's AWS burn rate ($40–155/mo), the Founders tier ($5,000 in credits) covers <strong>the entire 12-month server bill</strong>. Apply at aws.amazon.com/activate.</p>
+      <ul>
+        <li>Founders tier: $5,000 in AWS credits — no investor required, just an accelerator or university affiliation (Cornell qualifies)</li>
+        <li>Portfolio tier: $25,000 in credits — available once we receive pre-seed investment from a participating VC</li>
+        <li>Credits cover EC2, Lambda, S3, SQS, CloudWatch, RDS — everything in our stack</li>
+        <li>Also includes $1,000 in AWS Support credits and free training courses</li>
+        <li>Application takes ~30 minutes. Valid for 2 years from activation date</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════ VS ALTERNATIVES ══════════════════════════════ -->
+<div class="section">
+  <div class="section-title">AWS vs Alternatives</div>
+  <div class="compare">
+    <div class="compare-card winner">
+      <h4>✓ AWS — Recommended</h4>
+      <ul class="compare-list">
+        <li class="pro">$5K–$25K free credits via Activate</li>
+        <li class="pro">Deepest Python / boto3 ecosystem</li>
+        <li class="pro">Lambda + SQS + S3 — perfect for agent workloads</li>
+        <li class="pro">SageMaker ready for Year 2 ML</li>
+        <li class="pro">Best documentation + Stack Overflow coverage</li>
+        <li class="pro">Bedrock = Claude API through AWS billing</li>
+        <li class="con">Slightly more complex to set up than GCP</li>
+      </ul>
+    </div>
+    <div class="compare-card">
+      <h4>GCP — Strong but Second</h4>
+      <ul class="compare-list">
+        <li class="pro">Google Cloud for Startups: $200K in credits (larger but harder to qualify)</li>
+        <li class="pro">Vertex AI + BigQuery are excellent for ML at scale</li>
+        <li class="pro">Cloud Run is cleaner than Lambda for Python</li>
+        <li class="con">Firebase already in our stack (adds complexity)</li>
+        <li class="con">Smaller community for our specific agent use case</li>
+        <li class="con">Gemini API = competing with our Claude dependency</li>
+      </ul>
+    </div>
+    <div class="compare-card">
+      <h4>DigitalOcean — Not Yet</h4>
+      <ul class="compare-list">
+        <li class="pro">Simplest interface — good for a single developer</li>
+        <li class="pro">Cheapest raw compute ($6/mo droplet)</li>
+        <li class="pro">Good managed Postgres option</li>
+        <li class="con">No serverless functions equivalent to Lambda</li>
+        <li class="con">No managed queue service equivalent to SQS</li>
+        <li class="con">Limited AI/ML managed services</li>
+        <li class="con">Would need to rebuild entire stack if we outgrow it</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="foot">Redtail Pre-Seed · February 2026 · Confidential · Prepared by Amritha Parimala (Technical Lead)</div>
+
+<script>mermaid.initialize({ startOnLoad: true });</script>
+</body>
+</html>
