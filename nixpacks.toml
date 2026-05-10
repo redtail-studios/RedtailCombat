@@ -1,5 +1,0 @@
-[phases.install]
-cmds = [
-  "pip install -r requirements.txt",
-  "pip install app-store-scraper==0.3.5 --no-deps",
-]
