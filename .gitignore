@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+scraper/data/
+scraper/output/
+
+# Unity
+RedtailBattle/Library/
+RedtailBattle/Temp/
+RedtailBattle/obj/
+RedtailBattle/Logs/
+RedtailBattle/UserSettings/
+RedtailBattle/*.sln
+RedtailBattle/*.csproj
+
+# macOS
+.DS_Store
