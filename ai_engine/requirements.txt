@@ -1,0 +1,8 @@
+# Web app + deploy (Vercel installs this). Claude is the analysis/report engine.
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+anthropic>=0.40.0
+openai>=1.40.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+pypdf>=4.0.0                 # read game design docs (PDF) for snapshot generation

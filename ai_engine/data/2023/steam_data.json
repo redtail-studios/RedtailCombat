@@ -1,0 +1,333 @@
+[
+  {
+    "source": "steam",
+    "app_id": "291550",
+    "name": "Brawlhalla",
+    "developer": "Blue Mammoth Games",
+    "owners": "20,000,000 .. 50,000,000",
+    "tags": [
+      "Free to Play",
+      "Multiplayer",
+      "Fighting",
+      "2D Fighter",
+      "2D Platformer",
+      "Casual",
+      "Local Multiplayer",
+      "Co-op",
+      "Controller",
+      "Platformer",
+      "Action",
+      "Online Co-Op"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "1203220",
+    "name": "NARAKA: BLADEPOINT",
+    "developer": "24 Entertainment",
+    "owners": "10,000,000 .. 20,000,000",
+    "tags": [
+      "Battle Royale",
+      "Multiplayer",
+      "Martial Arts",
+      "Mature",
+      "PvP",
+      "Action",
+      "Female Protagonist",
+      "Character Customization",
+      "Massively Multiplayer",
+      "Fighting",
+      "Survival",
+      "Third Person"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "417910",
+    "name": "Street Warriors Online",
+    "developer": "Crazy Rocks Studios",
+    "owners": "10,000,000 .. 20,000,000",
+    "tags": [
+      "Fighting",
+      "Action",
+      "Multiplayer",
+      "Sports",
+      "Violent",
+      "Massively Multiplayer",
+      "Simulation",
+      "Open World",
+      "Free to Play",
+      "PvP",
+      "Early Access",
+      "Co-op"
+    ],
+    "reviews": [
+      {
+        "text": "Street Warriors Online sounded like an excellent idea having pick a class and fight in the streets or any arena without any use of guns. However despite how good the game is fighting with fists and kicks the game that I actually we're actually bots. It only felt like this game was meant to be a single-player game rather than a multiplayer game. \n\nHaving multiple bots in racing games is okay because it was the norm for old racing game titles but having bots in group street fights in the game just felt empty and not fun at all.\n\nI would recommend playing the game if you're looking to do achievement hunting but not recommend playing this game because of the bots. \n\nStreet Warriors needed to step up to their game by either making a DLC single-player campaign mode just like how Halo Reach does ",
+        "voted_up": false,
+        "timestamp": 1697377689,
+        "sentiment": {
+          "neg": 0.111,
+          "neu": 0.784,
+          "pos": 0.104,
+          "compound": -0.2867
+        }
+      },
+      {
+        "text": "Green Street Hooligans: Online",
+        "voted_up": true,
+        "timestamp": 1693093585,
+        "sentiment": {
+          "neg": 0.412,
+          "neu": 0.588,
+          "pos": 0.0,
+          "compound": -0.2732
+        }
+      },
+      {
+        "text": "DOBRA je jebem vam mater ubacite update !!!",
+        "voted_up": true,
+        "timestamp": 1677885395,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "Free to play and it kind of reminds Me of old-school games like State of Emergency by Rock-star.",
+        "voted_up": true,
+        "timestamp": 1673628003,
+        "sentiment": {
+          "neg": 0.105,
+          "neu": 0.565,
+          "pos": 0.331,
+          "compound": 0.6808
+        }
+      }
+    ]
+  },
+  {
+    "source": "steam",
+    "app_id": "275390",
+    "name": "Guacamelee! Super Turbo Championship Edition",
+    "developer": "Drinkbox Studios",
+    "owners": "5,000,000 .. 10,000,000",
+    "tags": [
+      "Platformer",
+      "2D",
+      "Metroidvania",
+      "Beat 'em up",
+      "Action",
+      "Colorful",
+      "Cartoony",
+      "Indie",
+      "Local Co-Op",
+      "Adventure",
+      "Funny",
+      "Difficult"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "844870",
+    "name": "KurtzPel",
+    "developer": "KOG",
+    "owners": "5,000,000 .. 10,000,000",
+    "tags": [
+      "Anime",
+      "Free to Play",
+      "Character Customization",
+      "Multiplayer",
+      "Action",
+      "PvP",
+      "Fantasy",
+      "Fighting",
+      "Third Person",
+      "Massively Multiplayer",
+      "Co-op",
+      "Sexual Content"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "304390",
+    "name": "FOR HONOR",
+    "developer": "Ubisoft Montreal, Ubisoft Quebec, Ubisoft Toronto, Blue Byte",
+    "owners": "5,000,000 .. 10,000,000",
+    "tags": [
+      "Medieval",
+      "Swordplay",
+      "Action",
+      "Multiplayer",
+      "Fighting",
+      "PvP",
+      "Third Person",
+      "War",
+      "Gore",
+      "Co-op",
+      "Singleplayer",
+      "Online Co-Op"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "508440",
+    "name": "Totally Accurate Battle Simulator",
+    "developer": "Landfall",
+    "owners": "2,000,000 .. 5,000,000",
+    "tags": [
+      "Sandbox",
+      "Simulation",
+      "Funny",
+      "War",
+      "Physics",
+      "Strategy",
+      "Singleplayer",
+      "Realistic",
+      "Indie",
+      "Adventure",
+      "Colorful",
+      "Fantasy"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "504370",
+    "name": "Battlerite",
+    "developer": "Stunlock Studios",
+    "owners": "2,000,000 .. 5,000,000",
+    "tags": [
+      "PvP",
+      "Multiplayer",
+      "MOBA",
+      "Competitive",
+      "Action",
+      "Free to Play",
+      "Arena Shooter",
+      "Fast-Paced",
+      "Team-Based",
+      "Fighting",
+      "Top-Down",
+      "Early Access"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "1172380",
+    "name": "STAR WARS Jedi: Fallen Order",
+    "developer": "Respawn Entertainment",
+    "owners": "2,000,000 .. 5,000,000",
+    "tags": [
+      "Action-Adventure",
+      "Souls-like",
+      "Third Person",
+      "Open World",
+      "Story Rich",
+      "Swordplay",
+      "Exploration",
+      "Sci-fi",
+      "Action",
+      "Platformer",
+      "Space",
+      "RPG"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "1260320",
+    "name": "Party Animals",
+    "developer": "Recreate Games",
+    "owners": "2,000,000 .. 5,000,000",
+    "tags": [
+      "Multiplayer",
+      "Funny",
+      "Casual",
+      "Cute",
+      "Party Game",
+      "Co-op",
+      "Fighting",
+      "Action",
+      "PvP",
+      "Party",
+      "Online Co-Op",
+      "Family Friendly"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "1716740",
+    "name": "Starfield",
+    "developer": "Bethesda Game Studios",
+    "owners": "2,000,000 .. 5,000,000",
+    "tags": [
+      "Space",
+      "Singleplayer",
+      "Open World",
+      "RPG",
+      "Sci-fi",
+      "Exploration",
+      "First-Person",
+      "Character Customization",
+      "Story Rich",
+      "Action-Adventure",
+      "Third Person",
+      "Adventure"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "2358720",
+    "name": "Black Myth: Wukong",
+    "developer": "Game Science",
+    "owners": "50,000,000 .. 100,000,000",
+    "tags": [
+      "Mythology",
+      "Action RPG",
+      "Action",
+      "Souls-like",
+      "RPG",
+      "Combat",
+      "Story Rich",
+      "Singleplayer",
+      "Action-Adventure",
+      "Drama",
+      "Dark Fantasy",
+      "Atmospheric"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "359550",
+    "name": "Tom Clancy's Rainbow Six Siege",
+    "developer": "Ubisoft Montreal",
+    "owners": "20,000,000 .. 50,000,000",
+    "tags": [
+      "FPS",
+      "PvP",
+      "Multiplayer",
+      "Tactical",
+      "e-sports",
+      "Shooter",
+      "Competitive",
+      "Online Co-Op",
+      "Action",
+      "Hero Shooter",
+      "Team-Based",
+      "Military"
+    ],
+    "reviews": []
+  }
+]
