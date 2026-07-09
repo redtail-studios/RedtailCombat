@@ -16,7 +16,9 @@ ai_engine/
 ├── scrapers/          # reddit, steam, googleplay, appstore, hackernews
 ├── data/              # scraped JSON per year (committed → deployed app reads it)
 ├── api/index.py       # Vercel entry point
-└── vercel.json        # Vercel routing + function timeout
+├── vercel.json        # Vercel routing + function timeout
+├── Procfile           # AWS Elastic Beanstalk entry point (gunicorn + uvicorn worker)
+└── .ebextensions/     # EB health check path + load balancer timeout
 ```
 
 ## How it works (and why the split)
@@ -80,13 +82,35 @@ vercel --prod
 - `data/` is committed on purpose so the deployed app has something to analyse.
   Refresh data locally and redeploy to update it.
 
-## Switching the model / provider
+## 5. Deploy on AWS
 
-Defaults to Claude `claude-opus-4-8`. Override via `.env`:
-`ANTHROPIC_MODEL=...`, or `LLM_PROVIDER=openai` + `OPENAI_API_KEY` to use OpenAI.
+The AI engine is deployed on ECS on AWS. 
 
-## Researching a different market
+- Step 1: Build the image using 
+```bash
+docker build -t redtail-ai-engine .
+```
 
-Edit `config.py` — `SUBREDDITS`, `STEAM_APP_IDS`, `GOOGLE_PLAY_QUERY`,
-`APP_STORE_APPS`, `HN_QUERIES`, `SIGNAL_KEYWORDS`, `COMPETITORS`. Everything
-downstream reads from there.
+- Step 2: Tag for ECR
+```bash
+docker tag redtail-ai-engine:latest 512190911607.dkr.ecr.us-east-1.amazonaws.com/redtail-ai-engine:latest
+```
+
+- Step 3: Login
+```bash
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 512190911607.dkr.ecr.us-east-1.amazonaws.com
+```
+
+- Step 4: Push the image
+```bash
+docker push 512190911607.dkr.ecr.us-east-1.amazonaws.com/redtail-ai-engine:latest
+```
+
+- Step 5: Force ECS Service redeploy
+```bash
+aws ecs update-service \
+  --cluster redtail-ai-engine-cluster \
+  --service redtail-ai-engine-task-service-k6omwqv9 \
+  --force-new-deployment
+```
+

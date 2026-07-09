@@ -1,13 +1,37 @@
 [
   {
     "source": "itch",
-    "title": "In Their Shoes [50% Off] [$5.24] [Visual Novel] [Windows] [macOS]",
+    "title": "Super Coupon Club [Free] [Card Game]",
+    "text": "Granny Balatro",
+    "url": "https://gizmo199.itch.io/super-coupon-club",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.455,
+      "pos": 0.545,
+      "compound": 0.802
+    }
+  },
+  {
+    "source": "itch",
+    "title": "Punch Dungeon [Free] [Strategy]",
+    "text": "PUNCH YOUR WAY TO THE TOP",
+    "url": "https://adamatomic.itch.io/punch-dungeon",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.578,
+      "pos": 0.422,
+      "compound": 0.7034
+    }
+  },
+  {
+    "source": "itch",
+    "title": "In Their Shoes [$10.49] [Visual Novel] [Windows] [macOS]",
     "text": "A mumblecore narrative game",
     "url": "https://wearemuesli.itch.io/its",
     "sentiment": {
       "neg": 0.0,
-      "neu": 0.85,
-      "pos": 0.15,
+      "neu": 0.827,
+      "pos": 0.173,
       "compound": 0.3182
     }
   },
@@ -50,18 +74,18 @@
   {
     "source": "itch",
     "title": "Milki Delivery Demo [Free] [Simulation] [Windows] [Linux]",
-    "text": "Cozy delivery adventure ðŸ�®ðŸš²ðŸŒ»",
+    "text": "Cozy delivery adventure 🐮🚲🌻",
     "url": "https://dodoot.itch.io/milki-delivery-demo",
     "sentiment": {
       "neg": 0.0,
-      "neu": 0.641,
-      "pos": 0.359,
+      "neu": 0.682,
+      "pos": 0.318,
       "compound": 0.6808
     }
   },
   {
     "source": "itch",
-    "title": "Indiepocalypse #77 [34% Off] [$9.90] [Windows]",
+    "title": "Indiepocalypse #77 [$15.00] [Windows]",
     "text": "Issue #77 of a monthly indie game anthology collecting games from 10 developers.",
     "url": "https://pizzapranks.itch.io/indiepocalypse-77",
     "sentiment": {
@@ -93,30 +117,6 @@
       "neu": 0.651,
       "pos": 0.349,
       "compound": 0.7088
-    }
-  },
-  {
-    "source": "itch",
-    "title": "bag game [Free] [Strategy]",
-    "text": "",
-    "url": "https://foolsroom.itch.io/bag-game",
-    "sentiment": {
-      "neg": 0.0,
-      "neu": 0.476,
-      "pos": 0.524,
-      "compound": 0.5106
-    }
-  },
-  {
-    "source": "itch",
-    "title": "Lexispell [20% Off] [$7.19] [Puzzle] [Windows] [Linux]",
-    "text": "Strategy meets physics, in this roguelike word game, where you combine spelling with cool upgrades to score high",
-    "url": "https://mreliptik.itch.io/lexispell",
-    "sentiment": {
-      "neg": 0.0,
-      "neu": 0.913,
-      "pos": 0.087,
-      "compound": 0.3182
     }
   }
 ]

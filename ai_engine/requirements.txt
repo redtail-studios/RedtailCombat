@@ -1,6 +1,8 @@
-# Web app + deploy (Vercel installs this). Claude is the analysis/report engine.
+# Web app + deploy (Vercel + AWS Elastic Beanstalk both install this).
+# Claude is the analysis/report engine.
 fastapi>=0.111.0
 uvicorn[standard]>=0.29.0
+gunicorn>=21.2.0              # WSGI server used by the EB Procfile (unused on Vercel)
 anthropic>=0.40.0
 openai>=1.40.0
 python-dotenv>=1.0.0

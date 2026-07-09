@@ -1,0 +1,16 @@
+name: redtail-ai-engine
+
+services:
+  web:
+    container_name: redtail-ai-web
+    image: redtail-ai-demo:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      PORT: 8000
+    ports:
+      - "${HOST_PORT:-8001}:8000"
+    restart: unless-stopped

@@ -277,6 +277,15 @@ async function loadGames(){
 
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 function setG(d,t){["gDot","gDot2"].forEach(i=>{const e=document.getElementById(i);if(e)e.className="dot "+d});["gText","gText2"].forEach(i=>{const e=document.getElementById(i);if(e)e.textContent=t});}
+function sleep(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+async function readJsonResponse(r){
+  const text=await r.text();
+  try{return text?JSON.parse(text):{};}
+  catch(e){
+    const preview=text.replace(/\s+/g," ").slice(0,360);
+    throw new Error(`Server returned ${r.status} ${r.statusText||"non-JSON response"}: ${preview}`);
+  }
+}
 
 // ── init (runs on load; dashboard is ready behind the landing) ──
 (async()=>{
@@ -364,6 +373,23 @@ function updateBtn(){
   reportBtn.disabled=bt.length===0;
 }
 
+async function waitForReport(jobId){
+  while(true){
+    await sleep(3000);
+    const r=await fetch("/api/report/status?job_id="+encodeURIComponent(jobId));
+    const d=await readJsonResponse(r);
+    if(!r.ok||d.error)throw new Error(d.error||"Report status failed");
+    if(d.status==="done")return d;
+    if(d.status==="error")throw new Error(d.error||"Report failed");
+  }
+}
+
+function showReport(d,bt){
+  empty.style.display="none";frameWrap.classList.add("on");frame.srcdoc=d.html;
+  lastReportYear=bt[0];document.getElementById("visualizeRow").style.display="block";
+  setG("done","Report ready");
+}
+
 async function generateReport(){
   const bt=mode==="simple"?sel("analyzeChecks"):sel("backChecks"), val=mode==="backtest"?sel("valChecks"):[];
   reportBtn.disabled=true;reportBtn.innerHTML='<div class="spinner"></div> Generating…';
@@ -376,12 +402,11 @@ async function generateReport(){
   const tick=setInterval(()=>{const s=Math.round((Date.now()-t0)/1000);const e=document.getElementById("elapsed");if(e)e.textContent=s+"s elapsed — writing the report…";},1000);
   try{
     const r=await fetch("/api/report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({backtest_years:bt,validation_years:val})});
-    const d=await r.json();clearInterval(tick);
-    if(!r.ok||d.error){fail(d.error||"Unknown error");return;}
-    empty.style.display="none";frameWrap.classList.add("on");frame.srcdoc=d.html;
-    lastReportYear=bt[0];document.getElementById("visualizeRow").style.display="block";
-    setG("done","Report ready");
-  }catch(e){clearInterval(tick);fail(e.message);}
+    const d=await readJsonResponse(r);
+    if(!r.ok||d.error)throw new Error(d.error||"Unknown error");
+    showReport(d.job_id?await waitForReport(d.job_id):d,bt);
+  }catch(e){fail(e.message);}
+  clearInterval(tick);
   reportBtn.disabled=false;reportBtn.innerHTML="✦ Generate Report";updateBtn();
 }
 function fail(msg){
@@ -392,6 +417,34 @@ function fail(msg){
 }
 
 // ── snapshot (analysis → game modifications → OpenAI image) ──
+async function waitForSnapshot(jobId){
+  while(true){
+    await sleep(3000);
+    const r=await fetch("/api/snapshot/status?job_id="+encodeURIComponent(jobId));
+    const d=await readJsonResponse(r);
+    if(!r.ok||d.error)throw new Error(d.error||"Snapshot status failed");
+    if(d.status==="done")return d;
+    if(d.status==="error")throw new Error(d.error||"Snapshot failed");
+  }
+}
+
+function showSnapshot(d){
+  snapEmpty.style.display="none";snapOut.style.display="block";
+  snapHeadline.textContent=d.headline||"";
+  document.getElementById("snapFeatures").innerHTML=(d.modifications||[]).map((m,i)=>`
+    <div class="feat">
+      ${m.image_b64
+          ? `<img class="feat-img" src="data:image/png;base64,${m.image_b64}" alt="feature ${i+1}">`
+          : `<div class="feat-noimg">⚠ image not generated${m.image_error?": "+esc(m.image_error):""}</div>`}
+      <div class="feat-body">
+        <div class="feat-h">${i+1}. ${esc(m.change||"")}</div>
+        <div class="feat-f">↳ signal: ${esc(m.finding||"")}</div>
+        <div class="feat-w">${esc(m.why||"")}</div>
+      </div>
+    </div>`).join("");
+  setG("done","Snapshot ready");
+}
+
 async function generateSnapshot(){
   const y=lastReportYear||activeYear;
   const game=document.getElementById("gameSelect").value;
@@ -406,30 +459,18 @@ async function generateSnapshot(){
   const tick=setInterval(()=>{const s=Math.round((Date.now()-t0)/1000);const e=document.getElementById("snapElapsed");if(e)e.textContent=s+"s elapsed…";},1000);
   try{
     const r=await fetch("/api/snapshot",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({year:y,game:game})});
-    const d=await r.json();clearInterval(tick);
-    if(!r.ok||d.error){snapFail(d.error||"Unknown error");return;}
-    snapEmpty.style.display="none";snapOut.style.display="block";
-    snapHeadline.textContent=d.headline||"";
-    document.getElementById("snapFeatures").innerHTML=(d.modifications||[]).map((m,i)=>`
-      <div class="feat">
-        ${m.image_b64
-            ? `<img class="feat-img" src="data:image/png;base64,${m.image_b64}" alt="feature ${i+1}">`
-            : `<div class="feat-noimg">⚠ image not generated${m.image_error?": "+esc(m.image_error):""}</div>`}
-        <div class="feat-body">
-          <div class="feat-h">${i+1}. ${esc(m.change||"")}</div>
-          <div class="feat-f">↳ signal: ${esc(m.finding||"")}</div>
-          <div class="feat-w">${esc(m.why||"")}</div>
-        </div>
-      </div>`).join("");
-    setG("done","Snapshot ready");
-  }catch(e){clearInterval(tick);snapFail(e.message);}
+    const d=await readJsonResponse(r);
+    if(!r.ok||d.error)throw new Error(d.error||"Unknown error");
+    showSnapshot(d.job_id?await waitForSnapshot(d.job_id):d);
+  }catch(e){snapFail(e.message);}
+  clearInterval(tick);
   snapBtn.disabled=false;snapBtn.innerHTML="✦ Generate images with OpenAI";
 }
 function snapFail(msg){
   snapEmpty.style.display="flex";
   snapEmpty.innerHTML=`<div class="empty-icon">⚠</div><div class="empty-t">Snapshot failed</div>
     <div class="empty-s" style="color:#f87171;max-width:640px;white-space:pre-wrap">${esc(msg)}</div>`;
-  setG("error","Snapshot failed");snapBtn.disabled=false;snapBtn.innerHTML="✦ Generate Snapshot";
+  setG("error","Snapshot failed");snapBtn.disabled=false;snapBtn.innerHTML="✦ Generate images with OpenAI";
 }
 </script>
 </body>

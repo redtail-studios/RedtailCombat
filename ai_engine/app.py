@@ -7,7 +7,11 @@ Runs two ways:
             (scraping is disabled on serverless; do it locally and commit data)
 """
 import os
+import json
+import tempfile
 import threading
+import time
+import uuid
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -21,6 +25,10 @@ from config import DATA_DIR, SUPPORTED_YEARS, PLATFORMS, PLATFORM_IDS
 
 HERE      = Path(__file__).parent
 DASHBOARD = HERE / "dashboard.html"
+REPORT_JOBS_DIR = Path(os.getenv("AI_ENGINE_JOBS_DIR", tempfile.gettempdir())) / "ai_engine_report_jobs"
+REPORT_JOBS_DIR.mkdir(parents=True, exist_ok=True)
+SNAPSHOT_JOBS_DIR = Path(os.getenv("AI_ENGINE_JOBS_DIR", tempfile.gettempdir())) / "ai_engine_snapshot_jobs"
+SNAPSHOT_JOBS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Vercel sets VERCEL=1; treat any serverless flag as "deployed" (no scraping).
 DEPLOYED = bool(os.getenv("VERCEL") or os.getenv("AI_ENGINE_DEPLOYED"))
@@ -54,6 +62,102 @@ class ReportReq(BaseModel):
 class SnapshotReq(BaseModel):
     year: int
     game: str | None = None   # game doc filename (from the dropdown)
+
+
+def _report_job_path(job_id: str) -> Path:
+    return REPORT_JOBS_DIR / f"{job_id}.json"
+
+
+def _write_report_job(job_id: str, data: dict):
+    data["updated_at"] = time.time()
+    path = _report_job_path(job_id)
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(data), encoding="utf-8")
+    tmp.replace(path)
+
+
+def _read_report_job(job_id: str) -> dict | None:
+    if not job_id or not all(c in "0123456789abcdef-" for c in job_id.lower()):
+        return None
+    path = _report_job_path(job_id)
+    if not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _run_report_job(job_id: str, backtest_years: list[int], validation_years: list[int]):
+    try:
+        _write_report_job(job_id, {
+            "status": "running",
+            "job_id": job_id,
+            "backtest_years": backtest_years,
+            "validation_years": validation_years,
+            "created_at": time.time(),
+        })
+        html = report.generate(backtest_years, validation_years)
+        _write_report_job(job_id, {
+            "status": "done",
+            "job_id": job_id,
+            "html": html,
+            "model": llm.active_model(),
+            "backtest_years": backtest_years,
+            "validation_years": validation_years,
+            "created_at": time.time(),
+        })
+    except Exception as e:
+        _write_report_job(job_id, {
+            "status": "error",
+            "job_id": job_id,
+            "error": f"{type(e).__name__}: {e}",
+            "backtest_years": backtest_years,
+            "validation_years": validation_years,
+            "created_at": time.time(),
+        })
+
+
+def _snapshot_job_path(job_id: str) -> Path:
+    return SNAPSHOT_JOBS_DIR / f"{job_id}.json"
+
+
+def _write_snapshot_job(job_id: str, data: dict):
+    data["updated_at"] = time.time()
+    path = _snapshot_job_path(job_id)
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(data), encoding="utf-8")
+    tmp.replace(path)
+
+
+def _read_snapshot_job(job_id: str) -> dict | None:
+    if not job_id or not all(c in "0123456789abcdef-" for c in job_id.lower()):
+        return None
+    path = _snapshot_job_path(job_id)
+    if not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _run_snapshot_job(job_id: str, year: int, game: str | None):
+    try:
+        import snapshot
+        _write_snapshot_job(job_id, {
+            "status": "running",
+            "job_id": job_id,
+            "year": year,
+            "game_file": game,
+            "created_at": time.time(),
+        })
+        result = snapshot.generate_snapshot(year, game)
+        result.update({"status": "done", "job_id": job_id})
+        _write_snapshot_job(job_id, result)
+    except Exception as e:
+        _write_snapshot_job(job_id, {
+            "status": "error",
+            "job_id": job_id,
+            "error": f"{type(e).__name__}: {e}",
+            "year": year,
+            "game_file": game,
+            "created_at": time.time(),
+        })
 
 
 # ── Routes ───────────────────────────────────────────────────────────────────
@@ -138,11 +242,30 @@ def scrape_status(year: int | None = None):
 def make_report(req: ReportReq):
     if not req.backtest_years:
         return JSONResponse({"error": "select at least one year"}, status_code=400)
-    try:
-        html = report.generate(req.backtest_years, req.validation_years)
-        return {"html": html, "model": llm.active_model()}
-    except Exception as e:
-        return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
+    job_id = str(uuid.uuid4())
+    backtest_years = list(req.backtest_years)
+    validation_years = list(req.validation_years)
+    _write_report_job(job_id, {
+        "status": "queued",
+        "job_id": job_id,
+        "backtest_years": backtest_years,
+        "validation_years": validation_years,
+        "created_at": time.time(),
+    })
+    threading.Thread(
+        target=_run_report_job,
+        args=(job_id, backtest_years, validation_years),
+        daemon=True,
+    ).start()
+    return JSONResponse({"status": "queued", "job_id": job_id}, status_code=202)
+
+
+@app.get("/api/report/status")
+def report_status(job_id: str):
+    job = _read_report_job(job_id)
+    if not job:
+        return JSONResponse({"error": "report job not found"}, status_code=404)
+    return job
 
 
 @app.get("/api/games")
@@ -156,11 +279,28 @@ def games():
 @app.post("/api/snapshot")
 def make_snapshot(req: SnapshotReq):
     """Analysis → game modifications → OpenAI-rendered snapshot of the modified game."""
-    try:
-        import snapshot
-        return snapshot.generate_snapshot(req.year, req.game)
-    except Exception as e:
-        return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
+    job_id = str(uuid.uuid4())
+    _write_snapshot_job(job_id, {
+        "status": "queued",
+        "job_id": job_id,
+        "year": req.year,
+        "game_file": req.game,
+        "created_at": time.time(),
+    })
+    threading.Thread(
+        target=_run_snapshot_job,
+        args=(job_id, req.year, req.game),
+        daemon=True,
+    ).start()
+    return JSONResponse({"status": "queued", "job_id": job_id}, status_code=202)
+
+
+@app.get("/api/snapshot/status")
+def snapshot_status(job_id: str):
+    job = _read_snapshot_job(job_id)
+    if not job:
+        return JSONResponse({"error": "snapshot job not found"}, status_code=404)
+    return job
 
 
 @app.get("/health")

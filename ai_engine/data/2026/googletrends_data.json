@@ -1,1 +1,86 @@
-[]
+[
+  {
+    "source": "googletrends",
+    "term": "mobile fighting game",
+    "avg_interest": 71.4,
+    "rising_queries": [],
+    "title": "Trend: mobile fighting game (2026)",
+    "text": "Google search interest for 'mobile fighting game' in 2026: avg index 71.4. Rising related searches: none.",
+    "sentiment": {
+      "neg": 0.128,
+      "neu": 0.718,
+      "pos": 0.154,
+      "compound": 0.128
+    }
+  },
+  {
+    "source": "googletrends",
+    "term": "gacha game",
+    "avg_interest": 68.9,
+    "rising_queries": [],
+    "title": "Trend: gacha game (2026)",
+    "text": "Google search interest for 'gacha game' in 2026: avg index 68.9. Rising related searches: none.",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.824,
+      "pos": 0.176,
+      "compound": 0.4588
+    }
+  },
+  {
+    "source": "googletrends",
+    "term": "auto battler",
+    "avg_interest": 63.3,
+    "rising_queries": [],
+    "title": "Trend: auto battler (2026)",
+    "text": "Google search interest for 'auto battler' in 2026: avg index 63.3. Rising related searches: none.",
+    "sentiment": {
+      "neg": 0.101,
+      "neu": 0.73,
+      "pos": 0.169,
+      "compound": 0.296
+    }
+  },
+  {
+    "source": "googletrends",
+    "term": "idle game",
+    "avg_interest": 78.5,
+    "rising_queries": [],
+    "title": "Trend: idle game (2026)",
+    "text": "Google search interest for 'idle game' in 2026: avg index 78.5. Rising related searches: none.",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.824,
+      "pos": 0.176,
+      "compound": 0.4588
+    }
+  },
+  {
+    "source": "googletrends",
+    "term": "roguelike",
+    "avg_interest": 78.7,
+    "rising_queries": [],
+    "title": "Trend: roguelike (2026)",
+    "text": "Google search interest for 'roguelike' in 2026: avg index 78.7. Rising related searches: none.",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.812,
+      "pos": 0.188,
+      "compound": 0.4588
+    }
+  },
+  {
+    "source": "googletrends",
+    "term": "hero shooter",
+    "avg_interest": 63.0,
+    "rising_queries": [],
+    "title": "Trend: hero shooter (2026)",
+    "text": "Google search interest for 'hero shooter' in 2026: avg index 63.0. Rising related searches: none.",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.663,
+      "pos": 0.337,
+      "compound": 0.765
+    }
+  }
+]

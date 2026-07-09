@@ -1,0 +1,16 @@
+name: redtail-combat
+
+services:
+  web:
+    container_name: redtail-combat-web
+    image: redtail-combat-demo:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      PORT: 8000
+    ports:
+      - "${HOST_PORT:-8001}:8000"
+    restart: unless-stopped
