@@ -1,0 +1,2825 @@
+[
+  {
+    "source": "hackernews",
+    "id": "48815361",
+    "title": "Built a mobile action game in Unreal Engine 5.7 over six months",
+    "text": "",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48795930",
+    "title": "Show HN: I hated how much my 12-year-old played Roblox, so we built our own FPS",
+    "text": "I&#x27;m a father of two, 7 and 12. They are obsessed with Roblox, especially Rivals.<p>Like a lot of parents, we did not love it. We tried the usual things: block it, limit it, set timers.&quot; It became a daily battle, a lose-lose situation.<p>So I flipped the problem.<p>Instead of fighting what they loved, I decided to lean into it, but with a twist.<p>Why just play an FPS when you could build one together?<p>My kids became the PMs. Claude and I became their engineer.<p>I was shocked by how fast we moved. We picked a name, Cooked and started building.<p>Get in. Lock in. Get cooked!<p>In th",
+    "points": 23,
+    "sentiment": {
+      "neg": 0.076,
+      "neu": 0.835,
+      "pos": 0.09,
+      "compound": 0.6916
+    },
+    "comments": [
+      {
+        "body": "Really, Really Fun!!!",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.296,
+          "pos": 0.704,
+          "compound": 0.6954
+        }
+      },
+      {
+        "body": "Why do these vibe coded projects always have an AI generated post too?<p>I come to this site hoping for original human thoughts not this.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.812,
+          "pos": 0.188,
+          "compound": 0.6249
+        }
+      },
+      {
+        "body": "I&#x27;d love to love it but this AI generated post made me gag, sorry. I&#x27;ll pass, takeaway from that is different than expected.<p>If it&#x27;s not worth writing, it&#x27;s not worth reading.<p>Fruit of love and passion for the hobby, I guess.",
+        "sentiment": {
+          "neg": 0.154,
+          "neu": 0.576,
+          "pos": 0.27,
+          "compound": 0.8574
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48793542",
+    "title": "Show HN: KiCad in the Browser",
+    "text": "KiCad, a PCB EDA suite is now working in a browser, you can try it at the link, there&#x27;s a demo project or you can bring your own. Firefox is best, Chrome is good, Safari is &quot;working&quot;.<p>We’re Emergence Engineering, a dev shop from Hungary, mostly working with rich text editors, CRDTs. PCBJam started as my (Viktor, CTO, ex-electrical engineer) hobby project but as time went on I put more\nand more energy into it, and a product started shaping up in my head, in the last few months we’ve started to focus on this project a bit more, and this is the first MVP~ish result.<p>This projec",
+    "points": 107,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.896,
+      "pos": 0.104,
+      "compound": 0.9583
+    },
+    "comments": [
+      {
+        "body": "Happy to answer any questions &amp; feel free to reach out ( email in my profile )!",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.625,
+          "pos": 0.375,
+          "compound": 0.8122
+        }
+      },
+      {
+        "body": "Small suggestion, it would be nice to see the total size of the download during the first load (sry I am on a slow metered connection).",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.899,
+          "pos": 0.101,
+          "compound": 0.4215
+        }
+      },
+      {
+        "body": "To open a demo board click &quot;Open&quot; in the Projects&#x2F;Demo board section then &quot;Open in PCB Editor&quot; at demo.kicad_pcb in Files.<p>Next time I&#x27;ll make a smoother demo...",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "Is this at all related to kicanvas.org",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "This is really cool. I think a lot of people will initially dismiss your demo as ‘slop’ unless the landing page drops some of the Claude-isms (text and design) because it’s clear this is a project with passion in it, but the demo page and landing page both look like something Claude might’ve made with a single prompt.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.859,
+          "pos": 0.141,
+          "compound": 0.7812
+        }
+      },
+      {
+        "body": "I can totally see pcb manufacturers like JLC integrating this into their websites, with a set of customized design rules and an order button.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.902,
+          "pos": 0.098,
+          "compound": 0.3612
+        }
+      },
+      {
+        "body": "I love that Firefox is the best.<p>I don&#x27;t use kicad. But, this project, as a web-first version of kicad, seems like it offers the best opportunities to create a shared learning community. Is that part of the long term goal?<p>I would love to experiment with kicad, but I learn best through watching others and asking questions. Can I do that with this? Is there a way I could &quot;watch&quot; other sessions as the build progresses? Or, chat about what I see there with other people interested in learning and teaching?<p>Very nice work!",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.676,
+          "pos": 0.324,
+          "compound": 0.9914
+        }
+      },
+      {
+        "body": "So you can easily get it to work in the browser, but the dozens of core developers can&#x27;t get it to work properly on Wayland[1]? Something smells fishy...<p>[1] <a href=\"https:&#x2F;&#x2F;www.kicad.org&#x2F;blog&#x2F;2025&#x2F;06&#x2F;KiCad-and-Wayland-Support&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.kicad.org&#x2F;blog&#x2F;2025&#x2F;06&#x2F;KiCad-and-Wayland-Support...</a>",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.942,
+          "pos": 0.058,
+          "compound": 0.21
+        }
+      },
+      {
+        "body": "Kudos! This is impressive work. Even the 3D viewer is working.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.566,
+          "pos": 0.434,
+          "compound": 0.784
+        }
+      },
+      {
+        "body": "This is genuinely impressive",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.476,
+          "pos": 0.524,
+          "compound": 0.5106
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48782328",
+    "title": "Show HN: Snibble – Snake x Scrabble where every match fits in a QR code",
+    "text": "Hi HN - I built Snibble, a browser word snake game.<p>The technical bit: every match is deterministic and compresses into a tiny replay URL &#x2F; QR code, so games can be shared and replayed without video.<p>This is an early beta. I’d especially love feedback on:\n- whether the submit&#x2F;steal mechanic makes sense\n- mobile onboarding\n- performance\n- the replay&#x2F;QR artifact idea<p>I built the engine from scratch in TypeScript&#x2F;Canvas&#x2F;WebGL over the last few months. Replays are generated from compressed event streams and re-simulated in the browser.",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.935,
+      "pos": 0.065,
+      "compound": 0.7841
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48733433",
+    "title": "Show HN: Curvytron 2, I rewrote my browser party game, 10 years later",
+    "text": "Hi everyone, french web dev here,<p>About 10 years ago I did a little party game in the browser inspired by Achtung die Kurve genre, it reached HN (<a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=9494619\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=9494619</a>) and everything went crazy, it&#x27;s still largely played in open-spaces all over the world today.<p>This past year, I&#x27;ve been working on a sequel: <a href=\"https:&#x2F;&#x2F;curvytron2.com\" rel=\"nofollow\">https:&#x2F;&#x2F;curvytron2.com</a> is live.<p>Same goal as the first one: challenge myself, perfect my s",
+    "points": 15,
+    "sentiment": {
+      "neg": 0.05,
+      "neu": 0.709,
+      "pos": 0.241,
+      "compound": 0.9824
+    },
+    "comments": [
+      {
+        "body": "This is excellent! What was the biggest challenge you found while developing the sequel?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.694,
+          "pos": 0.306,
+          "compound": 0.6476
+        }
+      },
+      {
+        "body": "Nice! The game is fun.<p>How did you handle the reconnection?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.744,
+          "pos": 0.256,
+          "compound": 0.4753
+        }
+      },
+      {
+        "body": "Wow, didn&#x27;t expect to see this. Maybe something is in the air - I&#x27;ve been working on a similar project [0] out of a nostalgia for the &quot;Curve Fever 2&quot; era. I&#x27;m  actually familiar with your first game, and this one is very fun and polished too, particularly the effects and the UI. Mine is a bit raw at the moment but quite functional. You get dropped in to a shared room of classic &quot;survival,&quot; but I&#x27;ve also spent a lot of time making wonkier mode like CTF, zone control, etc. It&#x27;s a bit of Achtung die Kurve meets Halo 3.<p>But - we are both very aligned ",
+        "sentiment": {
+          "neg": 0.037,
+          "neu": 0.806,
+          "pos": 0.157,
+          "compound": 0.9489
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48717385",
+    "title": "\"Perfumed Palaces: backrooms roguelike vibe-coded in <30 days\"",
+    "text": "&quot;found&quot; cosmic horror game with malicious RPG mechanics forces player to roll 9 digit RNG to earn $ to move and interact. entire game was written as a single html file by Claude Code on mobile, revised as a codebase on desktop with Codex, then wrapped with electron as proof-of-concept. lore written using Blair Witch Template to beef market ability and implied cognitohazard.<p>project initialize: 4&#x2F;30&#x2F;26\nproject prototype: 5&#x2F;15&#x2F;26\nproject beta test &amp; debug: today\nmarket release: 7&#x2F;17&#x2F;26\ntotal days from inception to market: 78\nhttps:&#x2F;&#x2F;store.s",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.062,
+      "neu": 0.915,
+      "pos": 0.023,
+      "compound": -0.5994
+    },
+    "comments": [
+      {
+        "body": "Nobody cares",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.25,
+          "pos": 0.75,
+          "compound": 0.4588
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48702104",
+    "title": "Show HN: Starglyphs - A constellation puzzle game based on Euler paths",
+    "text": "I am a big Dragon Age fan and sunk hundreds of hours into Inquisition. It had this minigame called astrariums where you had to solve these shapes based on constellation guides by tracing stars. I&#x27;m a hobby game dev and wondered if I could procedurally generate these puzzles so they were always solvable. Turns out you can, so I built a space puzzle game around it with a colorful aesthetic. I released it in web form here but I&#x27;m currently working on getting it on Steam and mobile.",
+    "points": 28,
+    "sentiment": {
+      "neg": 0.016,
+      "neu": 0.954,
+      "pos": 0.03,
+      "compound": 0.1154
+    },
+    "comments": [
+      {
+        "body": "This looks beautiful! I hope it works out well for you",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.465,
+          "pos": 0.535,
+          "compound": 0.8478
+        }
+      },
+      {
+        "body": "tried it. looks awesome. calm and peaceful. what did you build it with",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.51,
+          "pos": 0.49,
+          "compound": 0.8625
+        }
+      },
+      {
+        "body": "i dont know why i got it to work one time but after that it just shows a blank screen and i even cleared browser cache and stuff but it showed a blank screen , i thought you would like to know haha",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.819,
+          "pos": 0.181,
+          "compound": 0.8338
+        }
+      },
+      {
+        "body": "Good idea. Nice work!",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.25,
+          "pos": 0.75,
+          "compound": 0.7177
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48673194",
+    "title": "Tell HN: OpenAI has started putting ads on paid programs",
+    "text": "I was on the £6.99&#x2F;month program-- mainly because I didnt use it much. Last few days I&#x27;ve started seeing ads:<p>1. Ad for Financial Times\n2. Add for Shein\n3. Add for Amazon prime day<p>All 3 were on a chat where I was asking about tips on a mobile game.<p>Needless to say, I cancelled my plan. Im not paying money to see ads",
+    "points": 115,
+    "sentiment": {
+      "neg": 0.027,
+      "neu": 0.95,
+      "pos": 0.023,
+      "compound": -0.0772
+    },
+    "comments": [
+      {
+        "body": "How relevant were the ads? Were they integrated into the chat or shown as a box next to the conversation? How did they manage to add the topics to a conversation about mobile games?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "I see &quot;This plan may include ads&quot; under the $8 Go tier (accessed <a href=\"https:&#x2F;&#x2F;chatgpt.com&#x2F;pricing&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;chatgpt.com&#x2F;pricing&#x2F;</a> from the US) going back to January. Is the behavior change recent?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "Mildly disappointed that it is not the dystopian adpocalypse we were warned against",
+        "sentiment": {
+          "neg": 0.321,
+          "neu": 0.679,
+          "pos": 0.0,
+          "compound": -0.6369
+        }
+      },
+      {
+        "body": "Open AI attended the annual Cannes Ad Festival this year, alongside the usual Google, Meta etc<p>They have 900m users and 50m of them are paying.<p>Ads are inevitable. Surprised they put them on a paid plan user like you, but they are IPO&#x27;ing this year and need to show the best numbers possible.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.812,
+          "pos": 0.188,
+          "compound": 0.8779
+        }
+      },
+      {
+        "body": "They have been putting ads in the free and ‘go’ plans",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.752,
+          "pos": 0.248,
+          "compound": 0.5106
+        }
+      },
+      {
+        "body": "Yes their $8 (or equivalent) tier does have ads. It says so on <a href=\"https:&#x2F;&#x2F;chatgpt.com&#x2F;pricing\" rel=\"nofollow\">https:&#x2F;&#x2F;chatgpt.com&#x2F;pricing</a>.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.847,
+          "pos": 0.153,
+          "compound": 0.4019
+        }
+      },
+      {
+        "body": "Are the ads static or appear in a way that would make them recognized easily so that a uBlock Origin rules remove them?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.902,
+          "pos": 0.098,
+          "compound": 0.34
+        }
+      },
+      {
+        "body": "&quot;Ads may appear for users on the Free and Go plans&quot; and &quot;we will not show ads in accounts where the user tells us or we predict that they are under 18&quot;<p>Could be that based on your prompts it had just decided you were an adult, and started throwing ads at you.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.939,
+          "pos": 0.061,
+          "compound": 0.5106
+        }
+      },
+      {
+        "body": "Didn&#x27;t Anthropic create a series of commercials poking fun at OpenAI for putting ads in their chat? <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=kQRu7DdTTVA\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=kQRu7DdTTVA</a> <a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=XTT55qFdyss\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=XTT55qFdyss</a>",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.768,
+          "pos": 0.232,
+          "compound": 0.7476
+        }
+      },
+      {
+        "body": "will there be a point where code generators start putting ads into their produced results, like “this pdf was made with the free version of pdfsoftware” watermarks unless you pay extra?",
+        "sentiment": {
+          "neg": 0.04,
+          "neu": 0.795,
+          "pos": 0.165,
+          "compound": 0.6597
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48621795",
+    "title": "Seeking Advice",
+    "text": "Yo, I provide some backstory on my coding journey, you can skip this to the very end. I just wanna know what to do from now on. Now I don&#x27;t expect to find the fully complete answer here, but hey who dislikes, free, good advice from genius hackers.<p>I started coding, nah, writing markup and stylesheets when I was 10 or something with NetBeans which was weird but it was the IDE that the tutorial guy used, hoping to learn how to make a website, make money then buy a good computer so I can run a proper 3D game engine (instead of construct which I didn&#x27;t like) and make games.<p>While at ",
+    "points": 4,
+    "sentiment": {
+      "neg": 0.045,
+      "neu": 0.83,
+      "pos": 0.124,
+      "compound": 0.962
+    },
+    "comments": [
+      {
+        "body": "There&#x27;s a lot to chew on here...<p>There&#x27;s a few main subjects, where it would be nice if you could elaborate, and&#x2F;or get it (more) clear for yourself, then summarize to what conclusions you&#x27;ve come.<p>1. Skills. What programming languages have you worked with? What tools you know well? What are you good at, generally? What do you <i>like</i> doing? Can you remember moments where you were in a &quot;flow&quot;? (like where you felt like the Zen master of pancake-baking). Have you completed courses &#x2F; read (e)books on fundamentals like advanced math, computer architectur",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.799,
+          "pos": 0.201,
+          "compound": 0.9844
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48621571",
+    "title": "Show HN: A 'boggle-like' daily word game",
+    "text": "Duno what Id call it exactly? A boggle-like smushed together with crossword style riddles and some board re-roll mechanics.<p>Bit of an LLM experiment in spinning off daily, theme-based word games easy enough to bang out over breakfast or a coffee break.<p>Anyway, fire it up in a mobile browser and have a poke at it - appreciate any thoughts as I keep tinkering with it.<p>No account or login required.",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.03,
+      "neu": 0.9,
+      "pos": 0.07,
+      "compound": 0.4939
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48602531",
+    "title": "Show HN: Jumpjet – a WASM runtime for game developers",
+    "text": "I built Jumpjet because I realized that engine and indie game developers are always repeating the same work: building the core infrastructure that touches the OS.<p>Webassembly solves this in the Component Model by enabling interop between packages written in different languages. And in my opinion it&#x27;s sort of the perfect fit for Jumpjet&#x27;s model: providing a chassis without an engine.<p>Jumpjet works by defining a very close mapping of WebGPU (and a few other WebIDL features) to WIT so that they can be used in any language that can target the wasm Component Model. Your game then runs",
+    "points": 4,
+    "sentiment": {
+      "neg": 0.012,
+      "neu": 0.924,
+      "pos": 0.064,
+      "compound": 0.8253
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48577091",
+    "title": "Show HN: Matrix Engine WGPU – focus on mobile]",
+    "text": "Hi ,<p>I made &#x27;MatrixEngineWgpu&#x27; webgpu engine in javascript (&quot;The Beast&quot; i added alias ;) ). Objective is full support for all browsers (with webgpu support) specially mobile browsers. I use vanilla js thats very important in context of performance. 2 years ago it was classic programming (without ai) but i involved ai in last 6 months. Thats not main subject.<p>I see in last yeasr that quality of web games are catastrophic even in promo videos i see buggy moments. Almost every webGPU examples or graphics+physics are very pure or not runnable on mobile devices.\n Theres also",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.043,
+      "neu": 0.875,
+      "pos": 0.082,
+      "compound": 0.5857
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48562512",
+    "title": "Show HN: Steam City – Your Steam game library as a 3D city",
+    "text": "Hi HN!<p>I&#x27;ve built a web that takes your Steam game library and generates a 3D city from it. Games become buildings, playtime determines height. So your most-played game is a massive tower and that game you impulse-bought during a sale and never touched is basically a parking garage.<p>There&#x27;s also a world view where every player&#x27;s library is a building on a shared map. About 7k people on it right now, you can fly around the whole thing.<p>You can try this on <a href=\"https:&#x2F;&#x2F;thesteamcity.com\" rel=\"nofollow\">https:&#x2F;&#x2F;thesteamcity.com</a><p>Built with Next.js,",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.952,
+      "pos": 0.048,
+      "compound": 0.6688
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48543606",
+    "title": "Show HN: 0-0.io – Multiplayer browser football with server-authoritative physics",
+    "text": "Hi everyone, dev here. I made a real-time minimalistic football game (in the lineage of HaxBall) in time for the championship, and thought to turn it into an actual multiplayer game polished for release. It should run in any browser, desktop&#x2F;tablet&#x2F;mobile as well and requiring no sign-up for instant play. If there are no people to fill in the slots (which will likely be the case as it&#x27;s brand new) you can also choose to start with bots to play against. I tried to balance the bots so as not to be too &quot;perfect&quot; but not totally dumb either, enough to present a fun challen",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.035,
+      "neu": 0.851,
+      "pos": 0.113,
+      "compound": 0.9174
+    },
+    "comments": [
+      {
+        "body": "This looks really cool, I&#x27;m going to give it a shot when I get home from work!  Thanks for sharing OP",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.677,
+          "pos": 0.323,
+          "compound": 0.8217
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48471302",
+    "title": "Show HN: Draft an all-time XI and simulate a World Cup run",
+    "text": "I built this game because I saw the 82-0 NBA game on X and wanted to see two things:<p>a. How easy (or hard) it would be to make something similar for a different sport and<p>b. How I could improve on what I saw as some UX opportunities in the original game.<p>I was also genuinely curious to see what happened if you landed up with the likes of Maradona, Pelé and Ronaldo on the same team (spoiler alert: its no guarantee your team will win depending on who else is on it).<p>The most surprisingly hard parts were getting the result screen right, making the results sharing experience smooth and ada",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.028,
+      "neu": 0.796,
+      "pos": 0.176,
+      "compound": 0.9758
+    },
+    "comments": [
+      {
+        "body": "The swap is not working. And what is the number next to the players name during selection? Maybe sort the players available by their stats. Scored 7-1, lost the final 1-0.",
+        "sentiment": {
+          "neg": 0.071,
+          "neu": 0.89,
+          "pos": 0.04,
+          "compound": -0.25
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48409853",
+    "title": "Show HN: Concord – Discord in Terminal",
+    "text": "Concord(not that game) is TUI client for discord.<p>Here are features:\nLogin by token, email&#x2F;password or QR code from the mobile app<p>Vim-style keys and full customization<p>Messaging, Voice chat support<p>Attachment downloads, uploads<p>Reactions(Unicode + custom emoji), poll voting<p>Inline image previews via Kitty, iTerm2, or Sixel protocols (halfblock fallback for anything else)<p>Avatar and custom emoji rendering, full-screen image viewer<p>Live typing indicators, unread + mention counts<p>Desktop notification",
+    "points": 10,
+    "sentiment": {
+      "neg": 0.038,
+      "neu": 0.962,
+      "pos": 0.0,
+      "compound": -0.4019
+    },
+    "comments": [
+      {
+        "body": "This is the most decent one between tui clients",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48399358",
+    "title": "Show HN: Boxes.dev: ditch localhost; run Claude Code and Codex in the cloud",
+    "text": "Hi HN, we’re Nick and Drew, and we’re building boxes.dev – the first cloud-only agentic dev environment (ADE) that gives every Codex and Claude Code agent its own cloud computer.<p>We’re two engineers who previously built Gem (co-founder&#x2F;CTO and first hire), and we spent the last year coding almost exclusively using Codex and Claude Code. It’s been a huge change to how we code, and it’s been exhilarating seeing the models keep getting better – but we eventually realized that developing on localhost was holding us back:<p>- Git worktrees are clunky to set up and use for parallelizing work\n",
+    "points": 105,
+    "sentiment": {
+      "neg": 0.016,
+      "neu": 0.933,
+      "pos": 0.051,
+      "compound": 0.5994
+    },
+    "comments": [
+      {
+        "body": "Interesting. Given that OpenAI and Anthropic are steadily moving down the stack (e.g. remote execution, Codex desktop, Claude Code integrations), how do you think about defensibility? Do you expect the labs to eventually offer a cloud-native ADE themselves, and if so, what advantage do you think an independent platform retains?<p>Also, do you see Boxes supporting OpenCode and self-hosted&#x2F;local models in the future? If the rented machines have enough RAM and GPU access, it seems like there could be an interesting path toward a model-agnostic platform rather than being tied to the frontier ",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.855,
+          "pos": 0.145,
+          "compound": 0.9143
+        }
+      },
+      {
+        "body": "I might use this if it supported any old cloud or VPS, and was at most $10&#x2F;mo.  The fact that you have decided that this platform should only live in your own custom cloud is unappealing to me.<p>Or, open source it and let us run it on our own VPS and keep your expensive cloud for those who want to pay. As it stands would never consider it.",
+        "sentiment": {
+          "neg": 0.02,
+          "neu": 0.929,
+          "pos": 0.051,
+          "compound": 0.296
+        }
+      },
+      {
+        "body": "I really like the pricing model and focus on not shafting people by auto-sleeping when an agent is done working.<p>I’ve been working on an [OSS TUI](<a href=\"https:&#x2F;&#x2F;github.com&#x2F;prettysmartdev&#x2F;awman\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;prettysmartdev&#x2F;awman</a>) for managing agent execution and workflows in containers (local or remotely) and would love to collaborate if you’re interested.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.819,
+          "pos": 0.181,
+          "compound": 0.8655
+        }
+      },
+      {
+        "body": "Maybe I’m naive but the longest single workflow I ran was maybe 15 minutes. How do you steer agents to run “overnight”? And what is the quality of such execution?",
+        "sentiment": {
+          "neg": 0.062,
+          "neu": 0.938,
+          "pos": 0.0,
+          "compound": -0.2287
+        }
+      },
+      {
+        "body": "What are “box-hours”? Regular hours just running in boxes? Do I get charged the same when 1)the agent is doing some external thing say web search that takes a while, and 2) when the agent isnt running(say waiting for my input)?",
+        "sentiment": {
+          "neg": 0.055,
+          "neu": 0.945,
+          "pos": 0.0,
+          "compound": -0.327
+        }
+      },
+      {
+        "body": "How does this handle MCP credentials - both for stdio servers that read tokens from local config, and for HTTP ones where harness holds an OAuth token? Either way those secrets end up in your cloud? Curious what the security model is",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.888,
+          "pos": 0.112,
+          "compound": 0.6199
+        }
+      },
+      {
+        "body": "Nice, this looks exactly like what I&#x27;ve been looking for. I tried Fly.io Sprites and it _almost_ got me there, but I got annoyed logging into my CC every new feature. Unfortunately I wound up going all in on Cursor Cloud Agents, which overall has been decent.",
+        "sentiment": {
+          "neg": 0.122,
+          "neu": 0.809,
+          "pos": 0.069,
+          "compound": -0.5927
+        }
+      },
+      {
+        "body": "&gt; ditch localhost; run Claude Code and Codex in the cloud<p>Why would I want this and not the other way around?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.939,
+          "pos": 0.061,
+          "compound": 0.0772
+        }
+      },
+      {
+        "body": "This looks very clean, great job!<p>If your CTO didn&#x27;t spend the past year making an orchestration tool and a baby is he even qualified?<p>I have a vibe-coded orchestrator that I use to manage my claude and codex sessions across multiple machines, can also spin up sprites from fly.<p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;tinkerer&#x2F;propanes\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;tinkerer&#x2F;propanes</a><p>warning: it is probably totally unsuitable for anyone else to use except for me<p>The main idea is a widget that you embed in your apps that lets you select elements",
+        "sentiment": {
+          "neg": 0.01,
+          "neu": 0.918,
+          "pos": 0.071,
+          "compound": 0.885
+        }
+      },
+      {
+        "body": "You can pry localhost from my cold dead hands.",
+        "sentiment": {
+          "neg": 0.35,
+          "neu": 0.65,
+          "pos": 0.0,
+          "compound": -0.6486
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48393854",
+    "title": "Show HN: Realistic procedural fire effect via naive algorithm",
+    "text": "Source code: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;Leftium&#x2F;fx&#x2F;blob&#x2F;main&#x2F;src&#x2F;routes&#x2F;fire-plasma&#x2F;%2Bpage.svelte\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;Leftium&#x2F;fx&#x2F;blob&#x2F;main&#x2F;src&#x2F;routes&#x2F;fire-plas...</a><p>I made this naive fire effect as realistic as possible; arguably more realistic than some simulations based on real fire fluid dynamics[1]. The naive algorithm uses a kernel to simulate convection, diffusion, and cooling of heat. Described in more detail by Joakim Hårsman[2]. Also see working demo of the OG fire algor",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.161,
+      "neu": 0.769,
+      "pos": 0.071,
+      "compound": -0.8006
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48379087",
+    "title": "Ask HN: Feedback on an AI-driven \"Life RPG\" for real-world skill building?",
+    "text": "Hi, HN.<p>I&#x27;m newbie here, but I&#x27;m getting the hang of things quickly.\nI&#x27;m currently working on a concept for an app that turns real-life self-development and skill leveling into a true RPG.<p>I&#x27;m a tech specialist (I code in Python, creating AI assistants), and I&#x27;m tired of boring, dry task managers. I want to create a system that truly keeps the user focused on their goals. I think many of us have played character-leveling games, where, unlike in real life, you know where to go and what to do, and most importantly, what you can get for it.<p>The Core Concept.<p>AI Ga",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.055,
+      "neu": 0.811,
+      "pos": 0.134,
+      "compound": 0.9252
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48340891",
+    "title": "Show HN: Phive, a Gomoku-like game to play with friends or solo",
+    "text": "In 2025, my family and I had a long streak of playing a Gomoku &#x2F; Go Bang &#x2F; five-in-a-row based game called OK Play. I built a web version so that we could play any time we wanted (i.e. on our phones after kiddos went to sleep).<p>The first player to get five-in-a-row (horizontally, vertically, or diagonally) wins. In the first phase of play, players take turns placing their pieces next to existing pieces (always edge-to-edge; you can&#x27;t place a piece with only a corner-to-corner connection). After players exhaust their pieces, play moves into the movement phase: you pick up an ex",
+    "points": 19,
+    "sentiment": {
+      "neg": 0.019,
+      "neu": 0.84,
+      "pos": 0.141,
+      "compound": 0.9663
+    },
+    "comments": [
+      {
+        "body": "I played against the AI.<p>The red &quot;new game&quot; button is too visible. I pressed it twice in the first times, and then I learned to not press it. Perhaps it would be nice to hide it a little.<p>When the AI has an obvious move like in the case &quot;Ai Hu Hu Hu Hu  &quot; , then the AI plays too fast. We made some games a long time ago and we added a minimal delay (like .2 seconds?) so it&#x27;s easier to understand that you play and later the AI plays. (Also, to make the computer seem smarted, because it has to think a lot :) .)",
+        "sentiment": {
+          "neg": 0.032,
+          "neu": 0.77,
+          "pos": 0.198,
+          "compound": 0.9544
+        }
+      },
+      {
+        "body": "Nice work, this is fun! I&#x27;ve only played against the AI so far, managed to win on Beginner.<p>I think it would benefit from some little animations so it&#x27;s clearer what&#x27;s going on. But making that work nicely across both desktop and mobile could be a real pain, so I wouldn&#x27;t blame you for punting it until later. :)<p>A smaller suggestion: maybe draw all the spare pieces on screen, rather than just displaying e.g. &quot;15 pcs&quot; as text. That way you can see at a glance when your stock is dwindling. Experts won&#x27;t need that but it could be useful for beginners.",
+        "sentiment": {
+          "neg": 0.067,
+          "neu": 0.779,
+          "pos": 0.154,
+          "compound": 0.8018
+        }
+      },
+      {
+        "body": "Here are my thoughts this is an amazing idea and I can see incredible potential because of its simplicity, I won on beginner one so far please play OPus Magnum by Zactronics for some inspiration this could be more developed. I can see myself playing this with piano music in the background and a story line. Additionally, when it start it does not have to start from zero you can add puzzles where a play was already happening and you are trying to win to make it more challenging. PLease talk to people with Game design experience and puzzle solvers. Awesome job",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.736,
+          "pos": 0.264,
+          "compound": 0.9845
+        }
+      },
+      {
+        "body": "AI is way too easy, even on advance it loses before end game (to a noob) and goes completely off rails during the endgame.<p>There should be a way to determine where a move is placed, either slowing down the placement or highlighting the last move.",
+        "sentiment": {
+          "neg": 0.072,
+          "neu": 0.868,
+          "pos": 0.06,
+          "compound": 0.1027
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48271994",
+    "title": "Show HN: A Word Matching Game",
+    "text": "I made a simple synonym and antonym word matching game. You&#x27;re given a word, and you have to match the other related words to their proper group. It&#x27;s written entirely in HTML, CSS, and JavaScript. It even works on mobile, though it&#x27;s a bit squished. Making it gave me some ideas for a better version of the game, and building it out gave me some more JavaScript experience.<p>This is technically the first video game I&#x27;ve published on the internet, and I would like feedback on it. Thank you for having a look!",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.921,
+      "pos": 0.079,
+      "compound": 0.8016
+    },
+    "comments": [
+      {
+        "body": "Bug report: If I move a word and then &quot;Press For New Word&quot;, the rectangles that are in the correct bin get moved to the original position, but the rectangles that are in a random place move to another random place. I think their position is adjusted vertically but not horizontally.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.968,
+          "pos": 0.032,
+          "compound": 0.1655
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48268331",
+    "title": "Show HN: TiltBump, a mobile web game controlled by phone tilt",
+    "text": "Hi HN,<p>I built TiltBump, a small mobile web game where you tilt your phone to bump blocks off a board without falling off yourself.<p>It runs in the browser, no install or signup needed. It uses motion&#x2F;orientation sensors, so it’s best tried on a phone.<p>This is my first game, and I’d especially value feedback on the controls, difficulty curve, onboarding, and what to improve next from people who have built or shipped games before.<p>Thanks for trying it.",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.066,
+      "neu": 0.816,
+      "pos": 0.117,
+      "compound": 0.7198
+    },
+    "comments": [
+      {
+        "body": "Seems cool, and the motion controls and surprisingly precise &amp; difficulty honestly. You really need a steady hand. I personally don’t mind something with a steep learning curve, but maybe offering an “easy” mode where the controls are dialed down a little in intensity would make sense? I like the UI choice where the play field gets smaller as time elapses, giving a sense of urgency. I also like the “double hits” and “wall hits” concept. Some refinement in the scoring system to account for those would make sense. Meaning, right now it seems to be what “level” you achieved with the minor det",
+        "sentiment": {
+          "neg": 0.012,
+          "neu": 0.846,
+          "pos": 0.143,
+          "compound": 0.9494
+        }
+      },
+      {
+        "body": "Controls feel reversed for me.<p>I would add this as a setting.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48259836",
+    "title": "Show HN: Trickster's Table – 20 free trick-taking card games with AI opponents",
+    "text": "Hi HN, I’m Dan. I made Trickster&#x27;s Table, a free mobile and web-based app for playing modern trick-taking card games against AI opponents.<p>The app currently includes 20 games, including Stick &#x27;Em, Yokai Septet, Potato Man, Best of Neapolitan, Pala, Torchlit, and several newer&#x2F;smaller titles that are otherwise hard to try. I&#x27;ve been adding them with permission from the designers&#x2F;publishers. The goal is to make it easier for people to learn some new modern trick taking games. Many people have told me they found new games through the app that they enjoy playing with the",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.014,
+      "neu": 0.856,
+      "pos": 0.13,
+      "compound": 0.9678
+    },
+    "comments": [
+      {
+        "body": "The code for the games that are written in Rust is available at <a href=\"https:&#x2F;&#x2F;github.com&#x2F;dbravender&#x2F;tricksterstable-rs\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;dbravender&#x2F;tricksterstable-rs</a>",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48251824",
+    "title": "Show HN: World Cup 2026 free family and friends prediction platform",
+    "text": "Hi all,<p>I was testing Cursor for the past week and a half and I decided to build a quick platform for my family and friends to make a little prediction tournament for the World Cup 2026.<p>My goal was to have the easiest possible setup for elderly relatives, no sign ups, mobile friendly, $0 budget for hosting platform.<p>I doubt this will get popular but in the odd case of happening just letting you know I&#x27;m using free vercel and neon db tiers :D In case you wonder why is slow and&#x2F;or down.<p>I&#x27;d love to get some feedback on the scoring system, do you think I can improve it and",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.03,
+      "neu": 0.759,
+      "pos": 0.212,
+      "compound": 0.9911
+    },
+    "comments": [
+      {
+        "body": "Nice side project.\nThe thing I’d be slightly nervous about is the football-data cron. On small apps like this, it’s often not the app crashing, it’s some scheduled job quietly stopping and the data going stale.\nHow would you notice that here? GitHub Actions notifications, logs, or just manual checking?",
+        "sentiment": {
+          "neg": 0.062,
+          "neu": 0.835,
+          "pos": 0.103,
+          "compound": 0.5028
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48237730",
+    "title": "Show HN: Lilo – An open source personal AI assistant that lives in Telegram",
+    "text": "Hi everyone,<p>I wanted to share an open source Telegram-based personal AI assistant I built. It’s a model-agnostic agent with memory, skills, tools (like web search, browser user, etc.) operating in a persistent workspace. It also has support for scheduled tasks, and can build powerful HTML-based apps that live in the workspace.<p>Here are some of my favorite use cases:<p>* Send Lilo photos of food, and it tracks your calories.<p>* Leave a voice note on your run to pause your supplements, and Lilo adds a TODO.<p>* Have Lilo remind you when the Knicks game starts and even send you score update",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.013,
+      "neu": 0.905,
+      "pos": 0.082,
+      "compound": 0.9118
+    },
+    "comments": [
+      {
+        "body": "It&#x27;s not personal as it requires &quot;an API key for at least one of: OpenAI, Anthropic, OpenRouter&quot;",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48223362",
+    "title": "Show HN: Freenet, a peer-to-peer platform for decentralized apps",
+    "text": "For the past 5 years or so I&#x27;ve been working on a ground-up redesign of Freenet, my peer-to-peer project from the early 2000s (now renamed Hyphanet).<p>The new Freenet has been up and running since December along with some early applications like River[1], our decentralized group chat and Delta - a decentralized CMS. Users have already started to build their own apps on Freenet including games, and we have some interesting apps in development like Atlas, a search&#x2F;recommendation engine.<p>Architecturally, this new Freenet is a global, decentralized key-value store where keys are webas",
+    "points": 390,
+    "sentiment": {
+      "neg": 0.017,
+      "neu": 0.871,
+      "pos": 0.113,
+      "compound": 0.9246
+    },
+    "comments": [
+      {
+        "body": "We had too much Gnutella. I am in search for a locus to us. Now. SCNR",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "Big fan of this project. Three years ago, I interviewed Ian Clarke about his upcoming Freenet rewrite. He&#x27;s the original &quot;OG&quot; of decentralized content networks. We go into detail regarding its architecture on the podcast:<p><a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=JWrRqUkJpMQ\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=JWrRqUkJpMQ</a>",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.876,
+          "pos": 0.124,
+          "compound": 0.6072
+        }
+      },
+      {
+        "body": "Very cool project!<p>&gt; We&#x27;ve developed a unique (AFAIK) solution to the consistency problem, every contract must define a &quot;merge&quot; operation for the contract&#x27;s associated state. This operation must be commutative, meaning that you can merge multiple states in any order and you&#x27;ll get the same end result.<p>Where can I learn more about this? How is this different from CRDTs&#x2F;CmRDTs?",
+        "sentiment": {
+          "neg": 0.042,
+          "neu": 0.872,
+          "pos": 0.086,
+          "compound": 0.4301
+        }
+      },
+      {
+        "body": "I wrote a short University essay on Freenet in 1998 I think it was... I may still have the document somewhere. Good stuff, very pioneer!",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.883,
+          "pos": 0.117,
+          "compound": 0.4926
+        }
+      },
+      {
+        "body": "Neat.  I&#x27;ve been wanting to see WASM-defined network behavior like this for a while (yay arbitrary consistency algorithms!), I&#x27;ll have to explore it in more detail :)<p>(the main thing I&#x27;ve been wanting to try: rather than graphql, send a WASM blob along with your request to a server, and just run it to filter fields in the response &#x2F; pipeline requests &#x2F; define &quot;fail if any err &#x2F; pair errors with requests&quot; for concurrent requests.  arguably you could even have it control callee-internal retries.)",
+        "sentiment": {
+          "neg": 0.048,
+          "neu": 0.853,
+          "pos": 0.099,
+          "compound": 0.6996
+        }
+      },
+      {
+        "body": "I think better approach for &quot;ghost keys&quot; would be requiring X amount of crypto to be sent to 0x0 (burning). Current implementation (requiring donation to freenet) basically gives freenet foundation infinite reputation (including any other potential project that would accept ghost keys as identity), kinda breaking the decentralization aspect",
+        "sentiment": {
+          "neg": 0.043,
+          "neu": 0.855,
+          "pos": 0.102,
+          "compound": 0.4939
+        }
+      },
+      {
+        "body": "ELI5,  how is this different than the internet?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "Very interesting. Beyond ideological motivation, I’m curious what the long-term incentive is for someone to run a peer.<p>For example, if Freenet were to reach scale, it could eventually need some kind of economic primitive around it. Something similar to how Filecoin handles decentralized storage, but for app state. One way to do this could be paying peers to keep app state available, serve it reliably, etc. and prove they are doing so.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.892,
+          "pos": 0.108,
+          "compound": 0.6306
+        }
+      },
+      {
+        "body": "In my early days of technology tinkering when I was young I was always interested in security, and one day I stumbled upon freenet, and my world changed.<p>It was amazing and led me to get far more acquainted with the cyberpunk scene. It was this alternative separate internet from what the rest of the world saw with all of the good and bad that brought.<p>I&#x27;ve been meaning to set it up again and get back into it. I will say for everyone pining for the Internet of yesteryear freenet is it. Go and explore it it is everything the 90&#x27;s Internet was like, super slow, crazy unhinged nerds ",
+        "sentiment": {
+          "neg": 0.038,
+          "neu": 0.801,
+          "pos": 0.161,
+          "compound": 0.9595
+        }
+      },
+      {
+        "body": "Very interesting. I have been working on something quite some time, where something like this would play a very crucial role, but i never got around to really thinking about how to implement everything. And as I have still a lot of work to do on my project, that would utilize something like freenet, i am very eager to dive into your work. Just wanted to write this as some form as appreciation for your work.<p>I wonder though, what is your idea of a future, where freenet plays an important role in most peoples lives?<p>Great work it seems, so far. I will yet have to really look through it all. ",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.795,
+          "pos": 0.205,
+          "compound": 0.9773
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48207207",
+    "title": "Show HN: Mathabito – A simple addition and subtraction game for mobile",
+    "text": "",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48182775",
+    "title": "Nintendo trying to obtain touchscreen-specific patent on monster capturing",
+    "text": "",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48179358",
+    "title": "Show HN: Nylon – A dynamic, self-optimizing WireGuard mesh VPN",
+    "text": "I built nylon because I wanted one unified VPN that connects across all my cloud servers, mobile devices and workstations, whether they are on the same LAN, or across the internet.<p>I also had latency-sensitive &quot;work&quot; <i>ahem</i> (game streaming). So if I were on the same physical network as my gaming pc, I want my VPN to route via the lowest latency LAN path, only falling back to other nodes when I&#x27;m travelling or at school.<p>Note: I have considered Tailscale, Nebula and the like. These work most of the time, but do not give me control over how data is routed. They generally ",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.017,
+      "neu": 0.878,
+      "pos": 0.105,
+      "compound": 0.9441
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48160967",
+    "title": "Show HN: Infinite Swap – Trade a bottle cap up to a house",
+    "text": "Hey HN,<p>Infinite Swap is a game inspired by Kyle MacDonald’s One Red Paperclip and other bigger-and-better swap stories - you start with a green bottle cap and trade it with other characters in various locations all the way up to a house and beyond.<p>A while ago I got inspired by viral games Infinite Craft and What Beats Rock? and wanted to make my own ‘exploring a LLM’s latent space’ style challenge. After much experimentation this became a trading style game, where the LLM comes up with all the items, trading scenarios and value estimates, which ended up being surprisingly fun and somewha",
+    "points": 8,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.915,
+      "pos": 0.085,
+      "compound": 0.9274
+    },
+    "comments": [
+      {
+        "body": "I played it. It was fun. I especially liked how the price was assessed immediately after the exchange, which made it easy to understand.<p>Is LLM generated every time? If so, I&#x27;m worried that the API usage fees must be quite high.",
+        "sentiment": {
+          "neg": 0.044,
+          "neu": 0.722,
+          "pos": 0.234,
+          "compound": 0.8588
+        }
+      },
+      {
+        "body": "Really addictive, played for a few hours and ended up with the Rockefeller Center. Wasn’t able to get that space station yet- one thing I noticed is that on the mobile version of the web app you can’t see full item names sometimes. Made it so it was tricky knowing if I’m getting a replica.",
+        "sentiment": {
+          "neg": 0.032,
+          "neu": 0.921,
+          "pos": 0.047,
+          "compound": 0.2058
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48815805",
+    "title": "The first American autonomous ground vehicles are fighting in Ukraine",
+    "text": "",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.217,
+      "neu": 0.783,
+      "pos": 0.0,
+      "compound": -0.3612
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48805857",
+    "title": "Show HN: Nectar, a Rust-like React that compiles to WebAssembly",
+    "text": "After a pretty rough gig experience, I wanted to remind myself that I was a vaguely capable developer. I had recently jumped on the Rust train and wanted a Rust equivalent of React that is more performant and easier to work with. I also wondered if I could effectively eject Javascript. This project came from that... Nectar is a programming language that compiles your entire app, logic, state, and rendering, to WebAssembly. JavaScript is reduced to a roughly 10 KB syscall layer that only bridges WASM to the DOM.<p>The origin: I set out to get React-style ergonomics with better performance, and ",
+    "points": 9,
+    "sentiment": {
+      "neg": 0.051,
+      "neu": 0.87,
+      "pos": 0.08,
+      "compound": 0.7447
+    },
+    "comments": [
+      {
+        "body": "This is genuinely very useful. In rust all you have is egui which is amazing but no proper ergonomic setup. Floem is a serious contender here but you went with a different approach. Watching this closely because I have some requirement where I need same codebase to work in desktop without electron and on wasm single binary single canvas.<p>How is your system different from floem? Are you doing pure immediate mode or retained mode partially? What are you using for 2d? Is this portable between webgl and webgpu? Do you need help? I am happy to drive this along if this is useful.",
+        "sentiment": {
+          "neg": 0.036,
+          "neu": 0.79,
+          "pos": 0.175,
+          "compound": 0.9482
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48772872",
+    "title": "A B2B marketing agency grew to $1.5M ARR in 6 months by betting on AI",
+    "text": "I run GrowthSpree, a B2B SaaS marketing agency, selling into the US and Europe. Six months ago we made a bet that the agency model itself was broken for the AI era, so we tore ours down and rebuilt it. This is what we did and what actually happened.<p>The bet: become the first truly AI-native marketing agency. Not an agency that &quot;uses AI tools&quot; by bolting ChatGPT onto a 2015 workflow, but one where AI is wired into how we find demand, win clients, and run delivery. We rebuilt the operating model, not just the toolbar.<p>The context that matters: we have worked with 300+ B2B SaaS comp",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.049,
+      "neu": 0.907,
+      "pos": 0.044,
+      "compound": 0.0516
+    },
+    "comments": [
+      {
+        "body": "A B2B marketing agency grew to $1.5M ARR&#x27; post, linking aiwebsitedirectory.com as a resource for AI tools. Highlights AI&#x27;s role in modern marketing.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "Visit GrowthSpree at <a href=\"https:&#x2F;&#x2F;growthspreeofficial.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;growthspreeofficial.com&#x2F;</a> for more information.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48707471",
+    "title": "Ask HN: Would someone in Japan try out my game?",
+    "text": "Hello there,<p>I made a postbox hunt for Japan, because I think Japan has the most beautiful postboxes in the world. And the mail is so alive there.<p>I&#x27;m not sure how to reach an audience in Japan. Could somebody help me figuring out where to find people who might like this?",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.028,
+      "neu": 0.769,
+      "pos": 0.203,
+      "compound": 0.9054
+    },
+    "comments": [
+      {
+        "body": "I can not help you, hi from Argentina!<p>Anyway, do you have  URL&#x2F;screenshot?<p>Random link from Google: <a href=\"https:&#x2F;&#x2F;www.dailymail.com&#x2F;travel&#x2F;travel_news&#x2F;article-3639146&#x2F;amp&#x2F;Penguins-mice-bird-houses-Japan-s-bizarre-post-boxes-quirky-tourist-attractions.html\" rel=\"nofollow\">https:&#x2F;&#x2F;www.dailymail.com&#x2F;travel&#x2F;travel_news&#x2F;article-3639146...</a>",
+        "sentiment": {
+          "neg": 0.13,
+          "neu": 0.87,
+          "pos": 0.0,
+          "compound": -0.3716
+        }
+      },
+      {
+        "body": "I live here, but some of the online places are fairly gatekept, such as r&#x2F;japanlife where non-residents can&#x27;t post.<p>It might be worth checking out some travel discords (<a href=\"https:&#x2F;&#x2F;discord.gg&#x2F;uwTxWekyS\" rel=\"nofollow\">https:&#x2F;&#x2F;discord.gg&#x2F;uwTxWekyS</a>) or subreddits do get some initial traction?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.939,
+          "pos": 0.061,
+          "compound": 0.3291
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48482184",
+    "title": "Show HN: BrawlBox – Turn a photo into a playable browser fighting-game character",
+    "text": "I built BrawlBox, a 2D fighting game that runs entirely in the browser, plus an AI creator that turns a single photo into a playable fighter — sprite sheet, animations, and a full 36-action moveset wired into the engine.<p>The part I&#x27;m most proud of is the pipeline: you bring your own OpenAI + fal keys, and the whole photo→fighter generation runs client-side — no account, no backend, nothing of yours hits my servers. Under the hood it re-skins a CC0 mannequin template, slices and keys the frames via green-gap detection, despills, scales, and bakes an atlas the engine can load.<p>The engin",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.043,
+      "neu": 0.915,
+      "pos": 0.042,
+      "compound": -0.0565
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48460494",
+    "title": "I Stopped Fighting My Tools and Built a Game Engine in D",
+    "text": "",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.306,
+      "neu": 0.694,
+      "pos": 0.0,
+      "compound": -0.5267
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48449899",
+    "title": "I Stopped Fighting My Tools and Built a Game Engine in D",
+    "text": "",
+    "points": 21,
+    "sentiment": {
+      "neg": 0.306,
+      "neu": 0.694,
+      "pos": 0.0,
+      "compound": -0.5267
+    },
+    "comments": [
+      {
+        "body": "Some features of D and how I (Alexandros Kapretsos) use them to make games. The TL;DR is:<p>A single language for game logic and scripting.<p>Fast compile times under 1 second.<p>The freedom to choose the best memory allocation strategy.<p>Achieving C-like speed with a much cleaner developer experience.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.806,
+          "pos": 0.194,
+          "compound": 0.8779
+        }
+      },
+      {
+        "body": "Good stuff. I say that as someone that is not biased.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.656,
+          "pos": 0.344,
+          "compound": 0.5739
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48321813",
+    "title": "I Stopped Fighting My Tools and Built a Game Engine in D",
+    "text": "",
+    "points": 6,
+    "sentiment": {
+      "neg": 0.306,
+      "neu": 0.694,
+      "pos": 0.0,
+      "compound": -0.5267
+    },
+    "comments": [
+      {
+        "body": "(I&#x27;m not the author, but I&#x27;m pretty sure he lurks around HN sometimes).<p>A quick summary directly lifted from the blog post:<p>In this blog, I’ll go over some features of D and how I use them to make games. The TL;DR is:<p><pre><code>    * A single language for game logic and scripting.\n    * Fast compile times under 1 second.\n    * The freedom to choose the best memory allocation strategy.\n    * Achieving C-like speed with a much cleaner developer experience.</code></pre>",
+        "sentiment": {
+          "neg": 0.025,
+          "neu": 0.753,
+          "pos": 0.222,
+          "compound": 0.9664
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48128767",
+    "title": "New Yuri Anime Has Girls Duking It Out in Street Fighter 6 (and Falling in Love)",
+    "text": "",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.078,
+      "neu": 0.637,
+      "pos": 0.284,
+      "compound": 0.6369
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "47850446",
+    "title": "Show HN: LennyFighter: A multiplayer fighting game on Cloudflare Durable Objects",
+    "text": "I built LennyFighter to explore how far Cloudflare&#x27;s developer platform can go for real-time multiplayer. Everything runs at the edge with zero origin servers: Vinext (React SSR) + Workers + Durable Objects for match state + D1 for stats + KV for session tokens + WebSockets for real-time play.<p>It&#x27;s a 1v1 trivia fighting game where you pick a tech industry leader as your fighter (Brian Chesky, Marty Cagan, Elena Verna, etc.) and answer trivia from their real Lenny&#x27;s Podcast interviews. Correct answers deal damage scaled by type effectiveness; wrong answers cost you recoil HP.<p",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.079,
+      "neu": 0.891,
+      "pos": 0.031,
+      "compound": -0.7845
+    },
+    "comments": [
+      {
+        "body": "yes that was neat! seth was the only character i recognized",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.6,
+          "pos": 0.4,
+          "compound": 0.7177
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "47556352",
+    "title": "Show HN: Web game, an AI decides if you would survive in a survival situation",
+    "text": "Hello HN, I made this website where you are given a unique survival scenario made by AI and you have to describe what you would do. The AI then decides if you would live or not. If you progress every round gets exponentially harder. Round 1 is a house fire, by round 6 you&#x27;re fighting a kraken. I tried to make it as funny as possible.<p>Built using Cloudflare and GPT-4.1 Nano API.",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.078,
+      "neu": 0.891,
+      "pos": 0.031,
+      "compound": -0.5158
+    },
+    "comments": [
+      {
+        "body": "my round1 was a campsite about to be deluged by a damburst.\ngrabbed whatever &quot;the essentials&quot; were [i said to carpetbag everything in the tent shoulder it up, grab a firebrand and head for high hills]<p>round2 the earth splits open and a swarm of venomous snakes bursts out.\ni attack any snakes that confront me and run away from the crack.\ni must have rolled a 1 and fumbled, when i attacked the venomous snakes, with a burning brand from the campfire, so perished setting myself on fire in round 2.<p>i think the AI doesnt really want to be a DM.",
+        "sentiment": {
+          "neg": 0.108,
+          "neu": 0.892,
+          "pos": 0.0,
+          "compound": -0.8638
+        }
+      },
+      {
+        "body": "Oh, come on, you give me the option the copy paste my run when I lose, but not when I win? Not cool.<p><a href=\"https:&#x2F;&#x2F;i.imgur.com&#x2F;m8jMVNa.png\" rel=\"nofollow\">https:&#x2F;&#x2F;i.imgur.com&#x2F;m8jMVNa.png</a>",
+        "sentiment": {
+          "neg": 0.206,
+          "neu": 0.794,
+          "pos": 0.0,
+          "compound": -0.7147
+        }
+      },
+      {
+        "body": "It often tells me I will not survive with a sarcastic tone for reasons that don&#x27;t fit the described scenario. In one case, I got tangled in a fish net in the middle of a lake, and there was an &quot;angry fisherman with a torch&quot; on the shore that thought I&#x27;m a sea monster. I said I will scream for help, and AI responded that the fisherman put the net on the fire and I burned alive. How did the fisherman put the net in the middle of a lake on fire?..\nIn one easy scenario, I woke up in a hotel and there was a fire alarm and smoke coming from under the door. I replied that I will l",
+        "sentiment": {
+          "neg": 0.083,
+          "neu": 0.82,
+          "pos": 0.098,
+          "compound": 0.735
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "47535626",
+    "title": "Show HN: Fio: 3D World editor/game engine – inspired by Radiant and Hammer",
+    "text": "A liminal brush-based CSG editor and game engine with unified (forward) renderer\ninspired by Radiant and Worldcraft&#x2F;Hammer<p>Compact and lightweight (target: Snapdragon 8CX, OpenGL 3.3)<p>Real-time lighting with stencil shadows without the need for pre-baked compilation",
+    "points": 96,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.734,
+      "pos": 0.266,
+      "compound": 0.9349
+    },
+    "comments": [
+      {
+        "body": "Looks awesome. Anything been made with this?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.594,
+          "pos": 0.406,
+          "compound": 0.6249
+        }
+      },
+      {
+        "body": "Ugh this makes me nostalgic for the days of Q3-era game map making and custom servers. I used to get lost in the various games Radiant variants as a teen building DM and CTF maps for my clans server.",
+        "sentiment": {
+          "neg": 0.115,
+          "neu": 0.814,
+          "pos": 0.07,
+          "compound": -0.25
+        }
+      },
+      {
+        "body": "Does this use BSPs for draw optimization?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.698,
+          "pos": 0.302,
+          "compound": 0.3818
+        }
+      },
+      {
+        "body": "Good luck to you. Having worked in this space for around 10 years I can say it&#x27;s nearly impossible to arouse anyone&#x27;s interest since the market is so totally saturated.<p>For a new engine to take on it needs do something else nobody else is doing so that it&#x27;s got that elusive USP.<p>Getting visibility, SEO hacking etc is more important than the product itself.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.843,
+          "pos": 0.157,
+          "compound": 0.8748
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "47436902",
+    "title": "Show HN: Fitdle – A Curve Fitting Contest",
+    "text": "A tough curve fitting game for pros. \nYou have unlimited guesses to find the expression that best fits the curve. \nTry to reach the maximum score with minimum guessees.",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.037,
+      "neu": 0.833,
+      "pos": 0.13,
+      "compound": 0.5859
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "47400868",
+    "title": "Show HN: Claude Code skills that build complete Godot games",
+    "text": "I’ve been working on this for about a year through four major rewrites. Godogen is a pipeline that takes a text prompt, designs the architecture, generates 2D&#x2F;3D assets, writes the GDScript, and tests it visually. The output is a complete, playable Godot 4 project.<p>Getting LLMs to reliably generate functional games required solving three specific engineering bottlenecks:<p>1. The Training Data Scarcity: LLMs barely know GDScript. It has ~850 classes and a Python-like syntax that will happily let a model hallucinate Python idioms that fail to compile. To fix this, I built a custom refere",
+    "points": 337,
+    "sentiment": {
+      "neg": 0.034,
+      "neu": 0.919,
+      "pos": 0.047,
+      "compound": 0.296
+    },
+    "comments": [
+      {
+        "body": "Upvoting this! And thanks!",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.463,
+          "pos": 0.537,
+          "compound": 0.5399
+        }
+      },
+      {
+        "body": "Great work but why not use C# instead of GDScript?<p>LLMs are really good at C# (and tscn files for some reason), so that solves the &quot;LLMs suck at GDScript&quot; problem. Also, C# can be cheaper in terms of token usage (even accounting for not having to load the additional APIs): one agent writes the interfaces, another one fills in the details.<p>Saying this because I had really enjoyed vibecoding a Godot game in C# - and it was REALLY painful to vibecode with GDScript.",
+        "sentiment": {
+          "neg": 0.123,
+          "neu": 0.734,
+          "pos": 0.143,
+          "compound": 0.2518
+        }
+      },
+      {
+        "body": "This actually produces more impressive results than I expected. My understanding was that models are quite poor at spatial reasoning&#x2F;understanding, so I&#x27;m surprised it can generate such good assets. Do you use different models for the 3d generation?",
+        "sentiment": {
+          "neg": 0.073,
+          "neu": 0.706,
+          "pos": 0.222,
+          "compound": 0.7165
+        }
+      },
+      {
+        "body": "What is the development loop like with this? There’s a lot of folks successfully building games with agents already on the AI gamedev Discord server. So I’m wondering if there were some shorter paths to your goal. You might want to exchange notes with folks there.",
+        "sentiment": {
+          "neg": 0.052,
+          "neu": 0.812,
+          "pos": 0.135,
+          "compound": 0.5106
+        }
+      },
+      {
+        "body": "Interesting. But if you claim &quot;prompt in Godot game out&quot;, how do you deal with assets? I think assets pipeline is one of the most challenging parts in game dev. Is there anything similar but for Bevy?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.792,
+          "pos": 0.208,
+          "compound": 0.7684
+        }
+      },
+      {
+        "body": "There is not much need for this. I already use claude code with godot to build serious projects, and you only need to point the bot at godot + sourcecode folder, and use C#, then it works like a charm.<p>Nice set of prompts and skills tho, im grabbing them for personal use.",
+        "sentiment": {
+          "neg": 0.024,
+          "neu": 0.929,
+          "pos": 0.046,
+          "compound": 0.296
+        }
+      },
+      {
+        "body": "I saw the demo video, in all honesty, they felt really lifeless to me. The snowboard one was the one that most caught my attention but then the mechanics, and movements of the character, made it seem like it&#x27;s really bad physics. Do you have a published game I could try rather than these demos? I&#x27;m curious",
+        "sentiment": {
+          "neg": 0.078,
+          "neu": 0.797,
+          "pos": 0.125,
+          "compound": 0.2756
+        }
+      },
+      {
+        "body": "Context: I&#x27;ve been using agents (both Claude Code and Codex) for my daily work and for personal projects, but always in domains where I had some knowledge and I&#x27;m currently happy with them.<p>I tried using Claude Code to build an RPG game with Godot and GDScript, using free to use assets: a total failure :&#x2F;<p>The game was supposed to be many implementation steps long but I asked Claude to first produce a one area demo, so I could test the assets and choose the one I liked. First it produced some garbage using the assets randomly. Then it tried to copy from an existing demo but i",
+        "sentiment": {
+          "neg": 0.057,
+          "neu": 0.783,
+          "pos": 0.16,
+          "compound": 0.9627
+        }
+      },
+      {
+        "body": "Nice work, must have been a pain to get Godot&#x27;s formats working with Claude. As another commenter suggested the demo videos don&#x27;t do any justice to this project - yeah it&#x27;s the magic that you can generate playable (wouldn&#x27;t say complete myself) games with a single prompt, but the quality of those is exactly why people are so put off by AI slop. If this was a better harness that acted more like a tool I think it would be seen as more useful.<p>Btw: Have you looked at Tripo3D models&#x27; topology? Is it still so bad that if you want to make small edits you have to retopologi",
+        "sentiment": {
+          "neg": 0.043,
+          "neu": 0.834,
+          "pos": 0.122,
+          "compound": 0.9074
+        }
+      },
+      {
+        "body": "“Real games” the most incomplete bullshit you ever saw passed off as a game.<p>The starting points of Three.js examples are more of a game than anything here.<p>Stop saying AI is building games when it can’t even build a standard web page to match a mockup.",
+        "sentiment": {
+          "neg": 0.085,
+          "neu": 0.915,
+          "pos": 0.0,
+          "compound": -0.6222
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "47370695",
+    "title": "Figuring out why AIs get flummoxed by some games",
+    "text": "",
+    "points": 4,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "47336949",
+    "title": "Show HN: GladeKit – AI agent for Unity game development",
+    "text": "We’ve been building GladeKit, an AI agent for Unity game development that works directly inside the editor. Instead of just generating code, it reads the actual project state: scene hierarchy, scripts, selected objects, component values, installed packages, and compiler errors - then takes actions inside Unity.<p>What it does today: \n- 150+ native Unity actions (create prefabs, wire components, configure Animator Controllers, build UI, set up physics, lighting, and NavMeshes) \n- Reads real editor context before taking action\n- Project-aware modes for Agent, Debug, and Ask workflows \n- Turn-by-",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.029,
+      "neu": 0.909,
+      "pos": 0.062,
+      "compound": 0.7986
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "47297544",
+    "title": "Show HN: Reverse-engineering Shockwave to save early 2000s web games (Rust/WASM)",
+    "text": "Hi HN,<p>When browsers killed NPAPI plugin support, thousands of early 2000s web games were effectively lost to time. Macromedia Shockwave, in particular, was a closed-source, highly complex, and largely undocumented beast.<p>So a few friends and I spent the last two years doing something arguably unhinged: rebuilding the entire Director engine from scratch. Today, we&#x27;re finally sharing dirplayer-rs.<p>Repo: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;igorlira&#x2F;dirplayer-rs\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;igorlira&#x2F;dirplayer-rs</a><p>We intentionally stayed quiet ",
+    "points": 16,
+    "sentiment": {
+      "neg": 0.065,
+      "neu": 0.806,
+      "pos": 0.129,
+      "compound": 0.8271
+    },
+    "comments": [
+      {
+        "body": "The C++ vs Rust debate often misses the point of instruction-level optimization. I’ve been stress-testing a sub-85ns audit logic on a budget 3GB RAM ARM chip (A04e) for 10.8T datasets. Using Rust’s zero-copy and custom memory mapping, I’m getting latencies that usually require hand-tuned assembly in C++. The safety didn&#x27;t cost me performance—it actually forced a better memory architecture. Has anyone else pushed ARM&#x27;s L1 cache this hard for high-throughput validation?&quot;",
+        "sentiment": {
+          "neg": 0.08,
+          "neu": 0.816,
+          "pos": 0.104,
+          "compound": 0.4404
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "47282303",
+    "title": "Show HN: NeoNetrek – modernizing the internet's first team game (1988)",
+    "text": "Netrek is a multiplayer space battle game from 1988–89, widely considered the first Internet team game. It predates commercial online gaming by years, ran passionate leagues for decades, and is still technically alive — but getting a server up has always required real effort, and there’s been no easy way to just play it in a browser.\nNeoNetrek is my attempt to change that:\nServer: Based on the original vanilla Netrek C server, modernized with simpler configuration and containerized for one-command cloud deployment. There are ready-made templates for Fly.io and Railway, and public servers alrea",
+    "points": 7,
+    "sentiment": {
+      "neg": 0.046,
+      "neu": 0.88,
+      "pos": 0.074,
+      "compound": 0.568
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "47271515",
+    "title": "Show HN: Garden Horizons Calculator – Built by a Beginner via \"Vibe Coding\"",
+    "text": "Hi HN,<p>I’m a programming beginner, and lately, I’ve been hopelessly addicted to a farming simulation on Roblox called Garden Horizons.<p>The core loop is simple: plant, grow, and harvest. However, the game uses a complex, non-linear economic system where crop value scales with the square of its weight.<p>Sell Price = Base Price × (Weight &#x2F; Base Weight)² × Ripening × Color × Mutation × ...<p>Calculating the optimal time to harvest became a total ROI nightmare.<p>So, I built this tool to solve that: <a href=\"https:&#x2F;&#x2F;gardenhorizonscalculator.pro&#x2F;\" rel=\"nofollow\">https:&#x2F;",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.041,
+      "neu": 0.913,
+      "pos": 0.046,
+      "compound": -0.0516
+    },
+    "comments": [
+      {
+        "body": "The &quot;Deployment Hell&quot; section is the most instructive part of this writeup. The AI could write the code but couldn&#x27;t navigate the deployment environment — and you found that it was only by understanding the &quot;why&quot; behind the failures that you could actually get unstuck.<p>This is a pattern that shows up consistently in vibe coding experiences: AI excels at generating implementation within a well-understood context, but breaks down at system boundaries where implicit knowledge matters most. Deployment, authentication flows, third-party API quirks — these are places where",
+        "sentiment": {
+          "neg": 0.028,
+          "neu": 0.932,
+          "pos": 0.041,
+          "compound": 0.2263
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "47227505",
+    "title": "Show HN: A Crop Value Calculator for Garden Horizons",
+    "text": "Hi HN — I built something that’s been genuinely useful for myself and other Garden Horizons players, and I’d love to get feedback.<p>Website: <a href=\"https:&#x2F;&#x2F;gardenhorizonscalculator.co&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;gardenhorizonscalculator.co&#x2F;</a><p>Garden Horizons (a popular Roblox farming game) has a deceptively complex economy — crops have weight-scaled pricing, ripening multipliers, color variants, and mutation effects from weather. Figuring out the actual sell value of a harvest has historically required spreadsheets or manual math to estimate.<p>What I needed w",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.821,
+      "pos": 0.179,
+      "compound": 0.9786
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "47166998",
+    "title": "Riot's New Fighting Game Is Imploding as It Lays Off 80 Developers",
+    "text": "",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.185,
+      "neu": 0.815,
+      "pos": 0.0,
+      "compound": -0.3612
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "47106390",
+    "title": "Fighting games have a product design problem",
+    "text": "",
+    "points": 20,
+    "sentiment": {
+      "neg": 0.51,
+      "neu": 0.49,
+      "pos": 0.0,
+      "compound": -0.6369
+    },
+    "comments": [
+      {
+        "body": "I enjoyed this analysis quite a bit.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.645,
+          "pos": 0.355,
+          "compound": 0.5106
+        }
+      },
+      {
+        "body": "Fighting games are too inaccessible for me. I just want to play about game with cool characters with sick abilities  beating each other up (Skullgirls, Street Fighter, Tekken) but there’s always so much mental preparation and input memorization you have to go through just to have the slightest chance at winning&#x2F;having fun. The problem is multiplied by the sheer number of characters you get to play as and against in these games.<p>The whole genre, in some ways, has felt like some gated community to me that’s closed for anyone not willing to pour in the hours to learn.",
+        "sentiment": {
+          "neg": 0.082,
+          "neu": 0.729,
+          "pos": 0.189,
+          "compound": 0.8519
+        }
+      },
+      {
+        "body": "The emphasis on single-player in the author&#x27;s recommendations gells with me. I don&#x27;t think it&#x27;s a coincidence that SF6 has such an extensive campaign and is a huge success. By contrast 2XKO has none and is completely dead on arrival (though it has other problems as well). People need space to breath and learn before getting jumped on by somebody online, something to do when they&#x27;re not feeling at 100%, a way to get more attached to the characters and world. RTS has this exact same issue as well: new titles release with just a PvP skirmish mode and die on release.<p>SF6 was ",
+        "sentiment": {
+          "neg": 0.084,
+          "neu": 0.825,
+          "pos": 0.091,
+          "compound": 0.0611
+        }
+      },
+      {
+        "body": "Divekick saw this coming years ago\n|\n<a href=\"https:&#x2F;&#x2F;store.steampowered.com&#x2F;app&#x2F;244730&#x2F;Divekick&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;store.steampowered.com&#x2F;app&#x2F;244730&#x2F;Divekick&#x2F;</a>",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "47072945",
+    "title": "The End of Nue Framework",
+    "text": "Hello HN. I want to share something I’ve been thinking about for a while now. I’m stepping away from Nue [1][2] development to work on something new. This wasn’t an easy call, but I think it’s the right one. Here’s why.<p>[1]: https:&#x2F;&#x2F;github.com&#x2F;nuejs&#x2F;nue\n[2]: https:&#x2F;&#x2F;nuejs.org<p>The ecosystem chose React and Tailwind<p>I spent two years making the case for a simpler, standards-based alternative. Better architecture, faster builds, less complexity. None of it mattered. The frontend world picked React and Tailwind, and that’s not changing. I could keep fighting tha",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.063,
+      "neu": 0.86,
+      "pos": 0.076,
+      "compound": -0.2144
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "47037629",
+    "title": "Show HN: I.T. Never Ends – IT Support Simulator Built with React/Tauri/Supabase",
+    "text": "Hi HN,<p>I am the solo developer behind this.<p>The Pitch:\nIt is a card-based resource management game (inspired by Reigns) where you work IT support for a corporation taken over by eldritch horrors. You have to balance ticket resolution, budget, and entropy while dealing with printers that violate causality.<p>The Architecture:\nThe entire game is built in React&#x2F;JavaScript. Under the hood, it is basically a giant state machine. I chose this stack because it allowed me to iterate quickly on the UI and text-heavy elements, which are 90% of the gameplay. I&#x27;ve published other games that ",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.092,
+      "neu": 0.855,
+      "pos": 0.053,
+      "compound": -0.85
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "46985812",
+    "title": "Show HN: Fighting the War Against Expensive Reinforcement Learning",
+    "text": "Reinforcement learning has become the secret weapon behind AI&#x27;s most impressive specialized achievements.<p>From robotics with Tesla&#x27;s Autopilot to DeepMind&#x27;s AlphaFold 2 for predicting protein structures with 90%+ accuracy to even hedge funds deploying RL for algorithmic trading, there is a need for reinforcement learning.<p>And the market proves this demand further: RL grew from $1.5B (2020) → $12B (2024) with projections hitting $79B by 2030.<p>BUT THERE IS A BRUTAL REALITY!!!<p>Just to get one production line or train one model, the companies spend $100 million+ EVERY YEAR, ",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.097,
+      "neu": 0.866,
+      "pos": 0.037,
+      "compound": -0.8733
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "46818067",
+    "title": "Nuclear Fusion tokamak simulator FUSION CIRCUS beta",
+    "text": "Fusion Circus beta<p>Link: https:&#x2F;&#x2F;fusion-circus-ultimate.vercel.app&#x2F;<p>BETA PHASE!(NEED FEEDBACK!)<p>Fusion Circus is a nuclear fusion tokamak simulator I built to teach myself plasma physics. It started with a video game. Here’s the story \nGrowing up, I was fascinated with Megaman and his Mega Buster — a weapon that creates pure energy. All of Dr. Light’s work revolved around energy creation. Robots powered by limitless clean energy. A future where power wasn’t a problem. As a kid, I thought it was just sci-fi. Then I got older and discovered AI and neural networks. The idea t",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.02,
+      "neu": 0.789,
+      "pos": 0.191,
+      "compound": 0.9726
+    },
+    "comments": [
+      {
+        "body": "Clicky <a href=\"https:&#x2F;&#x2F;fusion-circus-ultimate.vercel.app&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;fusion-circus-ultimate.vercel.app&#x2F;</a><p>After the tutorial finish, the stability slowly decrease, and it&#x27;s not clear what  I can modify.<p>After a while, I found that I can turn on one of the slides on the right, but I have no idea why it&#x27;s useful. It would be nice to continue the tutorial until I have to turn on&#x2F;off the slides a few times.",
+        "sentiment": {
+          "neg": 0.063,
+          "neu": 0.829,
+          "pos": 0.108,
+          "compound": 0.6319
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "46644792",
+    "title": "Show HN: Using Strudel to control dance animations",
+    "text": "We have countless fighting games with extremely complex input systems: long button combos, precise timing.<p>But when it comes to dancing in games or interactive systems, complexity almost always disappears.\nDance games usually require you to move physically in front of a camera, or step on pads, or just trigger a single emote animation.<p>Meanwhile, in platforms like Roblox, players collect dance animations and show them off by triggering them at the right moments.\nSometimes multiple players even sync their dances together - which already feels a bit like a disco.<p>So the question that kept ",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.049,
+      "neu": 0.918,
+      "pos": 0.034,
+      "compound": -0.3008
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "46635335",
+    "title": "Forza Horizon 6 Just Slipped Through the Cracks and Everyone Noticed",
+    "text": "Some leaks come out of nowhere, posted on obscure forums, full of shaky claims and zero consequences. Others hit in the most unexpected way possible and instantly change the conversation. The Forza Horizon 6 leak clearly belongs to the second group.<p>This was not an anonymous insider whispering on social media. It was not a misplaced document or a blurry photo. It was Forza Horizon 5 itself, a live, active game, briefly displaying promotional material for the next entry in the series. When that happens, it stops being easy to dismiss things as noise.<p>And that is exactly why Forza Horizon 6 ",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.054,
+      "neu": 0.874,
+      "pos": 0.072,
+      "compound": 0.4798
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "46543639",
+    "title": "Show HN: Browser idle MMO that progresses while you work",
+    "text": "Built a persistent browser RPG where your character keeps fighting and looting even when you&#x27;re away.<p>Stack: Next.js, PostgreSQL, Docker\nDemo on the landing page.",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.07,
+      "neu": 0.93,
+      "pos": 0.0,
+      "compound": -0.3612
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48817913",
+    "title": "Show HN: Patterns with Friends – free multiplayer tile game (no sign-up, no ads)",
+    "text": "A couple weeks ago we were on vacation with friends, and after the kids were asleep we played games -- mostly Qwirkle, which I had never played and am terrible at. I don&#x27;t care about being terrible at games, so I made a web version to keep playing after vacation: build lines of tiles that share a color or a shape, 2-4 players (or add bots).<p>I wanted it to be low friction, so there are no accounts. Your identity is an anonymous id in localStorage, and you can move it to another device by scanning a QR code or hitting a unique url. Start a game and text someone the link (game slugs are se",
+    "points": 3,
+    "sentiment": {
+      "neg": 0.084,
+      "neu": 0.797,
+      "pos": 0.119,
+      "compound": 0.7952
+    },
+    "comments": [
+      {
+        "body": "Love to see no sign-up and no ads projects! the world needs more of these.<p>I tried it out seems like a cool mini game, the user experience is already amazing but if you want to take it to the next level i think you should make the first gameplay be assisted so that the rules are clear even without reading them! also a minor inconvenience i encountered is that if i select any text by error in the ui then try to drag a shape in the game board it won&#x27;t let me place it because it tries to drag the selected text as well.\nI hope the feedback helps!",
+        "sentiment": {
+          "neg": 0.111,
+          "neu": 0.719,
+          "pos": 0.17,
+          "compound": 0.7735
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "47271751",
+    "title": "Show HN: 1v1 coding game that LLMs struggle with",
+    "text": "This is a game I wish I had as a kid learning programming. The concept of it is fairly similar to other coding games like Screeps, but instead of a complex world with intricate mechanics, Yare is a lot more minimal and approachable with quick 1v1 &lt;3 min matches.<p>It&#x27;s purely a passion project with no monetization aspirations. And it&#x27;s open source: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;riesvile&#x2F;yare\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;riesvile&#x2F;yare</a><p>The first version &#x27;launched&#x27; several years ago and I got some good feedback here: <a href",
+    "points": 29,
+    "sentiment": {
+      "neg": 0.053,
+      "neu": 0.836,
+      "pos": 0.111,
+      "compound": 0.8008
+    },
+    "comments": [
+      {
+        "body": "Cool project, this is my first time seeing such project using LLMs. Took me a while to understand what&#x27;s happening on the home page.<p>A question though, why such powerful bots like Gemini 3.1 failed against Clowder bot? Is it because of inefficient code or the LLMs did not handle edge cases? Or they are not as good as humans when it comes to strategy.",
+        "sentiment": {
+          "neg": 0.079,
+          "neu": 0.812,
+          "pos": 0.11,
+          "compound": 0.308
+        }
+      },
+      {
+        "body": "Macroexpanding the previous threads:<p><i>Show HN: Yare 2 – Programmable RTS game</i> - <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=32394902\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=32394902</a> - Aug 2022 (26 comments)<p><i>Show HN: Yare.io – game where you control units with JavaScript</i> - <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=27365961\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=27365961</a> - June 2021 (64 comments)<p>(Btw, reposts are fine after a year or so; links to past threads are just to satisfy extra-curious readers!)",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.898,
+          "pos": 0.102,
+          "compound": 0.7229
+        }
+      },
+      {
+        "body": "Cool!<p>From the prompt it looks like you don’t give the llms a harness to step through games or simulate - is that correct? If so I’d suggest it’s not a level playing field vs human written bots - if the humans are allowed to watch some games that is.",
+        "sentiment": {
+          "neg": 0.031,
+          "neu": 0.915,
+          "pos": 0.054,
+          "compound": 0.296
+        }
+      },
+      {
+        "body": "LLMs need to have feedback of the outcomes. Just like a human does.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.828,
+          "pos": 0.172,
+          "compound": 0.3612
+        }
+      },
+      {
+        "body": "You should check out codingame.com\nIt has similar battle based objectives",
+        "sentiment": {
+          "neg": 0.206,
+          "neu": 0.794,
+          "pos": 0.0,
+          "compound": -0.3818
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "46938328",
+    "title": "Show HN: RoundsKeeper score tracking app for games (Swift, no ads/tracking)",
+    "text": "I&#x27;m an indie iOS developer launching RoundsKeeper, a score tracking app for board and card games. Looking for feedback before the App Store release in a few weeks.<p>Tech stack:\n- Swift&#x2F;SwiftUI (iOS 18+)\n- Built in Xcode with Claude Code assistance for development velocity\n- SwiftData for local persistence\n- Native calculator-style input with custom keyboard\n- Table view with inline editing for score adjustments<p>What it does:\nThe app solves a simple problem: tracking scores during game nights without paper or fumbling with Notes. Two input modes (calculator and table), game history",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.07,
+      "neu": 0.85,
+      "pos": 0.079,
+      "compound": 0.122
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "46654697",
+    "title": "Show HN: Explain Yourself – An AI party game app built with SwiftUI",
+    "text": "Hi HN,<p>I just released &quot;Explain Yourself,&quot; a local multiplayer party game (Jackbox style) where players have to give excuses for absurd AI-generated scenarios. An AI Judge then ranks the answers, roasts the players, and determines a winner.<p>I built this because I wanted an AI-first party app game that was fun and made people use their brains. This is my first app, but I have spent months on it and it is pretty thoroughly thought out.<p>The Stack:<p>Frontend: \nSwiftUI (using NavigationStack and EnvironmentObjects for state).<p>Backend: \nFirebase (Firestore for real-time syncing, C",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.024,
+      "neu": 0.853,
+      "pos": 0.124,
+      "compound": 0.9423
+    },
+    "comments": [
+      {
+        "body": "Nice job. Personally, I think you’d reach a wider audience if you built this as a mobile‑friendly website rather than a dedicated iOS app, especially since most of the compute happens off-site.<p>One of my family’s favorite holiday games is Balderdash, where you’re given an extremely esoteric word (like “coprolite”), and everyone has to write down realistic sounding (or ridiculous) definitions. Then players have to guess which one is correct. So we’re big fans of this type of game!",
+        "sentiment": {
+          "neg": 0.028,
+          "neu": 0.796,
+          "pos": 0.176,
+          "compound": 0.9033
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "46550606",
+    "title": "Show HN: GoPico – a native Android retro(PICO-8) games player",
+    "text": "Hi HN,<p>I’ve released GoPico v1.0, a native Android app for running PICO-8 carts locally, with a focus on minimizing startup time, input latency, and rendering overhead compared to browser-based players.<p>The app executes carts on-device and is optimized specifically for mobile hardware.<p>Current scope:<p>~350 curated carts used for compatibility and performance validation<p>No ads, no accounts, no monetization<p>First public release<p>Planned next steps:<p>Physical controller support<p>Tuning for handheld devices<p>Broader compatibility and performance testing<p>If you try it, feedback is ",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.02,
+      "neu": 0.908,
+      "pos": 0.072,
+      "compound": 0.7078
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "46502117",
+    "title": "Why \"make money online\" advice fails smart people",
+    "text": "Most “make money online” advice is framed like engineering: follow the steps, get the output.<p>But the online income game is closer to markets + power laws + platform governance than to deterministic systems. The advice is usually written by survivors (or marketers), so it quietly assumes you’ll have (1) above-average distribution, (2) stable platform reach, and (3) enough runway to iterate.<p>Those assumptions are often false. Revenue is highly skewed in creator&#x2F;platform ecosystems (a small minority captures most outcomes), and platforms can change incentives overnight via ranking, mone",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.06,
+      "neu": 0.828,
+      "pos": 0.112,
+      "compound": 0.6808
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48818509",
+    "title": "Show HN: I made a JavaScript layer that let's me make clinical research for free",
+    "text": "Accurate Clinical AI Research is a thing now:<p><a href=\"https:&#x2F;&#x2F;pathmap.org\" rel=\"nofollow\">https:&#x2F;&#x2F;pathmap.org</a> - main site\n<a href=\"https:&#x2F;&#x2F;pathmap.org&#x2F;viewer.php\" rel=\"nofollow\">https:&#x2F;&#x2F;pathmap.org&#x2F;viewer.php</a> - see the results<p>The software procures veridical, source-aligned research literature audits with guaranteed 0% mis-stated quotes AND perfect APA citations.<p>Disclaimer: Nothing on the website should be considered professional or medical advice. The PathMap methodology relies on a &quot;human in the loop&quot; process done by",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.906,
+      "pos": 0.094,
+      "compound": 0.875
+    },
+    "comments": [
+      {
+        "body": "If you have any questions or want me to do a run on a particular question, feel free to ask.  I doubt there will be much &quot;excitement&quot; about this on HN, but who knows.  I will check back throughout the day.<p>Thanks!",
+        "sentiment": {
+          "neg": 0.04,
+          "neu": 0.877,
+          "pos": 0.083,
+          "compound": 0.2124
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48817920",
+    "title": "Show HN: Rewire Text – system-wide text transforms with BYOK and local-models",
+    "text": "I just launched Rewire Text, a Windows + macOS tool that transforms text in any app at the press of a hotkey. Sits in the menu bar &#x2F; system tray until needed. Deterministic transforms (case changes, whitespace cleanup, Markdown fixes, encoding, etc.) instantly run on your machine. AI based transforms (style and tone rewrites, proofreading, bullets, summarization, translation, custom, etc.) either use a remote AI API (Gemini, Anthropic, OpenAI, OpenRouter, or OpenAI compatible APIs) with your own key (BYOK) or a local AI model via LM Studio, Ollama, or Llama.cpp.<p>The reason I built this ",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.018,
+      "neu": 0.915,
+      "pos": 0.067,
+      "compound": 0.8591
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48817727",
+    "title": "Show HN: Savva – Health Superapp powered by on-device AI",
+    "text": "Savva is a health superapp where you track medical records (OCR and patient portal), fitness, GLP-1, weight, blood pressure, and more with AI to give you feedback and insights. We offer 2B and 4B models, depending on device capability, that run on-device along with frontier models through us - no account needed. We just launched on App Store and Play Store with 48 languages. The app is free with a AI add-on for $9.99&#x2F;year.",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.048,
+      "neu": 0.851,
+      "pos": 0.101,
+      "compound": 0.5994
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48817192",
+    "title": "ScreenStack Is Looking for Design Partners",
+    "text": "If your team is hiring and conducting interviews, I urge you to consider ScreenStack: an all-in-one interview platform that replaces your fragmented stack of tools.<p>It was built by engineers who have spent years at FAANG, conducted over 400 hours of interviews, and felt the pain firsthand: juggling Zoom, CoderPad, Excalidraw, and an AI notetaker, then burning hours stitching them together to reach a decision.<p>ScreenStack has everything you need to run an interview built in: video calls, live transcription, a collaborative coding IDE, and a whiteboard. And because it has the full context of",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.036,
+      "neu": 0.903,
+      "pos": 0.061,
+      "compound": 0.507
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48816094",
+    "title": "Show HN: Orchestra – Browser automation tool with export plain Playwright",
+    "text": "I build automations for a living and my problem with most no-code tools is what happens when you want to leave. Your workflows live on their servers in their format and that&#x27;s that.<p>So mine works like this: you record a browser task (no code required at any point), edit it visually, run it from your own computer. But every automation can also be exported as a real code file. You don&#x27;t have to care about that part, most people won&#x27;t ever open it. It just means if you switch tools someday or hire a developer, your work comes with you.<p>There are over 40 tools that you can use t",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.016,
+      "neu": 0.893,
+      "pos": 0.091,
+      "compound": 0.9267
+    },
+    "comments": [
+      {
+        "body": "Interesting",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.0,
+          "pos": 1.0,
+          "compound": 0.4019
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48814952",
+    "title": "Show HN: Fast, native Mac file manager (filters, fuzzy find, 9 MB, no Electron)",
+    "text": "My Downloads folder had been left unkept for a really long time and cleaning it up using Finder was quite cumbersome. So I started creating a simple app to help me filter out and delete or move the files in the folder.<p>It started out very basic and the filtering options genuinely helped me clean out the Downloads folder, then as I thought of more features I would like to see in a file manager I started to add them. Some of the features are:<p>- Fuzzy go to folder&#x2F;file where you only need to write a few letters of a full path, get suggestions and can jump to the correct path instantly\n- ",
+    "points": 57,
+    "sentiment": {
+      "neg": 0.012,
+      "neu": 0.907,
+      "pos": 0.081,
+      "compound": 0.8993
+    },
+    "comments": [
+      {
+        "body": "does this index the disk to do this ? So the filemanager is working with an index rather than the files ? It could be stale ?<p>I haven&#x27;t found a good file manager for mac since 15 years now. They all just about do the things I need but not good enough. I&#x27;ve never really done the dual pane thing, my favourite gui for file management was Windows XP.  Every iteration of explorer since has gotten objectively worse.<p>On mac I don&#x27;t even bother trying to filemanage. I remote in to a windows machine.<p>I need to be able to get paths and paste paths.<p>for my downloads I just sort by ",
+        "sentiment": {
+          "neg": 0.054,
+          "neu": 0.935,
+          "pos": 0.011,
+          "compound": -0.8224
+        }
+      },
+      {
+        "body": "Just switched from windows to Mac and the rumors are true. Finder is terrible.",
+        "sentiment": {
+          "neg": 0.173,
+          "neu": 0.67,
+          "pos": 0.156,
+          "compound": -0.0772
+        }
+      },
+      {
+        "body": "Do you have any kind of public AI statement on the ways this product utilizes or is built with generative AI, if any?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "Why would anyone trust an app from an anonymous source access their whole filesystem with read&#x2F;write access? Who are you hello@whimfiles.com and where are you from?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.872,
+          "pos": 0.128,
+          "compound": 0.5661
+        }
+      },
+      {
+        "body": "First screenshot on the front page has a design issue: text of selected file is in black instead of white.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "&#x2F;&#x2F;confused noises&#x2F;&#x2F;<p>Wait, are you telling me that macOS has gotten so ensh---ified that many of its users feel the need to <i>purchase</i> a bespoke <i>file manager</i>, arguably one of the most fundamental functions of an operating system?<p>Surely this is a very specific product for a very specific class of users?  This can&#x27;t be a widespread need, right?  RIGHT?<p>(Context: I haven&#x27;t used modern macOS in roughly a decade and have no idea what it&#x27;s like these days)",
+        "sentiment": {
+          "neg": 0.064,
+          "neu": 0.905,
+          "pos": 0.031,
+          "compound": -0.3939
+        }
+      },
+      {
+        "body": "I like many of the ideas in this app, but IMHO it does not yet look like a macOS app: eg. strange blue focus outlines to denote active state, which on my system are larger vertically than the button they contain but not horizontally which results in a very untidy display, some buttons are smaller than the required&#x2F;recommended minimum size. Some other things I&#x27;ve noticed, compared to Finder: far less items in the same vertical space, different keyboard shortcuts for same feature makes migration difficult.<p>My favourite Finder-likes: Nimble Commander, Marta",
+        "sentiment": {
+          "neg": 0.051,
+          "neu": 0.894,
+          "pos": 0.055,
+          "compound": 0.1116
+        }
+      },
+      {
+        "body": "I used to have a greater need for a file manager in other jobs. I don’t have the same need anymore but Forklift (<a href=\"https:&#x2F;&#x2F;binarynights.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;binarynights.com&#x2F;</a>) has always been great and I still use it from time to time.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.833,
+          "pos": 0.167,
+          "compound": 0.8126
+        }
+      },
+      {
+        "body": "I really, really need a better Finder. I&#x27;ve been using Path Finder for many years, but it was always a so-so replacement and the company wasn&#x27;t very interested in moving it forward (even fixing bugs took many years). I eventually gave up and stopped paying for it.<p>I now use the Finder (column view) and it sucks.<p>At a first glance, I like this app. The problem I have is that I tend to think about the long term: will this app be around in 5 years? There is a plethora of AI-coded apps (this in itself doesn&#x27;t bother me) where the author loses interest after just a couple of week",
+        "sentiment": {
+          "neg": 0.109,
+          "neu": 0.819,
+          "pos": 0.072,
+          "compound": -0.7769
+        }
+      },
+      {
+        "body": "That&#x27;s a great tool dude! I was looking for similar thing would give it a try",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.774,
+          "pos": 0.226,
+          "compound": 0.6588
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48812900",
+    "title": "Show HN: Foundation – A Tale of Tokens and Psychosis",
+    "text": "I called my first experience with AI psychosis, master - <a href=\"https:&#x2F;&#x2F;github.com&#x2F;nmxmxh&#x2F;master-ovasabi\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;nmxmxh&#x2F;master-ovasabi</a>.<p>During the beginning of the coding agent expansion, compute was somewhat free to get with the right methods. I decided to finally build the backend project I&#x27;d always wanted to build.<p>I settled on Go for the language.\nI&#x27;d always liked Go because it was easy for me to read whilst also always being in the top ranges for performance.<p>I realise I&#x27;d tried to build a codeba",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.937,
+      "pos": 0.063,
+      "compound": 0.7546
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48809159",
+    "title": "Show HN: Code Review Enviornment for the Modern Era",
+    "text": "Plannotator opens a local diff viewer (git, jj, p4). You annotate lines, tokens, or comment on files, and when you&#x27;re done they feed straight into your agent session; creating an automated feedback loop.<p>It works on local diffs, commits, branches, worktrees, and GitHub&#x2F;GitLab PRs. The PR view lets you annotate the descriptions and comments while also being able to filter bot comments.<p>The core tool enables focused manual review, the optional AI layer:<p><pre><code>  - Ask AI: Ask questions directly inline\n  - Guided Reviews: Have an agent reorganize a large diff into semantic ove",
+    "points": 5,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.914,
+      "pos": 0.086,
+      "compound": 0.8885
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48807888",
+    "title": "BeEzrat HaShem Inc. Earns Candid Platinum Seal of Transparency for the 3rd Time",
+    "text": "Torah Education Nonprofit Joins Fewer Than 1% of U.S. Charities at the Highest Tier of Accountability<p>SOUTH FLORIDA — BeEzrat HaShem Inc., a Florida 501(c)(3) Torah outreach organization, has been awarded the 2026 Platinum Seal of Transparency by Candid (formerly GuideStar) for the third consecutive year. Platinum is the highest of Candid’s four transparency tiers, held by fewer than 1% of the 1.8 million U.S. nonprofits in Candid’s database.<p>“Earning Platinum once shows you can prepare a strong report. Earning it three years in a row proves it’s how we actually operate,” said Rabbi Yaron ",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.043,
+      "neu": 0.856,
+      "pos": 0.101,
+      "compound": 0.8809
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48805882",
+    "title": "Show HN: Tetris where every pixel is another Tetris (23,040 games in GLSL)",
+    "text": "On this page there are two complete recreations of the original Gameboy Tetris game based on the commented assembly code. On the top level there is a C version that compiles to WASM but on every pixel of that version there is a GLSL shader also implementing the complete original code with a AI player making virtual inputs!<p>Everything was planned by me and coded by Claude Fable. Brazilian tileset generated by Gemini so I&#x27;m not technically using any copyrighted assets.<p>Link to repo: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;ThiagoLira&#x2F;Fractetris&#x2F;tree&#x2F;main\" rel=\"nofollow\"",
+    "points": 4,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.938,
+      "pos": 0.062,
+      "compound": 0.6476
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48805303",
+    "title": "Show HN: A short walking sim based on 3DGS that runs in the browser",
+    "text": "Hi! I built a free short walking sim you that runs in the browser.<p>I originally made this experience about 2-3 years ago in Unreal Engine. The resulting build was huge: over 6 GB to download in order to play for max 10 minutes. Needless to say there weren&#x27;t that many people that ended up playing the game.<p>Seeing the quality that&#x27;s possible to achieve nowadays in the browser using gaussian splats, I recently got the idea to port it to a web-based experience. The result is that the whole game is a bit over 100 MB, and that&#x27;s including about 20 MB of music and VO. Thanks to Spa",
+    "points": 4,
+    "sentiment": {
+      "neg": 0.026,
+      "neu": 0.904,
+      "pos": 0.07,
+      "compound": 0.7959
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48804797",
+    "title": "Show HN: Orchestrate parallel Claude Code and Codex agents on a live map",
+    "text": "Hi HN!<p>I never understood why everybody is fine with (and actually try to copy it multiple times) a single chat interface for ai agents, where you have one conversation on the whole screen. I frequently run many coding agents in parallel (Claude Code, Codex), and after some time I lose the picture of where which subagent is and who spawned whom, which is working and which it not. Agents finish or die quietly and I find out half an hour later<p>And the information about the agents was already sitting on the disk. Every session writes a JSONL transcript under ~&#x2F;.claude or ~&#x2F;.codex, e",
+    "points": 4,
+    "sentiment": {
+      "neg": 0.049,
+      "neu": 0.941,
+      "pos": 0.01,
+      "compound": -0.7905
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48804775",
+    "title": "Show HN: Captchainbox – make senders work to get into your inbox",
+    "text": "Hi HN,<p>The one thing AI reliably does is generate noise. Half the tools I see launch are just machines for producing more noise across more channels. And people are starting to see this in the form of emails in their inboxes as spam filters are struggling.<p>There used to be a useful signal in email: the effort a sender put into customizing a message was a rough proxy for how relevant it actually was. AI killed that. Now it&#x27;s customized slop with the appearance of effort with none of the cost. It is painful that the open internet &#x2F; open channels have been abused like this.<p>Captch",
+    "points": 6,
+    "sentiment": {
+      "neg": 0.068,
+      "neu": 0.882,
+      "pos": 0.05,
+      "compound": -0.7579
+    },
+    "comments": [
+      {
+        "body": "these captcha farms offering solver apis can probably bypass this too, is that something on your mind? feels like in the end a paywall is the only thing left that survives agents. how do you see this playing out for the product?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.892,
+          "pos": 0.108,
+          "compound": 0.594
+        }
+      },
+      {
+        "body": "I like the proof-of-work angle. Have you thought about how you&#x27;ll handle legitimate first-time emails like account verification or password resets that can&#x27;t complete the challenge?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.785,
+          "pos": 0.215,
+          "compound": 0.6486
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48804732",
+    "title": "Show HN: Quiet Sky, a weather app built for privacy",
+    "text": "Hi, all.<p>I wanted to share an app and privacy proxy I made. I&#x27;d appreciate your feedback and thoughts.<p>I&#x27;ve been frustrated for years by the fact that weather apps use our information to track us in real time. I searched high and low for a weather app that promised privacy. I was surprised I couldn&#x27;t find one. Even apps with good privacy policies make no guarantees about how the provider will use your information. I decided this would be a good time to make an beautiful weather app that delivered on the privacy commitment cleanly.<p>Many of you probably know weather apps are",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.045,
+      "neu": 0.868,
+      "pos": 0.087,
+      "compound": 0.631
+    },
+    "comments": [
+      {
+        "body": "Would love any feedback or thoughts from others.  Thanks!",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.486,
+          "pos": 0.514,
+          "compound": 0.8122
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48799719",
+    "title": "Show HN: An unmetered LLM API–$6/month, no token tracking, no limits",
+    "text": "Hi HN,<p>I was once given the advice: Don&#x27;t waste expensive frontier model credits (GPT&#x2F;Claude&#x2F;etc.) on bulk work. Send the boring, repetitive, high-volume jobs to a smaller model, and save the expensive prompts for when you actually need frontier-level reasoning. I complained and told my manager that I shouldnt have to think about using certain models for certain coding tasks, and that one model should handle everything. Well, here we are anyway.<p>If anyone needs a place to absolutely abuse an LLM with high-volume tasks, come beat ours up at <a href=\"https:&#x2F;&#x2F;yolo-aut",
+    "points": 11,
+    "sentiment": {
+      "neg": 0.127,
+      "neu": 0.78,
+      "pos": 0.093,
+      "compound": -0.6801
+    },
+    "comments": [
+      {
+        "body": "Got me down a rabbit hole of trying to find the ROI of doing something like this. This is what every GM at AWS thinks about. So, a back of the napkin calculation of running at FP8 and approx 35GB. You can fit that on a g6e.xlarge @ 48GB for about $900&#x2F;year at reserved capacity.<p>Assuming you are netting at $5.5 (post stripe fees), and maybe $100&#x2F;month for API&#x2F;auth box for egress, you probably need about 170 paying customers to breakeven.  This is assuming light&#x2F;bursty usage.<p>Kudos! This is a a win win for both you and customer using it as it removes the undifferentiated ",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.887,
+          "pos": 0.113,
+          "compound": 0.9168
+        }
+      },
+      {
+        "body": "What type of hardware, GPU are you utilizing?  I have the same model self hosted at home",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "I wanted to start using this but I can&#x27;t since I can&#x27;t use any email&#x2F;password combination I want. By requiring an existing account from Google&#x2F;GitHub&#x2F;Discord you are just contributing to corporate-owned dystopia.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.955,
+          "pos": 0.045,
+          "compound": 0.1154
+        }
+      },
+      {
+        "body": "I will try this thing. if give free month",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.708,
+          "pos": 0.292,
+          "compound": 0.5106
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48788723",
+    "title": "Show HN: TeXposit – LaTeX and Markdown Editor",
+    "text": "Online editor with LaTeX, Markdown, LaTeX+Markdown Hybrid and WYSIWYG (MD only) support, AI assistant with resource lookup and anti-hallucination features, live collaboration and more fun things. Still in quite early beta. First institutional deployment scheduled in the autumn. Feel free to play around.",
+    "points": 4,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.797,
+      "pos": 0.203,
+      "compound": 0.8999
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48786769",
+    "title": "Show HN: Routing24 – free route optimization agent for Claude Cowork/WebMCP",
+    "text": "I&#x27;ve been building <a href=\"https:&#x2F;&#x2F;routing24.com\" rel=\"nofollow\">https:&#x2F;&#x2F;routing24.com</a> for a while, a free route optimization and planning app for businesses.<p>One of the things that bothered me for quite a time is inability of browser agents to work with Routing24.<p>We have tons of natural tasks for AI:<p>- data ingestion, to figure out data coming from user&#x27;s side (csv and Excel);<p>- geocoding quality validation (to explain user what they need to correct and their addresses and how);<p>- steep learning curve for business users (who have sense of what the",
+    "points": 7,
+    "sentiment": {
+      "neg": 0.04,
+      "neu": 0.813,
+      "pos": 0.147,
+      "compound": 0.923
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48784211",
+    "title": "Show HN: Psycurate – Curated place for privacy-first, free psychological tools",
+    "text": "I’m a psychologist, not a developer. Over the past few months, I used Google AI Studio to build Psycurate.com<p>Why? \nThe digital mental health space has become exhausting—too many great tools are buried under aggressive monetization, mandatory tracking, and corporate bloat. This website wants to be an accessible alternative.<p>What Psycurate is about:\n* Privacy First: A space specifically for tools that respect the person using them. Tools that do not harvest data. \n* A directory where anyone can discover and use these applications completely free, with no cookies and no corporate agendas and",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.048,
+      "neu": 0.831,
+      "pos": 0.121,
+      "compound": 0.9299
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48774148",
+    "title": "Show HN: Sonoday Radio – Listen to Podcasts like they are Radio",
+    "text": "An age-old problem for all of us (surely),in our experience we have a hard time discovering podcasts or just letting our favorites play in the background like white noise<p>Sooooooo... I made this to recreate Radio for Podcasts, which works especially well given how Open Source RSS is. We made it so it runs in the browser, though we would love to develop an App to accompany you too. No accounts, no sign-ins, Just quickly hop in and listen. If you want to create an account to save episodes, earn some badges, or save preferences, it is also Free, but not required to listen.<p>Over 100 channels t",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.027,
+      "neu": 0.733,
+      "pos": 0.24,
+      "compound": 0.9864
+    },
+    "comments": [
+      {
+        "body": "What are some of your favorite Podcasts that should be added?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.769,
+          "pos": 0.231,
+          "compound": 0.4588
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48774122",
+    "title": "Show HN: Wax Spinner, a \"now playing\" social app for vinyl record collectors",
+    "text": "I collect records and I build apps in my spare time (and listen to records while I build apps), and this is what happens when those two things run into each other.<p>Many people post photos of what they have spinning on their turntables on social media, and most never get any engagement. It occurred to me that people might want a better way to do this, and bringing them together in a niche social site might help.<p>So I made Wax Spinner. Connect your Discogs (the de-facto vinyl collector&#x27;s catalogue) account, post whatever you&#x27;re playing with an optional note, and it lands in a feed ",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.014,
+      "neu": 0.9,
+      "pos": 0.085,
+      "compound": 0.8563
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48773869",
+    "title": "GitHub is mailing free CDs of your public code to mock PlayStation disc changes",
+    "text": "",
+    "points": 4,
+    "sentiment": {
+      "neg": 0.155,
+      "neu": 0.663,
+      "pos": 0.182,
+      "compound": 0.128
+    },
+    "comments": [
+      {
+        "body": "The CD joke aside, there&#x27;s something weird abouta large, recognizable entity using such a nondescript MS form and collecting names and addresses, only to send something to a very small segment of them. Feels like a data harvesting operation.",
+        "sentiment": {
+          "neg": 0.04,
+          "neu": 0.849,
+          "pos": 0.111,
+          "compound": 0.4588
+        }
+      },
+      {
+        "body": "[dupe] <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48768997\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=48768997</a>",
+        "sentiment": {
+          "neg": 0.588,
+          "neu": 0.412,
+          "pos": 0.0,
+          "compound": -0.4329
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48768342",
+    "title": "Show HN: Gist Discover – TikTok for ArXiv Summaries",
+    "text": "Dunno about you, but I cannot keep up with the volume of AI research. Reading one paper properly takes 30–60 minutes, and it&#x27;s hard to know which are even worth it.<p>I built Gist, an AI summarizer for ADHD brains. Each paper is a clean slide deck with four layers you move through:<p>1. the Gist – the whole idea 1-2 sentences\n2. Logic – breakdown of the argument + evidence in discrete ideas\n3. Counter-Argument – strongest argument against the author (AI generated)\n4. Steelman – transcendent rebuttal to the counter-argument (AI generated)<p>There&#x27;s integrated TTS audio too — hit play ",
+    "points": 4,
+    "sentiment": {
+      "neg": 0.044,
+      "neu": 0.857,
+      "pos": 0.099,
+      "compound": 0.8715
+    },
+    "comments": [
+      {
+        "body": "Thanks Matt!<p>The marketing got me here (TikTok but for ArXiv) so good job on that. I started checking out a few posts (papers?) but the UI is a bit zoomed in for me. I can provide you with more details if needed.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.845,
+          "pos": 0.155,
+          "compound": 0.8102
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48766242",
+    "title": "Show HN: Bramble – Local-first password manager",
+    "text": "I&#x27;m currently working on Bramble, an open source password manager with P2P cross-device sync. Initially I released the Chrome extension, but recently I also published the Android app and iOS is pending Apple&#x27;s approval. Besides that, the latest version also includes passkey storage for all platforms!<p>About Bramble:<p>It aims to be as feature-rich as all popular and a replacement for cloud-based providers. I don&#x27;t think we need to store our data in the cloud and be at the whims of companies raising their prices every year. There&#x27;s always a breach and then we find out that ",
+    "points": 149,
+    "sentiment": {
+      "neg": 0.048,
+      "neu": 0.906,
+      "pos": 0.046,
+      "compound": -0.0996
+    },
+    "comments": [
+      {
+        "body": "&gt; TL;DR: I dislike private-equity and venture funded companies messing with our security, so I created my own Password Manager which is local-first, free, open source and as transparent as it gets.<p>I do too! And I appreciate your transparency about the vibe coding. But nowhere in the repository that I&#x27;ve found so far do you say who is writing this. For something like a password manager, I kind of need to know who&#x27;s responsible for it, and who&#x27;s reviewing the LLM source code, what they&#x27;ve done before, what their business model is, etc.<p>Can you share?",
+        "sentiment": {
+          "neg": 0.017,
+          "neu": 0.825,
+          "pos": 0.158,
+          "compound": 0.9158
+        }
+      },
+      {
+        "body": "What ai tools are you using if I may ask, genuinely interested.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.803,
+          "pos": 0.197,
+          "compound": 0.4019
+        }
+      },
+      {
+        "body": "You built your own sync engine? Why?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "Really clean concept. Keeping everything entirely on-disk instead of relying on a third-party cloud is something I&#x27;ve been wanting to see more of.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.88,
+          "pos": 0.12,
+          "compound": 0.4576
+        }
+      },
+      {
+        "body": "I think local-first password managers are the way forward. Big tech companies already have way too much power and having them mediate our most important data is a bad precedent to set.<p>I like that you made this P2P, I designed one that sits on top of sqlite and is 100% local first but is not P2P, take a look if you are interested in some prior art in this space:<p><a href=\"https:&#x2F;&#x2F;saveoursecrets.com&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;saveoursecrets.com&#x2F;</a><p>I decided to go with native apps all the way, Rust backend and Flutter front-end but kind of regret it now with ho",
+        "sentiment": {
+          "neg": 0.057,
+          "neu": 0.87,
+          "pos": 0.073,
+          "compound": -0.0369
+        }
+      },
+      {
+        "body": "Congrats! How’s it compare vs self-hosted vaultwarden?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.619,
+          "pos": 0.381,
+          "compound": 0.5707
+        }
+      },
+      {
+        "body": "When I hear P2P I imagine my data going through other people&#x27;s devices - but it sounds like this is a private P2P network.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.876,
+          "pos": 0.124,
+          "compound": 0.5023
+        }
+      },
+      {
+        "body": "This looks like something I&#x27;ve been looking for! Excited to give it a try! I don&#x27;t even use a password manager because of the things you&#x27;ve seemed to work around here. It&#x27;s been painful.<p>Honestly, though, I&#x27;m most intrigued by your P2P solution. I&#x27;ve built a couple of web apps as custom html elements that use indexedDB for storage and I&#x27;ve been trying to figure out the sweet spot for syncing the data between apps. I think this nostr relay hits the mark as something people can feel comfortable not self hosting, while power users can host their own solution. ",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.813,
+          "pos": 0.187,
+          "compound": 0.9828
+        }
+      },
+      {
+        "body": "How does it handle browser autofill. What if you have to fill in a box that has a non-standard label? These are things I rely on with 1Password.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "Very cool! I like it!<p>What about using Nostr relays to also back up your data passwords? I built a library called Tablinum around this idea. Local first but backed up to Nostr relays using NIP-59 gift wrapped events.<p><a href=\"https:&#x2F;&#x2F;tablinum.dev\" rel=\"nofollow\">https:&#x2F;&#x2F;tablinum.dev</a>",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.795,
+          "pos": 0.205,
+          "compound": 0.8054
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48762862",
+    "title": "Launch HN: Manufact (YC S25) – MCP Cloud",
+    "text": "Hi HN, we are Pietro and Luigi, cofounders of Manufact (<a href=\"https:&#x2F;&#x2F;manufact.com\">https:&#x2F;&#x2F;manufact.com</a>), a cloud for MCP apps and servers. We used to be called mcp-use, and still build open source SDKs for MCP under that name: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;mcp-use&#x2F;mcp-use\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;mcp-use&#x2F;mcp-use</a>. We did a Show HN about that last year: <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=44747229\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=44747229</a>.<p>Today we want to tell you ",
+    "points": 111,
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.936,
+      "pos": 0.064,
+      "compound": 0.8105
+    },
+    "comments": [
+      {
+        "body": "MCP is a deadend. CLI use is the future.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "Huge congrats to the team on the official launch of Manufact!",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.6,
+          "pos": 0.4,
+          "compound": 0.7177
+        }
+      },
+      {
+        "body": "MCP is something people think of as a &quot;panacea&quot; to all AI issues. I think people are beginning to realize it is just one, albeit important, part of a successful AI architecture.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.843,
+          "pos": 0.157,
+          "compound": 0.6808
+        }
+      },
+      {
+        "body": "This is cool. I was skeptical of MCP&#x27;s until I made one recently. They&#x27;re essentially the exact same as 1) giving your agent a CLI tool or REST API and 2) pointing it there in an AGENT.md&#x2F;CLAUDE.md. Agents are great at using built-for-human CLI tools and IMO they don&#x27;t need anything purpose-built for agents. The key difference, which ends up being a usability win for non-technical users, is that the MCP bundles 1 and 2 - harnesses inject the MCP tool descriptions on every session after install. Of course, that&#x27;s also why you need to be careful about context bloat when ",
+        "sentiment": {
+          "neg": 0.02,
+          "neu": 0.855,
+          "pos": 0.125,
+          "compound": 0.8979
+        }
+      },
+      {
+        "body": "we have so many problems with MCP related to auth, scopes etc... how do you guys help solve that?",
+        "sentiment": {
+          "neg": 0.127,
+          "neu": 0.681,
+          "pos": 0.192,
+          "compound": 0.1335
+        }
+      },
+      {
+        "body": "stopped using mcp and mostly using skills now. can&#x27;t understand what this product does or how it could help me.",
+        "sentiment": {
+          "neg": 0.084,
+          "neu": 0.796,
+          "pos": 0.119,
+          "compound": 0.2023
+        }
+      },
+      {
+        "body": "congrats guys! how does the automated testing using ChatGPT&#x2F;Claude clients work?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.73,
+          "pos": 0.27,
+          "compound": 0.5707
+        }
+      },
+      {
+        "body": "I am really impressed with your demo video, particularly the analytics, logs, and test suite features.<p>I&#x27;m a target customer where I have a few curious customers, but I&#x27;m not fully ready to roll it out yet across the customer base. One thing that&#x27;s stopping me, what does credits mean on your pricing page? And what is the pay as you go price after you hit your limit? I would need to be able to budget this before I deploy.<p>The second piece - we already have a CLI, which is great for terminal based agents and what we will continue to recommend. What we really want, and I think ",
+        "sentiment": {
+          "neg": 0.032,
+          "neu": 0.828,
+          "pos": 0.139,
+          "compound": 0.9733
+        }
+      },
+      {
+        "body": "You may want to have a look at Skybridge, a TypeScript framework designed to build MCP servers and MCP Apps, with a recent emphasis on making authentication easy.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.861,
+          "pos": 0.139,
+          "compound": 0.4939
+        }
+      },
+      {
+        "body": "we&#x27;ve been using manufact for months now. couldn&#x27;t build mcps another way.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48762000",
+    "title": "Show HN: Mail Memories – A desktop app to rescue photos from Gmail",
+    "text": "Hey HN, I’m the creator of Mail Memories. Like many of you, I&#x27;ve had my Gmail address for more than 20 years. A few years ago, I got curious and wanted to see what photos were buried deep in my account. I ended up finding lots of &quot;lost&quot; pictures of old friends, family members, and a ridiculous number of vintage memes.<p>I originally built and launched this as a SaaS, but even with code and policies in place that kept users&#x27; photos private, I figured everyone would feel more comfortable with a desktop app.<p>So, I threw out the server architecture and completely rewrote it a",
+    "points": 103,
+    "sentiment": {
+      "neg": 0.018,
+      "neu": 0.847,
+      "pos": 0.135,
+      "compound": 0.9625
+    },
+    "comments": [
+      {
+        "body": "idk if other tools do it for free, but cool idea, hope that it gains the deserved visibility",
+        "sentiment": {
+          "neg": 0.046,
+          "neu": 0.495,
+          "pos": 0.459,
+          "compound": 0.8968
+        }
+      },
+      {
+        "body": "First, I really love this idea, and I thank you for getting it into my head.<p>That said, if no AI is really important, I guess it&#x27;s worth $29, though I can&#x27;t tell if you used AI to build it or not from here.<p>Like, I just one-shot a script that does the same with Claude, after it listed 5 free projects that do the same, including one GUI.  The whole thing took less time than writing this comment.<p>Now, if it were $2.99, I probably would have just paid you.",
+        "sentiment": {
+          "neg": 0.022,
+          "neu": 0.833,
+          "pos": 0.145,
+          "compound": 0.9019
+        }
+      },
+      {
+        "body": "Or you can just use Google Takeout: <a href=\"https:&#x2F;&#x2F;takeout.google.com\" rel=\"nofollow\">https:&#x2F;&#x2F;takeout.google.com</a><p>Deselect everything, select &quot;Mail&quot;, create export, wait until it&#x27;s done, and then download the zip.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.916,
+          "pos": 0.084,
+          "compound": 0.2732
+        }
+      },
+      {
+        "body": "For $30 you should sign your binary  so you don&#x27;t have a UAC popup.<p>Also is it not doable with Google takeout ( with Gmail )?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "body": "I like the idea. Google Takeout works, but a focused app that helps you actually find and recover old photos could still be useful.",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.617,
+          "pos": 0.383,
+          "compound": 0.9081
+        }
+      },
+      {
+        "body": "I like your idea. While installing the app, I suddenly had an idea for the logo: what do you think about using a tilted old photo of a child as the app icon?",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.928,
+          "pos": 0.072,
+          "compound": 0.3612
+        }
+      },
+      {
+        "body": "&gt; 100% local, no cloud, no subscriptions, no AI.<p>The world needs more of this",
+        "sentiment": {
+          "neg": 0.13,
+          "neu": 0.648,
+          "pos": 0.222,
+          "compound": 0.1471
+        }
+      },
+      {
+        "body": "If I have to look at yet another website with this same fucking AI-generated theme I&#x27;m gonna have to kill somebody.",
+        "sentiment": {
+          "neg": 0.19,
+          "neu": 0.81,
+          "pos": 0.0,
+          "compound": -0.6908
+        }
+      },
+      {
+        "body": "“I found photos of my niece I thought were lost forever. Thank you so much!”\nEmily D.<p>Be honest, is &quot;Emily D&quot; a real person you got organic feedback from? Small thing that makes the vibed site off-putting.<p>It says &quot;Storage: 1.3 GB saved&quot;, but then says it is Read-only.",
+        "sentiment": {
+          "neg": 0.032,
+          "neu": 0.885,
+          "pos": 0.082,
+          "compound": 0.3699
+        }
+      },
+      {
+        "body": "Interesting! I already have a Python script that can download anything from Gmail. Making it a product?! Really have not thought about it! Which is why I am probably broke Ha Ha",
+        "sentiment": {
+          "neg": 0.071,
+          "neu": 0.715,
+          "pos": 0.214,
+          "compound": 0.6784
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48760467",
+    "title": "Show HN: Navia Dratp – an online version of an out-of-print Bandai strategy game",
+    "text": "I built an online version of Navia Dratp, an out-of-print chess-like strategy game by Bandai (think chess plus mana and deckbuilding).<p>One interesting part was the Claude-powered AI opponent. The critical part wasn&#x27;t getting it to play, it was making it safe: the backend only ever hands it server-validated legal moves to choose from, so a hallucinated or malformed move can&#x27;t corrupt game state. It explains its reasoning after each move. The whole site is Elixir&#x2F;Phoenix LiveView, with each game as its own process.<p>I had Claude keep a running development journal from its own p",
+    "points": 2,
+    "sentiment": {
+      "neg": 0.03,
+      "neu": 0.873,
+      "pos": 0.097,
+      "compound": 0.8591
+    },
+    "comments": [
+      {
+        "body": "This is a neat LiveView use case. The bit that jumped out to me is &quot;each game as its own process&quot;, which feels very BEAM-y in the good way.<p>Curious how you&#x27;re handling abandoned games. Do they just sit around until some timeout kills them, or are you persisting after each move so they can be rebuilt after a deploy&#x2F;restart?",
+        "sentiment": {
+          "neg": 0.096,
+          "neu": 0.816,
+          "pos": 0.088,
+          "compound": -0.1531
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48746576",
+    "title": "Show HN: Bytesalt – AI that finds bugs Playwright tests miss",
+    "text": "Hey! I built Bytesalt and excited to share it here.<p>Every engineering team I&#x27;ve been part of has had the same problem. Playwright (or similar) scripts pass, yet critical bugs showed up when real users used our software. I don&#x27;t think this is because Playwright is inherently bad - it is doing its job perfectly well - testing exactly what we told it to test.<p>The problem is - real world bugs happen because we didn&#x27;t think to test a particular path - think a support widget covering the checkout button on smaller screen phones, or a race condition when clicking through buttons in",
+    "points": 1,
+    "sentiment": {
+      "neg": 0.05,
+      "neu": 0.887,
+      "pos": 0.062,
+      "compound": 0.2828
+    },
+    "comments": []
+  },
+  {
+    "source": "hackernews",
+    "id": "48746018",
+    "title": "Show HN: Infini-News – 1.36B news articles from Common Crawl, queryable in ms",
+    "text": "Infini-News is ten years of CC-NEWS (the news subset of Common Crawl), cleaned, enriched and turned into a full-text index so you can count any keyword or phrase across 1.36B articles in sub-second time (ok, now maybe a few seconds, but circumstantial), without downloading anything. It&#x27;s free and open on Hugging Face.\nI did it because I was sick of having to manually scrape news websites and the like for research purposes and because it felt interesting personally to tackle a project of this scale.\nOn top of data cleaning, we have run language, country (via TLDs and some other heuristics)",
+    "points": 6,
+    "sentiment": {
+      "neg": 0.023,
+      "neu": 0.824,
+      "pos": 0.153,
+      "compound": 0.9783
+    },
+    "comments": [
+      {
+        "body": "Very cool! Happy to see some cool stuff made in Graz too. Keep up the good work!",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.513,
+          "pos": 0.487,
+          "compound": 0.9073
+        }
+      }
+    ]
+  },
+  {
+    "source": "hackernews",
+    "id": "48738624",
+    "title": "Ask HN: Which payment processor/merchant-of-record do you use in 2026?",
+    "text": "I&#x27;m a solo dev about to sell a one-time-purchase macOS desktop app, and I&#x27;ve been hunting for the right way to take payments and handle licensing. I wanted a merchant-of-record so I don&#x27;t have to deal with global sales tax &#x2F; EU VAT myself.<p>My experience so far, in case it&#x27;s useful to others going through this:<p>- Lemon Squeezy: spent about a week integrating their API and testing the full purchase + license flow, and then got rejected during review with no explanation and no real path to ask why. A week of work to a dead end. Frustrating, and I still don&#x27;t know",
+    "points": 4,
+    "sentiment": {
+      "neg": 0.101,
+      "neu": 0.833,
+      "pos": 0.066,
+      "compound": -0.743
+    },
+    "comments": []
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "source": "itch",
+    "title": "Super Coupon Club [Free] [Card Game]",
+    "text": "Granny Balatro",
+    "url": "https://gizmo199.itch.io/super-coupon-club",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.455,
+      "pos": 0.545,
+      "compound": 0.802
+    }
+  },
+  {
+    "source": "itch",
+    "title": "Punch Dungeon [Free] [Strategy]",
+    "text": "PUNCH YOUR WAY TO THE TOP",
+    "url": "https://adamatomic.itch.io/punch-dungeon",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.578,
+      "pos": 0.422,
+      "compound": 0.7034
+    }
+  },
+  {
+    "source": "itch",
+    "title": "In Their Shoes [$10.49] [Visual Novel] [Windows] [macOS]",
+    "text": "A mumblecore narrative game",
+    "url": "https://wearemuesli.itch.io/its",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.827,
+      "pos": 0.173,
+      "compound": 0.3182
+    }
+  },
+  {
+    "source": "itch",
+    "title": "ROLLA [Free] [Action] [Windows]",
+    "text": "ROLL. EAT. GROW. REPEAT.",
+    "url": "https://pantaloon-io.itch.io/rolla",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.68,
+      "pos": 0.32,
+      "compound": 0.5106
+    }
+  },
+  {
+    "source": "itch",
+    "title": "Tales of Tuscany Demo [Free] [Role Playing]",
+    "text": "",
+    "url": "https://athenian-rhapsody.itch.io/tales-of-tuscany-demo",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.495,
+      "pos": 0.505,
+      "compound": 0.6249
+    }
+  },
+  {
+    "source": "itch",
+    "title": "Fugue Shot (Pre-Demo) [Free] [Action] [Windows] [macOS]",
+    "text": "Multiple arcade game modes, one roguelike run",
+    "url": "https://raredialect.itch.io/fugue-shot-pre-demo",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.798,
+      "pos": 0.202,
+      "compound": 0.5106
+    }
+  },
+  {
+    "source": "itch",
+    "title": "Milki Delivery Demo [Free] [Simulation] [Windows] [Linux]",
+    "text": "Cozy delivery adventure 🐮🚲🌻",
+    "url": "https://dodoot.itch.io/milki-delivery-demo",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.682,
+      "pos": 0.318,
+      "compound": 0.6808
+    }
+  },
+  {
+    "source": "itch",
+    "title": "Indiepocalypse #77 [$15.00] [Windows]",
+    "text": "Issue #77 of a monthly indie game anthology collecting games from 10 developers.",
+    "url": "https://pizzapranks.itch.io/indiepocalypse-77",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "itch",
+    "title": "OFFBEAT [Free] [Simulation]",
+    "text": "Build the recording studio of your dreams!",
+    "url": "https://pantaloon-io.itch.io/offbeat",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.56,
+      "pos": 0.44,
+      "compound": 0.7424
+    }
+  },
+  {
+    "source": "itch",
+    "title": "Celestial Coffee Quest [Free] [Adventure] [Windows] [macOS]",
+    "text": "To quench a thirst for coffee!",
+    "url": "https://wavey-games.itch.io/celestial-coffee-quest",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.651,
+      "pos": 0.349,
+      "compound": 0.7088
+    }
+  }
+]

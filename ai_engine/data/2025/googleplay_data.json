@@ -1,0 +1,1237 @@
+[
+  {
+    "source": "googleplay",
+    "app_id": "air.com.ubisoft.brawl.halla.platform.fighting.action.pvp",
+    "name": "Brawlhalla",
+    "developer": "Ubisoft Entertainment",
+    "installs": "10,000,000+",
+    "genre": "Action",
+    "reviews": []
+  },
+  {
+    "source": "googleplay",
+    "app_id": "com.nekki.shadowfightarena",
+    "name": "Shadow Fight 4: Arena",
+    "developer": "NEKKI",
+    "installs": "50,000,000+",
+    "genre": "Role Playing",
+    "reviews": []
+  },
+  {
+    "source": "googleplay",
+    "app_id": "com.deemedyainc.duels",
+    "name": "Duels: Epic Fighting PVP Game",
+    "developer": "Gameplay Galaxy",
+    "installs": "1,000,000+",
+    "genre": "Role Playing",
+    "reviews": [
+      {
+        "text": "4 stars as of now but only bc I just started playing. The game seems fun and well paced so far. Accessing good weapons and armor is not hard plus the battles seem balanced as of now but idk how it will be at higher level. Will edit my review after playing for a while.",
+        "score": 4,
+        "date": "2025-12-31 01:03:36",
+        "sentiment": {
+          "neg": 0.123,
+          "neu": 0.639,
+          "pos": 0.239,
+          "compound": 0.8095
+        }
+      },
+      {
+        "text": "It's a game",
+        "score": 4,
+        "date": "2025-12-28 00:31:34",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "It was getting fun until the Pay2Win players started to file in the roster. Better rating when it's more grindy and not running on Pay2Win player's economy.",
+        "score": 3,
+        "date": "2025-12-27 14:15:11",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.801,
+          "pos": 0.199,
+          "compound": 0.7351
+        }
+      },
+      {
+        "text": "cool but not 😎",
+        "score": 5,
+        "date": "2025-12-22 08:28:48",
+        "sentiment": {
+          "neg": 0.326,
+          "neu": 0.507,
+          "pos": 0.167,
+          "compound": -0.3757
+        }
+      },
+      {
+        "text": "so far not bad but time will tell",
+        "score": 4,
+        "date": "2025-12-20 18:18:45",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.773,
+          "pos": 0.227,
+          "compound": 0.2633
+        }
+      },
+      {
+        "text": "easy to play noiceee ~",
+        "score": 5,
+        "date": "2025-12-19 11:03:31",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.361,
+          "pos": 0.639,
+          "compound": 0.6486
+        }
+      },
+      {
+        "text": "when is there going to be more content added.... past 60 campaign.... other stuff for rewards... great game just lacking content",
+        "score": 3,
+        "date": "2025-12-19 09:55:22",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.725,
+          "pos": 0.275,
+          "compound": 0.802
+        }
+      },
+      {
+        "text": "To much hacker from Korea 3 times win a same guy and still him win a tournament",
+        "score": 1,
+        "date": "2025-12-12 22:31:53",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.664,
+          "pos": 0.336,
+          "compound": 0.8225
+        }
+      },
+      {
+        "text": "Great game",
+        "score": 5,
+        "date": "2025-12-11 21:51:22",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.196,
+          "pos": 0.804,
+          "compound": 0.6249
+        }
+      },
+      {
+        "text": "its solid no forced ads.",
+        "score": 5,
+        "date": "2025-12-09 23:54:29",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.424,
+          "pos": 0.576,
+          "compound": 0.4731
+        }
+      },
+      {
+        "text": "great game to pass time. good gear, and good character progression",
+        "score": 5,
+        "date": "2025-12-09 10:26:56",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.447,
+          "pos": 0.553,
+          "compound": 0.872
+        }
+      },
+      {
+        "text": "Game is good, and I'm already waiting for more content of it like different class or characters with different animations 😍",
+        "score": 5,
+        "date": "2025-12-08 11:25:47",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.714,
+          "pos": 0.286,
+          "compound": 0.8126
+        }
+      },
+      {
+        "text": "so far decent",
+        "score": 4,
+        "date": "2025-12-07 08:27:25",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "awsome game",
+        "score": 5,
+        "date": "2025-12-03 13:49:03",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "not to bad",
+        "score": 4,
+        "date": "2025-12-02 15:16:46",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.412,
+          "pos": 0.588,
+          "compound": 0.431
+        }
+      },
+      {
+        "text": "update the campaign mode and more events plss",
+        "score": 4,
+        "date": "2025-12-01 10:06:33",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "So buggy always playing up on me have lost my content twice now having to reinstall I wouldn't waste any money on this as you can't save your content. it's a shame as the game itself when not playing up is quite fun.",
+        "score": 1,
+        "date": "2025-11-28 17:01:29",
+        "sentiment": {
+          "neg": 0.179,
+          "neu": 0.672,
+          "pos": 0.149,
+          "compound": -0.1609
+        }
+      },
+      {
+        "text": "game concept looks good. graphic design nice. overall game play nothing to do all is automatically and takes the fun out of it",
+        "score": 2,
+        "date": "2025-11-28 14:28:53",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.625,
+          "pos": 0.375,
+          "compound": 0.886
+        }
+      },
+      {
+        "text": "awesome Game 🎯🎮",
+        "score": 5,
+        "date": "2025-11-25 05:59:07",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.549,
+          "pos": 0.451,
+          "compound": 0.6249
+        }
+      },
+      {
+        "text": "so far its okay. slightly a bit hard to follow",
+        "score": 4,
+        "date": "2025-11-24 16:13:29",
+        "sentiment": {
+          "neg": 0.101,
+          "neu": 0.708,
+          "pos": 0.191,
+          "compound": 0.2564
+        }
+      },
+      {
+        "text": "very nice PvP game",
+        "score": 5,
+        "date": "2025-11-24 15:36:26",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.492,
+          "pos": 0.508,
+          "compound": 0.4754
+        }
+      },
+      {
+        "text": "clan members welcome in our clan FENRIS come join us.",
+        "score": 5,
+        "date": "2025-11-24 04:07:38",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.606,
+          "pos": 0.394,
+          "compound": 0.6369
+        }
+      },
+      {
+        "text": "Cool. I like it",
+        "score": 5,
+        "date": "2025-11-22 14:08:01",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.294,
+          "pos": 0.706,
+          "compound": 0.5859
+        }
+      },
+      {
+        "text": "i played this game since 2018 but now i cant recover my account. back to lvl 1. what a waste of time!!!!",
+        "score": 1,
+        "date": "2025-11-19 17:32:37",
+        "sentiment": {
+          "neg": 0.183,
+          "neu": 0.753,
+          "pos": 0.064,
+          "compound": -0.6331
+        }
+      },
+      {
+        "text": "pretty fun so far. chests are expensive but I guess whatever.",
+        "score": 5,
+        "date": "2025-11-17 14:27:38",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.679,
+          "pos": 0.321,
+          "compound": 0.5023
+        }
+      },
+      {
+        "text": "awesome 👍😎",
+        "score": 5,
+        "date": "2025-11-14 09:17:59",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.413,
+          "pos": 0.587,
+          "compound": 0.7964
+        }
+      },
+      {
+        "text": "sòoooooò fun",
+        "score": 5,
+        "date": "2025-11-13 21:10:50",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.233,
+          "pos": 0.767,
+          "compound": 0.5106
+        }
+      },
+      {
+        "text": "great game Keep it going.",
+        "score": 5,
+        "date": "2025-11-13 00:20:41",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.494,
+          "pos": 0.506,
+          "compound": 0.6249
+        }
+      },
+      {
+        "text": "Very fun game love how you get different gear pieces and stuff makes you look cool easy to play.",
+        "score": 5,
+        "date": "2025-11-10 16:58:38",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.472,
+          "pos": 0.528,
+          "compound": 0.9399
+        }
+      },
+      {
+        "text": "good game to try",
+        "score": 3,
+        "date": "2025-11-07 05:49:53",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.508,
+          "pos": 0.492,
+          "compound": 0.4404
+        }
+      },
+      {
+        "text": "not bad so far",
+        "score": 4,
+        "date": "2025-11-06 09:58:57",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.513,
+          "pos": 0.487,
+          "compound": 0.431
+        }
+      },
+      {
+        "text": "nice but need to update",
+        "score": 5,
+        "date": "2025-11-05 22:41:49",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.678,
+          "pos": 0.322,
+          "compound": 0.2263
+        }
+      },
+      {
+        "text": "yeah it alright",
+        "score": 3,
+        "date": "2025-11-04 01:36:36",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.192,
+          "pos": 0.808,
+          "compound": 0.4939
+        }
+      },
+      {
+        "text": "This is one of the best game I think you need more Player this game will change the MMROPG game play",
+        "score": 5,
+        "date": "2025-10-29 20:39:05",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.742,
+          "pos": 0.258,
+          "compound": 0.765
+        }
+      },
+      {
+        "text": "dead game. this game sucks, it's been almost two years since I made my last comment and they haven't made a single positive change to the game. oh and there's still only sixty levels to the campaign. if they added another 140 levels at least that would make this game less boring.",
+        "score": 1,
+        "date": "2025-10-29 00:52:50",
+        "sentiment": {
+          "neg": 0.146,
+          "neu": 0.795,
+          "pos": 0.06,
+          "compound": -0.6378
+        }
+      },
+      {
+        "text": "Rigged Rigged Riggrd! It's a fun game for the 1st few days. They make you feel like you are progressing, but you're not really. You hit a pay wall quickly. The most frustrating part is that the matches seem fixed. You can fight against a creature or opponent at your same level, and they kill you within 2 hits. You barely get to attack. Then, all of a sudden, you 1 shot them. The fights and the so-called randomness are clearly rigged. Too bad. Great graphics and great idea otherwise.",
+        "score": 2,
+        "date": "2025-10-26 15:19:15",
+        "sentiment": {
+          "neg": 0.271,
+          "neu": 0.583,
+          "pos": 0.146,
+          "compound": -0.945
+        }
+      },
+      {
+        "text": "absolutely refreshing.",
+        "score": 5,
+        "date": "2025-10-24 21:09:00",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "lost account again cause they refuse to let my Google account be linked what a waste of my time and money",
+        "score": 1,
+        "date": "2025-10-21 14:02:02",
+        "sentiment": {
+          "neg": 0.289,
+          "neu": 0.711,
+          "pos": 0.0,
+          "compound": -0.743
+        }
+      },
+      {
+        "text": "Very enjoyable. Great game.",
+        "score": 5,
+        "date": "2025-10-21 02:23:20",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.209,
+          "pos": 0.791,
+          "compound": 0.8211
+        }
+      },
+      {
+        "text": "it's an okay game.. Dislikes (1) The loot and collect fights that carry a number you must beat in order to complete and collect keys, is very set up your first few fights are simple and some equal, but when it comes to the end to complete the last battle is very uneven, they usually out power you by over 100 points plus, leaving you to loose all other battles... ( 2 ) very slow on upgrading your equipment power, you just inch along,",
+        "score": 2,
+        "date": "2025-10-19 17:58:01",
+        "sentiment": {
+          "neg": 0.163,
+          "neu": 0.809,
+          "pos": 0.028,
+          "compound": -0.9136
+        }
+      },
+      {
+        "text": "the auto battle thing ain't really all that good at all you can equip good equipment and never even use the ability",
+        "score": 3,
+        "date": "2025-10-19 14:25:03",
+        "sentiment": {
+          "neg": 0.09,
+          "neu": 0.621,
+          "pos": 0.289,
+          "compound": 0.6969
+        }
+      },
+      {
+        "text": "Fun and addictive",
+        "score": 5,
+        "date": "2025-10-06 16:43:04",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.377,
+          "pos": 0.623,
+          "compound": 0.5106
+        }
+      },
+      {
+        "text": "i love this game. addictive continuous play. I'm a grinder but this app i will I will do some purchasing. I beta tested this game a few years ago and I'm so glad to find it again and I want to see this game as a top 5er...",
+        "score": 5,
+        "date": "2025-10-04 14:38:02",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.764,
+          "pos": 0.236,
+          "compound": 0.9052
+        }
+      },
+      {
+        "text": "good game but internet too...",
+        "score": 3,
+        "date": "2025-09-22 08:16:22",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.672,
+          "pos": 0.328,
+          "compound": 0.2382
+        }
+      },
+      {
+        "text": "I miss this game from years ago and love how it's aged.",
+        "score": 5,
+        "date": "2025-09-17 23:45:34",
+        "sentiment": {
+          "neg": 0.101,
+          "neu": 0.633,
+          "pos": 0.266,
+          "compound": 0.5574
+        }
+      },
+      {
+        "text": "i am not able to download this game,why what is the reason ?",
+        "score": 1,
+        "date": "2025-09-14 22:31:48",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "Another game that's become useless because the developer(s) won't maintain it properly. I can't do anything cause I need to watch ads to get any further and they don't even work.",
+        "score": 1,
+        "date": "2025-09-10 09:45:56",
+        "sentiment": {
+          "neg": 0.085,
+          "neu": 0.915,
+          "pos": 0.0,
+          "compound": -0.4215
+        }
+      },
+      {
+        "text": "they deleted my comment cuhz they won't update the game at all had it since 2020 and it's 2025 still says coming soon",
+        "score": 1,
+        "date": "2025-08-13 01:29:00",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "needs an update tbh",
+        "score": 1,
+        "date": "2025-08-10 17:47:51",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "i hope we can connect gmail as well to get back our old account data",
+        "score": 4,
+        "date": "2025-08-10 06:38:02",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.722,
+          "pos": 0.278,
+          "compound": 0.6124
+        }
+      },
+      {
+        "text": "more update",
+        "score": 5,
+        "date": "2025-07-23 07:31:25",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "You guys need to stop forcing stupid tutorials..... if they ain't smart enough to play a game they should have access to electronics lmao... I hate forced and unstoppable tutorials",
+        "score": 1,
+        "date": "2025-07-22 17:28:17",
+        "sentiment": {
+          "neg": 0.366,
+          "neu": 0.493,
+          "pos": 0.141,
+          "compound": -0.8425
+        }
+      },
+      {
+        "text": "fun fun fun",
+        "score": 5,
+        "date": "2025-07-12 07:50:07",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.0,
+          "pos": 1.0,
+          "compound": 0.872
+        }
+      },
+      {
+        "text": "Loving it🫂",
+        "score": 5,
+        "date": "2025-07-11 04:26:04",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.204,
+          "pos": 0.796,
+          "compound": 0.5994
+        }
+      },
+      {
+        "text": "My experience is cool but I have one small complaint . This cool game has all kinds of elements the warriors fight with , but..... WHERE IS THE ELEMENT OF LIGHTENING STRIKES???????? ARE YOU NUTS TO NOT PUT THAT IN THIS GAME 🤔???? Everyone will know if you read this post if we all start having fun ELECTROCUTING OUR ENEMY.. Why don't you guys add LIGHTENING STRIKES in the next update, since the game actually looks like THOR'S REALM . I give this idea free of CHARGE because I have a lot more ideas",
+        "score": 4,
+        "date": "2025-07-04 13:03:43",
+        "sentiment": {
+          "neg": 0.204,
+          "neu": 0.664,
+          "pos": 0.132,
+          "compound": -0.9002
+        }
+      },
+      {
+        "text": "I hate the fact then when I reinstall the game, I can't seem to get my old progress back. Which is a huge deal for me and countless other people",
+        "score": 2,
+        "date": "2025-07-02 21:47:24",
+        "sentiment": {
+          "neg": 0.103,
+          "neu": 0.754,
+          "pos": 0.142,
+          "compound": 0.1027
+        }
+      },
+      {
+        "text": "Next Please!",
+        "score": 5,
+        "date": "2025-06-07 06:33:24",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.278,
+          "pos": 0.722,
+          "compound": 0.3802
+        }
+      },
+      {
+        "text": "Good game 😄",
+        "score": 5,
+        "date": "2025-05-31 12:04:29",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.323,
+          "pos": 0.677,
+          "compound": 0.8126
+        }
+      },
+      {
+        "text": "Good Game Guys",
+        "score": 5,
+        "date": "2025-05-24 02:41:09",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.408,
+          "pos": 0.592,
+          "compound": 0.4404
+        }
+      },
+      {
+        "text": "the games is rigged",
+        "score": 1,
+        "date": "2025-04-22 18:20:02",
+        "sentiment": {
+          "neg": 0.455,
+          "neu": 0.545,
+          "pos": 0.0,
+          "compound": -0.3612
+        }
+      },
+      {
+        "text": "I don't understand why now in April and there is still a Christmas event on, doesn't look like there has or will be any updates for this game......save your money",
+        "score": 1,
+        "date": "2025-04-13 08:35:19",
+        "sentiment": {
+          "neg": 0.068,
+          "neu": 0.932,
+          "pos": 0.0,
+          "compound": -0.2755
+        }
+      },
+      {
+        "text": "Nice game! Thanks.",
+        "score": 5,
+        "date": "2025-04-08 22:22:34",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.143,
+          "pos": 0.857,
+          "compound": 0.7177
+        }
+      },
+      {
+        "text": "good, but not good as knighthood!",
+        "score": 4,
+        "date": "2025-04-04 12:13:30",
+        "sentiment": {
+          "neg": 0.364,
+          "neu": 0.428,
+          "pos": 0.209,
+          "compound": -0.3508
+        }
+      },
+      {
+        "text": "Amazing game play",
+        "score": 5,
+        "date": "2025-04-01 18:21:13",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.139,
+          "pos": 0.861,
+          "compound": 0.7351
+        }
+      },
+      {
+        "text": "Good game. But you should add a way to equip armor and weapons but only use the cosmetic not the stats. That way we can make our characters look however we want and have good stats",
+        "score": 5,
+        "date": "2025-03-30 15:19:07",
+        "sentiment": {
+          "neg": 0.089,
+          "neu": 0.742,
+          "pos": 0.168,
+          "compound": 0.34
+        }
+      },
+      {
+        "text": "this is cool but i like so the campain and a few more events or updates to happen mor often",
+        "score": 5,
+        "date": "2025-03-15 07:58:48",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.786,
+          "pos": 0.214,
+          "compound": 0.5994
+        }
+      },
+      {
+        "text": "It sux because I can't login to my old acct that I put alot of money into since I re-downloaded the game my purchases are just gone and I can no longer finish the campaign because it won't start the match I'm totally disappointed in how this game turned out other then that the game would get 5 stars from myself but since I lost alot on it and can't really advance this is what it gets",
+        "score": 2,
+        "date": "2025-02-25 21:14:58",
+        "sentiment": {
+          "neg": 0.104,
+          "neu": 0.896,
+          "pos": 0.0,
+          "compound": -0.7577
+        }
+      },
+      {
+        "text": "Wow this game is really good, I didn't expect it to be good, recommended ✨",
+        "score": 5,
+        "date": "2025-02-20 01:57:03",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.417,
+          "pos": 0.583,
+          "compound": 0.9184
+        }
+      },
+      {
+        "text": "Leveling is very slow",
+        "score": 4,
+        "date": "2025-02-07 10:20:30",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "It's an amazing fun game only thing is I wish there were more modes to play like 2v2s or side campaign missions and better and easier ways to level up but other than that yeah it's addicting",
+        "score": 5,
+        "date": "2025-02-04 18:31:18",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.636,
+          "pos": 0.364,
+          "compound": 0.9124
+        }
+      },
+      {
+        "text": "Pretty neat concept. It is enjoyable at the get go!",
+        "score": 4,
+        "date": "2025-02-03 17:58:05",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.427,
+          "pos": 0.573,
+          "compound": 0.8553
+        }
+      },
+      {
+        "text": "Haven't had to spend a dime and it's not rigged, let me explain. Focus on crit, CRIT chance, physical defense and dodge chance. Just high att N HP isn't good enough. Also don't be afraid to spend your keys on chests (mainly 5key & 10 key chests) fire, poison & other chests can be farmed through events, bosses etc. But what you put in you get out and I can do everything I need within an hour I'll usually spend more because I'm an osrs player so I'm used to grind but you don't need major hours.",
+        "score": 5,
+        "date": "2025-01-25 12:52:02",
+        "sentiment": {
+          "neg": 0.056,
+          "neu": 0.887,
+          "pos": 0.057,
+          "compound": -0.2139
+        }
+      },
+      {
+        "text": "LAME LAME LAME, ALL YOU SO IS WATCH THE GAME PLAY ITSELF",
+        "score": 1,
+        "date": "2025-01-20 22:35:57",
+        "sentiment": {
+          "neg": 0.447,
+          "neu": 0.426,
+          "pos": 0.128,
+          "compound": -0.7184
+        }
+      },
+      {
+        "text": "Absolutely awesome game, my son recommended and it is so fun! Cool characters and it's easy to play xx",
+        "score": 5,
+        "date": "2025-01-20 13:59:29",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.411,
+          "pos": 0.589,
+          "compound": 0.9559
+        }
+      },
+      {
+        "text": "I played the game its fun,but the more you level up the game going harder, you will go stagnant once you reach lvl19+ game is starting the only thing you do is wait for dungeon, go league or win loot, now you go do these things repeatedly , I hope the developer find ways to make the game more engaging, its hard to had fun if you keep waiting for hours until you can repeat these things I hope this game will be improve, I really Love the concept ,I hope this game will continue to grow, please",
+        "score": 4,
+        "date": "2025-01-17 12:56:42",
+        "sentiment": {
+          "neg": 0.014,
+          "neu": 0.721,
+          "pos": 0.265,
+          "compound": 0.9818
+        }
+      },
+      {
+        "text": "Pretty good huh",
+        "score": 5,
+        "date": "2025-01-08 12:50:26",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.141,
+          "pos": 0.859,
+          "compound": 0.7269
+        }
+      },
+      {
+        "text": "The game is fun but when will it update for the coming soon part on campaign?",
+        "score": 5,
+        "date": "2025-01-07 11:04:39",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.875,
+          "pos": 0.125,
+          "compound": 0.2846
+        }
+      },
+      {
+        "text": "Decent graphics with great combat and easy to learn,play and addicted",
+        "score": 4,
+        "date": "2025-01-06 07:30:48",
+        "sentiment": {
+          "neg": 0.138,
+          "neu": 0.46,
+          "pos": 0.402,
+          "compound": 0.6808
+        }
+      },
+      {
+        "text": "I love the fighting so cool",
+        "score": 5,
+        "date": "2025-01-01 09:59:25",
+        "sentiment": {
+          "neg": 0.197,
+          "neu": 0.236,
+          "pos": 0.567,
+          "compound": 0.6899
+        }
+      }
+    ]
+  },
+  {
+    "source": "googleplay",
+    "app_id": "jp.co.capcom.sf4ce",
+    "name": "Street Fighter IV CE",
+    "developer": "CAPCOM CO., LTD.",
+    "installs": "10,000,000+",
+    "genre": "Action",
+    "reviews": [
+      {
+        "text": "I bought it twice just now but it is showing as error and telling to restore transaction when try it then it will as no previous transaction found....nice Way of scamming people",
+        "score": 1,
+        "date": "2025-12-31 20:16:06",
+        "sentiment": {
+          "neg": 0.166,
+          "neu": 0.76,
+          "pos": 0.073,
+          "compound": -0.5499
+        }
+      },
+      {
+        "text": "Yes I am enjoying the game so much but it is getting disconnect more and more often, please fix it. I literally paid for this game and this game freeze and a lot of issue in online opponent",
+        "score": 3,
+        "date": "2025-12-31 15:22:14",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.796,
+          "pos": 0.204,
+          "compound": 0.7729
+        }
+      },
+      {
+        "text": "I just love this game shoryoken!!",
+        "score": 5,
+        "date": "2025-12-31 13:06:54",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.511,
+          "pos": 0.489,
+          "compound": 0.6988
+        }
+      },
+      {
+        "text": "can't open the game",
+        "score": 1,
+        "date": "2025-12-31 10:24:02",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "wow wow wow I somuch love ❤️ it!!!!!",
+        "score": 5,
+        "date": "2025-12-31 08:21:24",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.23,
+          "pos": 0.77,
+          "compound": 0.9569
+        }
+      },
+      {
+        "text": "surprisingly decent port",
+        "score": 5,
+        "date": "2025-12-31 02:59:54",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.476,
+          "pos": 0.524,
+          "compound": 0.296
+        }
+      },
+      {
+        "text": "i paid for full access but after paying I can't able to access other players and it is also asking to pay ...then showing already purchased go to restore ...but restore of purchase is failing .....is it a scam",
+        "score": 1,
+        "date": "2025-12-31 00:11:54",
+        "sentiment": {
+          "neg": 0.219,
+          "neu": 0.671,
+          "pos": 0.11,
+          "compound": -0.7579
+        }
+      },
+      {
+        "text": "very good good to enjoy in home",
+        "score": 5,
+        "date": "2025-12-29 23:57:26",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.295,
+          "pos": 0.705,
+          "compound": 0.8615
+        }
+      },
+      {
+        "text": "Brings me back to my high school memories with this game, and its less than $2. Can't go wrong",
+        "score": 5,
+        "date": "2025-12-29 22:40:26",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.876,
+          "pos": 0.124,
+          "compound": 0.3724
+        }
+      },
+      {
+        "text": "because it very good worked hard for it",
+        "score": 5,
+        "date": "2025-12-29 13:45:36",
+        "sentiment": {
+          "neg": 0.153,
+          "neu": 0.553,
+          "pos": 0.294,
+          "compound": 0.3673
+        }
+      },
+      {
+        "text": "no need to explain",
+        "score": 1,
+        "date": "2025-12-28 23:19:51",
+        "sentiment": {
+          "neg": 0.423,
+          "neu": 0.577,
+          "pos": 0.0,
+          "compound": -0.296
+        }
+      },
+      {
+        "text": "Shockingly good aside from the graphics. Never did I think that Dan Hibiki and Chun Li would be the Top 1 and 2 of a game though.",
+        "score": 5,
+        "date": "2025-12-28 18:37:49",
+        "sentiment": {
+          "neg": 0.056,
+          "neu": 0.789,
+          "pos": 0.155,
+          "compound": 0.4588
+        }
+      },
+      {
+        "text": "a very good game but \"battle mode\" does not work or there is not enough players with this game to be mstched up so uninstalled",
+        "score": 2,
+        "date": "2025-12-28 15:42:34",
+        "sentiment": {
+          "neg": 0.119,
+          "neu": 0.807,
+          "pos": 0.074,
+          "compound": -0.319
+        }
+      },
+      {
+        "text": "Absolutely Awesome",
+        "score": 5,
+        "date": "2025-12-28 04:15:48",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.185,
+          "pos": 0.815,
+          "compound": 0.659
+        }
+      },
+      {
+        "text": "great time killer!",
+        "score": 4,
+        "date": "2025-12-28 03:48:14",
+        "sentiment": {
+          "neg": 0.474,
+          "neu": 0.103,
+          "pos": 0.423,
+          "compound": -0.126
+        }
+      },
+      {
+        "text": "The game is good everything is perfect but i bet many people will dl this game if it's multiplayer is free",
+        "score": 5,
+        "date": "2025-12-28 01:00:03",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.673,
+          "pos": 0.327,
+          "compound": 0.8294
+        }
+      },
+      {
+        "text": "not worth it.",
+        "score": 1,
+        "date": "2025-12-27 14:32:35",
+        "sentiment": {
+          "neg": 0.454,
+          "neu": 0.546,
+          "pos": 0.0,
+          "compound": -0.1695
+        }
+      },
+      {
+        "text": "The game is really good",
+        "score": 5,
+        "date": "2025-12-27 02:40:31",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.556,
+          "pos": 0.444,
+          "compound": 0.4927
+        }
+      },
+      {
+        "text": "i have been a fan of CAPCOM since forever. i am paying as a thank you for all the great arcade years i had from 1986 to 2005",
+        "score": 5,
+        "date": "2025-12-27 02:24:47",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.737,
+          "pos": 0.263,
+          "compound": 0.836
+        }
+      },
+      {
+        "text": "Amazing game crippled by horrid controls. Games like this do not project well onto a phone. I wish it did but it doesn't.",
+        "score": 2,
+        "date": "2025-12-26 18:43:46",
+        "sentiment": {
+          "neg": 0.132,
+          "neu": 0.651,
+          "pos": 0.217,
+          "compound": 0.3276
+        }
+      },
+      {
+        "text": "online ranked fights always crash",
+        "score": 1,
+        "date": "2025-12-26 18:00:52",
+        "sentiment": {
+          "neg": 0.643,
+          "neu": 0.357,
+          "pos": 0.0,
+          "compound": -0.6597
+        }
+      },
+      {
+        "text": "I love this that's all I can said",
+        "score": 5,
+        "date": "2025-12-26 13:44:24",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.625,
+          "pos": 0.375,
+          "compound": 0.6369
+        }
+      },
+      {
+        "text": "this fighting games is great and easy",
+        "score": 5,
+        "date": "2025-12-25 21:01:26",
+        "sentiment": {
+          "neg": 0.185,
+          "neu": 0.296,
+          "pos": 0.519,
+          "compound": 0.6705
+        }
+      },
+      {
+        "text": "This is just like the PS3 version, good game.",
+        "score": 5,
+        "date": "2025-12-25 17:49:42",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.565,
+          "pos": 0.435,
+          "compound": 0.6597
+        }
+      },
+      {
+        "text": "Street Fighter IV: Champion Edition is a fantastic throwback that captures the heart of classic Street Fighter while still feeling modern and accessible. The combat is smooth, responsive, and incredibly satisfying, whether you’re pulling off simple combos or mastering more advanced techniques. The visuals are stylish and vibrant, and the character animations have a lot of personality, making every fight feel intense and exciting.",
+        "score": 5,
+        "date": "2025-12-25 12:42:58",
+        "sentiment": {
+          "neg": 0.057,
+          "neu": 0.572,
+          "pos": 0.371,
+          "compound": 0.9761
+        }
+      },
+      {
+        "text": "i can't believe i pay for a game then it does not want me to play ranked online match i thought you fixed this problem but you didn't it keeps telling me i have been disconnected and my WiFi is fully functioning so please fix this problem apart from that the game is actually good the only problem is match making",
+        "score": 1,
+        "date": "2025-12-25 10:41:26",
+        "sentiment": {
+          "neg": 0.138,
+          "neu": 0.712,
+          "pos": 0.15,
+          "compound": 0.2277
+        }
+      },
+      {
+        "text": "as soon as i payed to unlock characters it says im disconnected. this game is a scam",
+        "score": 1,
+        "date": "2025-12-25 06:45:24",
+        "sentiment": {
+          "neg": 0.188,
+          "neu": 0.812,
+          "pos": 0.0,
+          "compound": -0.5719
+        }
+      },
+      {
+        "text": "Hi , Paid but not able to play the game with all characters. Can someone look into it. ?",
+        "score": 2,
+        "date": "2025-12-25 02:09:24",
+        "sentiment": {
+          "neg": 0.124,
+          "neu": 0.876,
+          "pos": 0.0,
+          "compound": -0.3724
+        }
+      },
+      {
+        "text": "I play this game seldomly but it never fails to amaze me..I am the best and no one can beT me.",
+        "score": 5,
+        "date": "2025-12-24 18:37:50",
+        "sentiment": {
+          "neg": 0.199,
+          "neu": 0.484,
+          "pos": 0.317,
+          "compound": 0.6024
+        }
+      }
+    ]
+  },
+  {
+    "source": "googleplay",
+    "app_id": "com.Neurononfire.SupremeDuelist",
+    "name": "Supreme Duelist",
+    "developer": "Neron's Brother",
+    "installs": "100,000,000+",
+    "genre": "Action",
+    "reviews": []
+  }
+]

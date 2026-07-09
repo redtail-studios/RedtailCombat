@@ -1,0 +1,323 @@
+[
+  {
+    "source": "googleplay",
+    "app_id": "air.com.ubisoft.brawl.halla.platform.fighting.action.pvp",
+    "name": "Brawlhalla",
+    "developer": "Ubisoft Entertainment",
+    "installs": "10,000,000+",
+    "genre": "Action",
+    "reviews": []
+  },
+  {
+    "source": "googleplay",
+    "app_id": "com.nekki.shadowfightarena",
+    "name": "Shadow Fight 4: Arena",
+    "developer": "NEKKI",
+    "installs": "50,000,000+",
+    "genre": "Role Playing",
+    "reviews": []
+  },
+  {
+    "source": "googleplay",
+    "app_id": "com.deemedyainc.duels",
+    "name": "Duels: Epic Fighting PVP Game",
+    "developer": "Gameplay Galaxy",
+    "installs": "1,000,000+",
+    "genre": "Role Playing",
+    "reviews": [
+      {
+        "text": "Relaxing and fun for free...and earning some extra cash 🍻",
+        "score": 5,
+        "date": "2024-12-31 09:29:39",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.606,
+          "pos": 0.394,
+          "compound": 0.7579
+        }
+      },
+      {
+        "text": "It takes time to like it",
+        "score": 5,
+        "date": "2024-12-26 19:00:28",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.667,
+          "pos": 0.333,
+          "compound": 0.3612
+        }
+      },
+      {
+        "text": "This game is so much fun. I've had online games that were so addictive that I couldn't quit even after I lost all of my stuff gambling on the matches.",
+        "score": 5,
+        "date": "2024-12-19 02:16:40",
+        "sentiment": {
+          "neg": 0.068,
+          "neu": 0.826,
+          "pos": 0.106,
+          "compound": 0.3134
+        }
+      },
+      {
+        "text": "Update the game with more campaign level and more game modes",
+        "score": 5,
+        "date": "2024-12-16 23:18:24",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "Mixed feelings on this game. Good graphics etc but the prizes in the chests are rubbish. Feel when you are spending real money you should receive good items in the chests not weaker things to what you own already. The campaign is the only worth while thing as you get good prizes completing that. I'm enjoying this game at the moment but think i will get bored quite quickly of the poor prizes in the chests. Think things need to improve quite a bit.",
+        "score": 3,
+        "date": "2024-12-16 09:30:52",
+        "sentiment": {
+          "neg": 0.059,
+          "neu": 0.63,
+          "pos": 0.311,
+          "compound": 0.983
+        }
+      },
+      {
+        "text": "Of the graphics best game I played in a long time",
+        "score": 5,
+        "date": "2024-12-14 05:42:44",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.577,
+          "pos": 0.423,
+          "compound": 0.765
+        }
+      },
+      {
+        "text": "login fail trash game",
+        "score": 1,
+        "date": "2024-12-13 10:34:45",
+        "sentiment": {
+          "neg": 0.538,
+          "neu": 0.462,
+          "pos": 0.0,
+          "compound": -0.5423
+        }
+      },
+      {
+        "text": "a very awesome game with cool armor and cool weapon and its so so fun even when you lose",
+        "score": 5,
+        "date": "2024-12-12 07:41:02",
+        "sentiment": {
+          "neg": 0.156,
+          "neu": 0.413,
+          "pos": 0.431,
+          "compound": 0.8652
+        }
+      },
+      {
+        "text": "The cool game continue to drop better stuff and more",
+        "score": 5,
+        "date": "2024-12-07 17:59:17",
+        "sentiment": {
+          "neg": 0.147,
+          "neu": 0.49,
+          "pos": 0.364,
+          "compound": 0.4767
+        }
+      },
+      {
+        "text": "Fun and easy to navigate",
+        "score": 4,
+        "date": "2024-12-07 01:35:20",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.326,
+          "pos": 0.674,
+          "compound": 0.7351
+        }
+      },
+      {
+        "text": "I have been playing well over a year. I have had an avatar switched with another players avatar and can not get it back. I have tried contacting twice to no avail. There have been zero upgrades and no additions made to the map quest stuck at 60. The only updates are to the amounts of ads that have now doubled from 30 seconds to 60 second, meaning that every time you do something requiring to watch an ad now requires you to watch 2. A big ask for no game improvement in such a long time.",
+        "score": 2,
+        "date": "2024-12-05 12:06:37",
+        "sentiment": {
+          "neg": 0.106,
+          "neu": 0.857,
+          "pos": 0.037,
+          "compound": -0.7335
+        }
+      },
+      {
+        "text": "Extremely P2W, and locks me out the game for a day at a time, stops at 57% or 58% loading every once in a while for an entire day.",
+        "score": 3,
+        "date": "2024-11-14 13:35:31",
+        "sentiment": {
+          "neg": 0.054,
+          "neu": 0.946,
+          "pos": 0.0,
+          "compound": -0.1531
+        }
+      },
+      {
+        "text": "Can't watch ad to get free rewards . Play smooth it's a great game can't watch the ads to get the free rewards play fix",
+        "score": 3,
+        "date": "2024-11-08 21:20:56",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.453,
+          "pos": 0.547,
+          "compound": 0.967
+        }
+      },
+      {
+        "text": "it is a good game but it can also improve by giving us control for fighting please remove the function of automatic fight and also game glithces at higher level",
+        "score": 4,
+        "date": "2024-10-18 10:04:43",
+        "sentiment": {
+          "neg": 0.156,
+          "neu": 0.565,
+          "pos": 0.279,
+          "compound": 0.6369
+        }
+      },
+      {
+        "text": "Brilliant game, only sad thing is not enough things to do and the gear needs different types etc",
+        "score": 5,
+        "date": "2024-10-06 18:56:06",
+        "sentiment": {
+          "neg": 0.135,
+          "neu": 0.699,
+          "pos": 0.166,
+          "compound": 0.1779
+        }
+      },
+      {
+        "text": "Gave it 2 stars because it's at least pleasing to the eye. However, this is a \"game\" that basically plays itself. Aside from selecting equipment, You aren't actually doing anything to contribute towards the outcome.",
+        "score": 2,
+        "date": "2024-10-03 19:57:20",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.859,
+          "pos": 0.141,
+          "compound": 0.6597
+        }
+      },
+      {
+        "text": "👍👎 it's okay I guess",
+        "score": 4,
+        "date": "2024-09-26 17:11:33",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.787,
+          "pos": 0.213,
+          "compound": 0.2263
+        }
+      },
+      {
+        "text": "When is the compain going again",
+        "score": 5,
+        "date": "2024-09-21 14:26:43",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "Great game",
+        "score": 5,
+        "date": "2024-09-16 09:42:15",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.196,
+          "pos": 0.804,
+          "compound": 0.6249
+        }
+      },
+      {
+        "text": "Calling all Elvis to return to duel. Elvis",
+        "score": 5,
+        "date": "2024-09-02 05:24:16",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "Sunk so many hours. Cons: no cloud save",
+        "score": 5,
+        "date": "2024-09-01 20:40:13",
+        "sentiment": {
+          "neg": 0.446,
+          "neu": 0.554,
+          "pos": 0.0,
+          "compound": -0.5897
+        }
+      },
+      {
+        "text": "THIS GAME IS PAY TO WIN.. USELESS YOU CAN'T USE YOUR LEGENDARY ITEMS UNLESS YOU REACH THE REQUIRED LEVEL. AND IN ORDER FOR YOU TO LEVEL UP IS TO DISPOSE THE ITEMS. THE THING THAT MAKES ME FEEL MAD IS THAT, YOU CAN'T PASS THROUGH LEVELS AND BECAUSE OF THAT YOU WILL NOT GAIN ANY ITEMS OR REWARDS. HOW CAN I LEVEL UP FASTER IN THIS GAME BESIDES DISSASSEMBLING THE ITEMS!?? PAY TO WIN. JUNK!.. I DELETED THIS GAME AND I WANT MY REFUND! USELESS!",
+        "score": 1,
+        "date": "2024-08-28 22:51:32",
+        "sentiment": {
+          "neg": 0.154,
+          "neu": 0.718,
+          "pos": 0.127,
+          "compound": -0.4222
+        }
+      },
+      {
+        "text": "Love this game but without any updates really struggling to carry on . Is there ever going to be updates for campaign or anything ?",
+        "score": 5,
+        "date": "2024-08-26 08:33:10",
+        "sentiment": {
+          "neg": 0.139,
+          "neu": 0.773,
+          "pos": 0.087,
+          "compound": -0.3694
+        }
+      },
+      {
+        "text": "This is a fun game , feel like kid. Lols",
+        "score": 5,
+        "date": "2024-08-26 01:10:09",
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.58,
+          "pos": 0.42,
+          "compound": 0.7003
+        }
+      },
+      {
+        "text": "Addictive game, fun and easy to understand also NO forced ads! Only thing that bothering me is this game doesn't have too much to do wish had longer campaign but pvp also fun.",
+        "score": 5,
+        "date": "2024-08-25 15:45:46",
+        "sentiment": {
+          "neg": 0.076,
+          "neu": 0.625,
+          "pos": 0.299,
+          "compound": 0.8506
+        }
+      }
+    ]
+  },
+  {
+    "source": "googleplay",
+    "app_id": "jp.co.capcom.sf4ce",
+    "name": "Street Fighter IV CE",
+    "developer": "CAPCOM CO., LTD.",
+    "installs": "10,000,000+",
+    "genre": "Action",
+    "reviews": []
+  },
+  {
+    "source": "googleplay",
+    "app_id": "com.Neurononfire.SupremeDuelist",
+    "name": "Supreme Duelist",
+    "developer": "Neron's Brother",
+    "installs": "100,000,000+",
+    "genre": "Action",
+    "reviews": []
+  }
+]

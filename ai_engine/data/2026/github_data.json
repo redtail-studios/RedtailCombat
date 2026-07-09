@@ -1,0 +1,1172 @@
+[
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "Scriptez1/RedXFreeSteamInstaller",
+    "title": "Scriptez1/RedXFreeSteamInstaller (1442★)",
+    "text": "GitHub game project 'Scriptez1/RedXFreeSteamInstaller' (1442★, PowerShell): It allows you to automatically add all free and paid games and DLCs to your Steam account securely and for free. - Steam hesabınıza tüm ücretsiz ve ücretli oyunları ve DLC'leri güvenli ve ücretsiz bir şekilde otomatik olarak eklemenizi sağlar. Topics: bedavasteam, dokuman-tv, dokumantv, free, freegame, freesteamgame, game, games.",
+    "stars": 1442,
+    "topics": [
+      "bedavasteam",
+      "dokuman-tv",
+      "dokumantv",
+      "free",
+      "freegame",
+      "freesteamgame",
+      "game",
+      "games"
+    ],
+    "url": "https://github.com/Scriptez1/RedXFreeSteamInstaller",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.809,
+      "pos": 0.191,
+      "compound": 0.8402
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "MultiCraft/MultiCraft",
+    "title": "MultiCraft/MultiCraft (149★)",
+    "text": "GitHub game project 'MultiCraft/MultiCraft' (149★, C++): 🌍 MultiCraft Engine | Open Source Topics: android-game, game, game-engine, irrlicht, linux-game, lua, luanti, macos-game.",
+    "stars": 149,
+    "topics": [
+      "android-game",
+      "game",
+      "game-engine",
+      "irrlicht",
+      "linux-game",
+      "lua",
+      "luanti",
+      "macos-game"
+    ],
+    "url": "https://github.com/MultiCraft/MultiCraft",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "LostArtefacts/TRX",
+    "title": "LostArtefacts/TRX (931★)",
+    "text": "GitHub game project 'LostArtefacts/TRX' (931★, C): Open source re-implementation of Tomb Raider I, Tomb Raider II and Tomb Raider III, along with additional enhancements and bugfixes Topics: game, game-modding, reverse-engineering, tomb-raider.",
+    "stars": 931,
+    "topics": [
+      "game",
+      "game-modding",
+      "reverse-engineering",
+      "tomb-raider"
+    ],
+    "url": "https://github.com/LostArtefacts/TRX",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "BeeStation/BeeStation-Hornet",
+    "title": "BeeStation/BeeStation-Hornet (215★)",
+    "text": "GitHub game project 'BeeStation/BeeStation-Hornet' (215★, DM): 99.95% station. 0.05% bees Topics: atmospheric-modelling, bees, byond, codebase, dm, game, hacktoberfest, retrogaming.",
+    "stars": 215,
+    "topics": [
+      "atmospheric-modelling",
+      "bees",
+      "byond",
+      "codebase",
+      "dm",
+      "game",
+      "hacktoberfest",
+      "retrogaming"
+    ],
+    "url": "https://github.com/BeeStation/BeeStation-Hornet",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "kyh/vibedgames",
+    "title": "kyh/vibedgames (52★)",
+    "text": "GitHub game project 'kyh/vibedgames' (52★, TypeScript): A game studio for your agent 🎮 Topics: game, multiplayer, nextjs, partykit, react, realtime, supabase.",
+    "stars": 52,
+    "topics": [
+      "game",
+      "multiplayer",
+      "nextjs",
+      "partykit",
+      "react",
+      "realtime",
+      "supabase"
+    ],
+    "url": "https://github.com/kyh/vibedgames",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "kqcoxn/MaaDuDuL",
+    "title": "kqcoxn/MaaDuDuL (45★)",
+    "text": "GitHub game project 'kqcoxn/MaaDuDuL' (45★, Python): 嘟嘟脸恶作剧（Trickcal）自动化小助手，由 MaaFramework 强力驱动！ Topics: automation, game, maa, maaframework.",
+    "stars": 45,
+    "topics": [
+      "automation",
+      "game",
+      "maa",
+      "maaframework"
+    ],
+    "url": "https://github.com/kqcoxn/MaaDuDuL",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "4ian/GDevelop",
+    "title": "4ian/GDevelop (24442★)",
+    "text": "GitHub game project '4ian/GDevelop' (24442★, JavaScript): 🎮 Open-source, cross-platform 2D/3D/multiplayer game engine designed for everyone. Topics: 2d-game, 2d-game-engine, 3d, 3d-game, 3d-game-engine, game, game-development, game-engine.",
+    "stars": 24442,
+    "topics": [
+      "2d-game",
+      "2d-game-engine",
+      "3d",
+      "3d-game",
+      "3d-game-engine",
+      "game",
+      "game-development",
+      "game-engine"
+    ],
+    "url": "https://github.com/4ian/GDevelop",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "DeltaV-Station/Delta-v",
+    "title": "DeltaV-Station/Delta-v (138★)",
+    "text": "GitHub game project 'DeltaV-Station/Delta-v' (138★, C#): A fork of Space Station 14, embracing a mixture of classic SS13 chaos and experimentation only possible with the new engine Topics: c-sharp, game, spacestation13, spacestation14, ss13, ss14.",
+    "stars": 138,
+    "topics": [
+      "c-sharp",
+      "game",
+      "spacestation13",
+      "spacestation14",
+      "ss13",
+      "ss14"
+    ],
+    "url": "https://github.com/DeltaV-Station/Delta-v",
+    "sentiment": {
+      "neg": 0.15,
+      "neu": 0.85,
+      "pos": 0.0,
+      "compound": -0.5719
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "mrayanasim09/python-projects",
+    "title": "mrayanasim09/python-projects (51★)",
+    "text": "GitHub game project 'mrayanasim09/python-projects' (51★, Python): Be a part of the magic at 'Python-Projects' by MRayanAsim: See how magical games, applications, and utilities can be with the power of machine learning magic. Unlock the power of Python and spread the magic by starring this repo right now Topics: bmi-calculator, calculas, calculator, game, graph, gui, hangman, instagram-hacking.",
+    "stars": 51,
+    "topics": [
+      "bmi-calculator",
+      "calculas",
+      "calculator",
+      "game",
+      "graph",
+      "gui",
+      "hangman",
+      "instagram-hacking"
+    ],
+    "url": "https://github.com/mrayanasim09/python-projects",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "gd-codes/mc-pixelart-maker",
+    "title": "gd-codes/mc-pixelart-maker (35★)",
+    "text": "GitHub game project 'gd-codes/mc-pixelart-maker' (35★, JavaScript): A client-side web application that creates add-ons for the popular game Minecraft, allowing you to bring any image from your computer into the game ! Topics: art, client-side, game, image-processing, minecraft, minecraft-addon, pixel-art.",
+    "stars": 35,
+    "topics": [
+      "art",
+      "client-side",
+      "game",
+      "image-processing",
+      "minecraft",
+      "minecraft-addon",
+      "pixel-art"
+    ],
+    "url": "https://github.com/gd-codes/mc-pixelart-maker",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.822,
+      "pos": 0.178,
+      "compound": 0.636
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "NYRDS/remixed-dungeon",
+    "title": "NYRDS/remixed-dungeon (277★)",
+    "text": "GitHub game project 'NYRDS/remixed-dungeon' (277★, Java): Traditional roguelike game with pixel-art graphics and simple interface - Remixed Pixel Dungeon Topics: android, dungeon, dungeon-crawler-game, game, pixel-art, remixed, roguelike.",
+    "stars": 277,
+    "topics": [
+      "android",
+      "dungeon",
+      "dungeon-crawler-game",
+      "game",
+      "pixel-art",
+      "remixed",
+      "roguelike"
+    ],
+    "url": "https://github.com/NYRDS/remixed-dungeon",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "Aurorastation/Aurora.3",
+    "title": "Aurorastation/Aurora.3 (161★)",
+    "text": "GitHub game project 'Aurorastation/Aurora.3' (161★, DM): The code for Aurorastation's new base, forked from Baystation12. Topics: byond, dm, dreammaker, game, role-playing, ss13.",
+    "stars": 161,
+    "topics": [
+      "byond",
+      "dm",
+      "dreammaker",
+      "game",
+      "role-playing",
+      "ss13"
+    ],
+    "url": "https://github.com/Aurorastation/Aurora.3",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "MihailRis/voxelcore",
+    "title": "MihailRis/voxelcore (1419★)",
+    "text": "GitHub game project 'MihailRis/voxelcore' (1419★, C++): VoxelCore – voxel game engine in C++ Topics: game, game-engine, opengl, voxel-game.",
+    "stars": 1419,
+    "topics": [
+      "game",
+      "game-engine",
+      "opengl",
+      "voxel-game"
+    ],
+    "url": "https://github.com/MihailRis/voxelcore",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "VIDAKHOSHPEY22/Atari-Racer",
+    "title": "VIDAKHOSHPEY22/Atari-Racer (115★)",
+    "text": "GitHub game project 'VIDAKHOSHPEY22/Atari-Racer' (115★, Python): A fast-paced 2D arcade racing game built with Python and Pygame. Enjoy! Topics: beginer-projects, beginner-friendly, car, cars, contrubtion, first-contributions, fun, game.",
+    "stars": 115,
+    "topics": [
+      "beginer-projects",
+      "beginner-friendly",
+      "car",
+      "cars",
+      "contrubtion",
+      "first-contributions",
+      "fun",
+      "game"
+    ],
+    "url": "https://github.com/VIDAKHOSHPEY22/Atari-Racer",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.775,
+      "pos": 0.225,
+      "compound": 0.5411
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game",
+    "repo": "P3D-Legacy/P3D-Legacy",
+    "title": "P3D-Legacy/P3D-Legacy (199★)",
+    "text": "GitHub game project 'P3D-Legacy/P3D-Legacy' (199★, Visual Basic .NET): Legacy repository for the Pokémon3D Visual Basic version Topics: game, gamejolt, monogame, pokemon, pokemon3d, visual-basic.",
+    "stars": 199,
+    "topics": [
+      "game",
+      "gamejolt",
+      "monogame",
+      "pokemon",
+      "pokemon3d",
+      "visual-basic"
+    ],
+    "url": "https://github.com/P3D-Legacy/P3D-Legacy",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "LordOfDragons/dragengine",
+    "title": "LordOfDragons/dragengine (88★)",
+    "text": "GitHub game project 'LordOfDragons/dragengine' (88★, C++): Drag[en]gine Game Engine Topics: dragengine, game-development, game-engine, gamedev.",
+    "stars": 88,
+    "topics": [
+      "dragengine",
+      "game-development",
+      "game-engine",
+      "gamedev"
+    ],
+    "url": "https://github.com/LordOfDragons/dragengine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "playcanvas/engine",
+    "title": "playcanvas/engine (16211★)",
+    "text": "GitHub game project 'playcanvas/engine' (16211★, JavaScript): Powerful web graphics runtime built on WebGL, WebGPU, WebXR and glTF Topics: 3d-gaussian-splatting, 3dgs, game-development, game-engine, gamedev, gaussian-splatting, gltf, hacktoberfest.",
+    "stars": 16211,
+    "topics": [
+      "3d-gaussian-splatting",
+      "3dgs",
+      "game-development",
+      "game-engine",
+      "gamedev",
+      "gaussian-splatting",
+      "gltf",
+      "hacktoberfest"
+    ],
+    "url": "https://github.com/playcanvas/engine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.797,
+      "pos": 0.203,
+      "compound": 0.4215
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "godotengine/godot",
+    "title": "godotengine/godot (113722★)",
+    "text": "GitHub game project 'godotengine/godot' (113722★, C++): Godot Engine – Multi-platform 2D and 3D game engine Topics: game-development, game-engine, gamedev, godot, godotengine, multi-platform, open-source.",
+    "stars": 113722,
+    "topics": [
+      "game-development",
+      "game-engine",
+      "gamedev",
+      "godot",
+      "godotengine",
+      "multi-platform",
+      "open-source"
+    ],
+    "url": "https://github.com/godotengine/godot",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "ocornut/imgui",
+    "title": "ocornut/imgui (74328★)",
+    "text": "GitHub game project 'ocornut/imgui' (74328★, C++): Dear ImGui: Bloat-free Graphical User interface for C++ with minimal dependencies Topics: api, cplusplus, framework, game-development, game-engine, gamedev, gui, imgui.",
+    "stars": 74328,
+    "topics": [
+      "api",
+      "cplusplus",
+      "framework",
+      "game-development",
+      "game-engine",
+      "gamedev",
+      "gui",
+      "imgui"
+    ],
+    "url": "https://github.com/ocornut/imgui",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.809,
+      "pos": 0.191,
+      "compound": 0.3818
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "irov/Mengine",
+    "title": "irov/Mengine (31★)",
+    "text": "GitHub game project 'irov/Mengine' (31★, C++): Mengine is an multiple platforms engine for creating and running graphical games Topics: game-development, game-engine, gamedev, mengine, multi-platform, open-source.",
+    "stars": 31,
+    "topics": [
+      "game-development",
+      "game-engine",
+      "gamedev",
+      "mengine",
+      "multi-platform",
+      "open-source"
+    ],
+    "url": "https://github.com/irov/Mengine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.845,
+      "pos": 0.155,
+      "compound": 0.296
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "NeoAxis/NeoAxisEngine",
+    "title": "NeoAxis/NeoAxisEngine (256★)",
+    "text": "GitHub game project 'NeoAxis/NeoAxisEngine' (256★, C#): A versatile game engine designed for creating video games and real-time apps. Topics: 3d-graphics, 3d-graphics-engine, android, csharp, engine, engine3d, game-engine, game-engine-2d.",
+    "stars": 256,
+    "topics": [
+      "3d-graphics",
+      "3d-graphics-engine",
+      "android",
+      "csharp",
+      "engine",
+      "engine3d",
+      "game-engine",
+      "game-engine-2d"
+    ],
+    "url": "https://github.com/NeoAxis/NeoAxisEngine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.845,
+      "pos": 0.155,
+      "compound": 0.296
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "hajimehoshi/ebiten",
+    "title": "hajimehoshi/ebiten (13314★)",
+    "text": "GitHub game project 'hajimehoshi/ebiten' (13314★, Go): A dead simple 2D game engine for Go Topics: ebiten, ebitengine, game, game-2d, game-development, game-engine, game-engine-2d, game-library.",
+    "stars": 13314,
+    "topics": [
+      "ebiten",
+      "ebitengine",
+      "game",
+      "game-2d",
+      "game-development",
+      "game-engine",
+      "game-engine-2d",
+      "game-library"
+    ],
+    "url": "https://github.com/hajimehoshi/ebiten",
+    "sentiment": {
+      "neg": 0.35,
+      "neu": 0.65,
+      "pos": 0.0,
+      "compound": -0.6486
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "richardbiely/gaia-ecs",
+    "title": "richardbiely/gaia-ecs (131★)",
+    "text": "GitHub game project 'richardbiely/gaia-ecs' (131★, C++): A simple and powerful entity component system (ECS) written in C++17 Topics: cpp, cpp-library, cpp17, data-oriented, data-oriented-design, data-oriented-programming, dod, ecs.",
+    "stars": 131,
+    "topics": [
+      "cpp",
+      "cpp-library",
+      "cpp17",
+      "data-oriented",
+      "data-oriented-design",
+      "data-oriented-programming",
+      "dod",
+      "ecs"
+    ],
+    "url": "https://github.com/richardbiely/gaia-ecs",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.797,
+      "pos": 0.203,
+      "compound": 0.4215
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "fennaraOfficial/fennara-godot-ai",
+    "title": "fennaraOfficial/fennara-godot-ai (193★)",
+    "text": "GitHub game project 'fennaraOfficial/fennara-godot-ai' (193★, C++): AI chat and agent tooling for Godot, with both MCP support and in-built native chat window. Topics: ai-agent, ai-coding, ai-game-development, claude-code, codex, cursor, gamedev, gdscript.",
+    "stars": 193,
+    "topics": [
+      "ai-agent",
+      "ai-coding",
+      "ai-game-development",
+      "claude-code",
+      "codex",
+      "cursor",
+      "gamedev",
+      "gdscript"
+    ],
+    "url": "https://github.com/fennaraOfficial/fennara-godot-ai",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.856,
+      "pos": 0.144,
+      "compound": 0.4019
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "aldegad/sprite-gen",
+    "title": "aldegad/sprite-gen (445★)",
+    "text": "GitHub game project 'aldegad/sprite-gen' (445★, Python): Generate clean 2D game sprites & animation atlases — component-row pipeline: state rows, alpha cleanup, frame extraction, runtime atlases. Codex/Claude skill. Topics: 2d-game, ai-tools, claude-code, codex, game-dev, gamedev, pixel-art, sprite-generation.",
+    "stars": 445,
+    "topics": [
+      "2d-game",
+      "ai-tools",
+      "claude-code",
+      "codex",
+      "game-dev",
+      "gamedev",
+      "pixel-art",
+      "sprite-generation"
+    ],
+    "url": "https://github.com/aldegad/sprite-gen",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.886,
+      "pos": 0.114,
+      "compound": 0.4019
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "heroiclabs/nakama-cpp",
+    "title": "heroiclabs/nakama-cpp (89★)",
+    "text": "GitHub game project 'heroiclabs/nakama-cpp' (89★, C++): Nakama C++ Client SDK Topics: backend, client, cpp, cpp-client, game, gamedev, lobby, matchmaking.",
+    "stars": 89,
+    "topics": [
+      "backend",
+      "client",
+      "cpp",
+      "cpp-client",
+      "game",
+      "gamedev",
+      "lobby",
+      "matchmaking"
+    ],
+    "url": "https://github.com/heroiclabs/nakama-cpp",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "Facepunch/sbox-public",
+    "title": "Facepunch/sbox-public (6345★)",
+    "text": "GitHub game project 'Facepunch/sbox-public' (6345★, C#): s&box is a modern game engine, built on Valve's Source 2 and the latest .NET technology, it provides a modern intuitive editor for creating games Topics: gamedev, sbox, source2.",
+    "stars": 6345,
+    "topics": [
+      "gamedev",
+      "sbox",
+      "source2"
+    ],
+    "url": "https://github.com/Facepunch/sbox-public",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.919,
+      "pos": 0.081,
+      "compound": 0.296
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "Pumpkin-MC/Pumpkin",
+    "title": "Pumpkin-MC/Pumpkin (7921★)",
+    "text": "GitHub game project 'Pumpkin-MC/Pumpkin' (7921★, Rust): Empowering everyone to host fast and efficient Minecraft servers. Topics: docker, game-server, gamedev, minecraft, minecraft-bedrock-edition, minecraft-protocol, minecraft-server, networking.",
+    "stars": 7921,
+    "topics": [
+      "docker",
+      "game-server",
+      "gamedev",
+      "minecraft",
+      "minecraft-bedrock-edition",
+      "minecraft-protocol",
+      "minecraft-server",
+      "networking"
+    ],
+    "url": "https://github.com/Pumpkin-MC/Pumpkin",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.763,
+      "pos": 0.237,
+      "compound": 0.4215
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:gamedev",
+    "repo": "doriaxengine/doriax",
+    "title": "doriaxengine/doriax (429★)",
+    "text": "GitHub game project 'doriaxengine/doriax' (429★, C++): Game engine for 2D and 3D projects with entity component system (ECS) and data-oriented design Topics: cross-platform, data-oriented-design, directx, ecs, entity-component-system, game-dev, game-development, game-engine.",
+    "stars": 429,
+    "topics": [
+      "cross-platform",
+      "data-oriented-design",
+      "directx",
+      "ecs",
+      "entity-component-system",
+      "game-dev",
+      "game-development",
+      "game-engine"
+    ],
+    "url": "https://github.com/doriaxengine/doriax",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game-engine",
+    "repo": "esengine/estella",
+    "title": "esengine/estella (306★)",
+    "text": "GitHub game project 'esengine/estella' (306★, TypeScript): Lightweight 2D game engine for WebAssembly and WeChat MiniGames Topics: 2d-game-engine, ecs, game-engine, typescript, webassembly, webgl, wechat-minigame.",
+    "stars": 306,
+    "topics": [
+      "2d-game-engine",
+      "ecs",
+      "game-engine",
+      "typescript",
+      "webassembly",
+      "webgl",
+      "wechat-minigame"
+    ],
+    "url": "https://github.com/esengine/estella",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game-engine",
+    "repo": "xriss/gamecake",
+    "title": "xriss/gamecake (34★)",
+    "text": "GitHub game project 'xriss/gamecake' (34★, C): GameCake is a cross platform build of Lua(JIT) with embedded libraries. Topics: game-engine, lua, lua-library.",
+    "stars": 34,
+    "topics": [
+      "game-engine",
+      "lua",
+      "lua-library"
+    ],
+    "url": "https://github.com/xriss/gamecake",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game-engine",
+    "repo": "secondlife/viewer",
+    "title": "secondlife/viewer (294★)",
+    "text": "GitHub game project 'secondlife/viewer' (294★, C++): 🖥️ Second Life's official client Topics: 3d, chat, game-engine, metaverse, mmo, modeling, multiplayer, sandbox.",
+    "stars": 294,
+    "topics": [
+      "3d",
+      "chat",
+      "game-engine",
+      "metaverse",
+      "mmo",
+      "modeling",
+      "multiplayer",
+      "sandbox"
+    ],
+    "url": "https://github.com/secondlife/viewer",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game-engine",
+    "repo": "cvet/fonline",
+    "title": "cvet/fonline (331★)",
+    "text": "GitHub game project 'cvet/fonline' (331★, C++): FOnline Engine is a flexible cross-platform isometric game engine Topics: angelscript, c-plus-plus, cross-platform, engine, fallout, fallout-online, fonline, fonline-engine.",
+    "stars": 331,
+    "topics": [
+      "angelscript",
+      "c-plus-plus",
+      "cross-platform",
+      "engine",
+      "fallout",
+      "fallout-online",
+      "fonline",
+      "fonline-engine"
+    ],
+    "url": "https://github.com/cvet/fonline",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.826,
+      "pos": 0.174,
+      "compound": 0.2263
+    }
+  },
+  {
+    "source": "github",
+    "query": "topic:game-engine",
+    "repo": "paladin-t/gbb",
+    "title": "paladin-t/gbb (96★)",
+    "text": "GitHub game project 'paladin-t/gbb' (96★, C++): A retro Fantasy Console that generates ROMs compatible with the popular handheld game console. Topics: basic, fantasy-computer, fantasy-console, game-development, game-engine, gameboy, gbbasic, gbdk.",
+    "stars": 96,
+    "topics": [
+      "basic",
+      "fantasy-computer",
+      "fantasy-console",
+      "game-development",
+      "game-engine",
+      "gameboy",
+      "gbbasic",
+      "gbdk"
+    ],
+    "url": "https://github.com/paladin-t/gbb",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.833,
+      "pos": 0.167,
+      "compound": 0.4215
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "defold/defold",
+    "title": "defold/defold (6164★)",
+    "text": "GitHub game project 'defold/defold' (6164★, C++): Defold is a completely free to use game engine for development of desktop, mobile and web games. Topics: c-plus-plus, clojure, defold, game-development, game-engine, gamedev, hacktoberfest, lua.",
+    "stars": 6164,
+    "topics": [
+      "c-plus-plus",
+      "clojure",
+      "defold",
+      "game-development",
+      "game-engine",
+      "gamedev",
+      "hacktoberfest",
+      "lua"
+    ],
+    "url": "https://github.com/defold/defold",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.826,
+      "pos": 0.174,
+      "compound": 0.5563
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "windbow27/kornblume",
+    "title": "windbow27/kornblume (86★)",
+    "text": "GitHub game project 'windbow27/kornblume' (86★, Vue): A toolsite for mobile game Reverse: 1999 Topics: none.",
+    "stars": 86,
+    "topics": [],
+    "url": "https://github.com/windbow27/kornblume",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "Is-Daouda/is-Engine",
+    "title": "Is-Daouda/is-Engine (231★)",
+    "text": "GitHub game project 'Is-Daouda/is-Engine' (231★, C): C++, SDL 2 and SFML game engine that allows to create games on Nintendo Switch, Web (HTML 5), Mobile and PC. Topics: android, android-studio, box-2d, code-blocks, cplusplus, cpp, css3, emscripten.",
+    "stars": 231,
+    "topics": [
+      "android",
+      "android-studio",
+      "box-2d",
+      "code-blocks",
+      "cplusplus",
+      "cpp",
+      "css3",
+      "emscripten"
+    ],
+    "url": "https://github.com/Is-Daouda/is-Engine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.909,
+      "pos": 0.091,
+      "compound": 0.2732
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "sinanata/unity-ui-document-design-system",
+    "title": "sinanata/unity-ui-document-design-system (462★)",
+    "text": "GitHub game project 'sinanata/unity-ui-document-design-system' (462★, C#): Drop-in design system for Unity 6 UI Toolkit (UIDocument + PanelRenderer, UXML + USS): tokens, 24 components, 63 icons, mobile-responsive, dark-themed. One stylesheet, zero dependencies. Battle-tested in a shipping cross-play game. Topics: component-library, design-system, design-tokens, game-ui, gamedev, mobile, responsive-ui, ui.",
+    "stars": 462,
+    "topics": [
+      "component-library",
+      "design-system",
+      "design-tokens",
+      "game-ui",
+      "gamedev",
+      "mobile",
+      "responsive-ui",
+      "ui"
+    ],
+    "url": "https://github.com/sinanata/unity-ui-document-design-system",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "castle-engine/castle-engine",
+    "title": "castle-engine/castle-engine (1225★)",
+    "text": "GitHub game project 'castle-engine/castle-engine' (1225★, Pascal): Cross-platform (desktop, mobile, console, web) 3D and 2D game engine. Powerful visual editor. Support for glTF, X3D, IFC and more. Fast clean code using modern Pascal. Free and open-source. Topics: 2d-game-engine, 3d-game-engine, castle-game-engine, delphi, delphi-game, delphi-game-engine, delphi-library, delphi-source.",
+    "stars": 1225,
+    "topics": [
+      "2d-game-engine",
+      "3d-game-engine",
+      "castle-game-engine",
+      "delphi",
+      "delphi-game",
+      "delphi-game-engine",
+      "delphi-library",
+      "delphi-source"
+    ],
+    "url": "https://github.com/castle-engine/castle-engine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.688,
+      "pos": 0.312,
+      "compound": 0.8952
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "AllenHeartcore/GkmasObjectManager",
+    "title": "AllenHeartcore/GkmasObjectManager (39★)",
+    "text": "GitHub game project 'AllenHeartcore/GkmasObjectManager' (39★, Python): A Python OOP CLI+GUI interface with the object database in the mobile game Gakuen Idolm@ster. Topics: gakuen-idolmaster, gakumas, gkmas, idolmaster.",
+    "stars": 39,
+    "topics": [
+      "gakuen-idolmaster",
+      "gakumas",
+      "gkmas",
+      "idolmaster"
+    ],
+    "url": "https://github.com/AllenHeartcore/GkmasObjectManager",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "Gakuto1112/FiguraBlueArchiveCrafters",
+    "title": "Gakuto1112/FiguraBlueArchiveCrafters (127★)",
+    "text": "GitHub game project 'Gakuto1112/FiguraBlueArchiveCrafters' (127★, Lua): The avatars for Figura, the skin mod for Minecraft Java Edition, which are imitated characters who appear in \"Blue Archive (ブルーアーカイブ)\", the game for mobile devices. Topics: anime, blue-archive, figura, lua, minecraft, minecraft-skin.",
+    "stars": 127,
+    "topics": [
+      "anime",
+      "blue-archive",
+      "figura",
+      "lua",
+      "minecraft",
+      "minecraft-skin"
+    ],
+    "url": "https://github.com/Gakuto1112/FiguraBlueArchiveCrafters",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "kitswas/VirtualGamePad-Mobile",
+    "title": "kitswas/VirtualGamePad-Mobile (99★)",
+    "text": "GitHub game project 'kitswas/VirtualGamePad-Mobile' (99★, Kotlin): Android App for Virtual Gamepad. Topics: android, client, fdroid, game-controller, gamepad, games, virtual-gamepad.",
+    "stars": 99,
+    "topics": [
+      "android",
+      "client",
+      "fdroid",
+      "game-controller",
+      "gamepad",
+      "games",
+      "virtual-gamepad"
+    ],
+    "url": "https://github.com/kitswas/VirtualGamePad-Mobile",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "jmiln/SWGoHBot",
+    "title": "jmiln/SWGoHBot (36★)",
+    "text": "GitHub game project 'jmiln/SWGoHBot' (36★, TypeScript): Discord bot for EA's SWGoH mobile game Topics: bot, discord, discord-bot, discord-js, hacktoberfest, nodejs, swgoh, typescript.",
+    "stars": 36,
+    "topics": [
+      "bot",
+      "discord",
+      "discord-bot",
+      "discord-js",
+      "hacktoberfest",
+      "nodejs",
+      "swgoh",
+      "typescript"
+    ],
+    "url": "https://github.com/jmiln/SWGoHBot",
+    "sentiment": {
+      "neg": 0.278,
+      "neu": 0.722,
+      "pos": 0.0,
+      "compound": -0.4019
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "molenzwiebel/Deceive",
+    "title": "molenzwiebel/Deceive (1628★)",
+    "text": "GitHub game project 'molenzwiebel/Deceive' (1628★, C#): 🎩 Appear offline for League of Legends, VALORANT, and Legends of Runeterra. Topics: deceive, friends, game, league, league-of-legends, leagueoflegends, legends-of-runeterra, lol.",
+    "stars": 1628,
+    "topics": [
+      "deceive",
+      "friends",
+      "game",
+      "league",
+      "league-of-legends",
+      "leagueoflegends",
+      "legends-of-runeterra",
+      "lol"
+    ],
+    "url": "https://github.com/molenzwiebel/Deceive",
+    "sentiment": {
+      "neg": 0.098,
+      "neu": 0.784,
+      "pos": 0.118,
+      "compound": 0.0772
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "rbfx/rbfx",
+    "title": "rbfx/rbfx (1016★)",
+    "text": "GitHub game project 'rbfx/rbfx' (1016★, C++): Lightweight Game Engine/Framework in C++17 with WYSIWYG Editor. Experimental C# bindings. Topics: 3d-engine, 3d-graphics, cpp17, csharp, desktop, directx-11, game-engine, hot-reload.",
+    "stars": 1016,
+    "topics": [
+      "3d-engine",
+      "3d-graphics",
+      "cpp17",
+      "csharp",
+      "desktop",
+      "directx-11",
+      "game-engine",
+      "hot-reload"
+    ],
+    "url": "https://github.com/rbfx/rbfx",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "coronalabs/corona",
+    "title": "coronalabs/corona (2850★)",
+    "text": "GitHub game project 'coronalabs/corona' (2850★, C++): Solar2D Game Engine main repository (ex Corona SDK) Topics: android, corona, corona-simulator, coronasdk, cross-platform, desktop, engine, game.",
+    "stars": 2850,
+    "topics": [
+      "android",
+      "corona",
+      "corona-simulator",
+      "coronasdk",
+      "cross-platform",
+      "desktop",
+      "engine",
+      "game"
+    ],
+    "url": "https://github.com/coronalabs/corona",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "AlmasB/FXGL",
+    "title": "AlmasB/FXGL (4828★)",
+    "text": "GitHub game project 'AlmasB/FXGL' (4828★, Kotlin): Java / JavaFX / Kotlin Game Library (Engine) Topics: 2d, 2d-framework, 2d-game-engine, 2d-game-framework, 3d, 3d-game-engine, android, framework.",
+    "stars": 4828,
+    "topics": [
+      "2d",
+      "2d-framework",
+      "2d-game-engine",
+      "2d-game-framework",
+      "3d",
+      "3d-game-engine",
+      "android",
+      "framework"
+    ],
+    "url": "https://github.com/AlmasB/FXGL",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "phaserjs/phaser",
+    "title": "phaserjs/phaser (39909★)",
+    "text": "GitHub game project 'phaserjs/phaser' (39909★, JavaScript): Phaser is a fun, free and fast 2D game framework for making HTML5 games for desktop and mobile web browsers, supporting Canvas and WebGL rendering. Topics: canvas, discord-activities, facebook-instant-games, game-development, game-frameworks, gamedev, html5-game-development, javascript.",
+    "stars": 39909,
+    "topics": [
+      "canvas",
+      "discord-activities",
+      "facebook-instant-games",
+      "game-development",
+      "game-frameworks",
+      "gamedev",
+      "html5-game-development",
+      "javascript"
+    ],
+    "url": "https://github.com/phaserjs/phaser",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.708,
+      "pos": 0.292,
+      "compound": 0.8591
+    }
+  },
+  {
+    "source": "github",
+    "query": "mobile game",
+    "repo": "skylicht-lab/skylicht-engine",
+    "title": "skylicht-lab/skylicht-engine (757★)",
+    "text": "GitHub game project 'skylicht-lab/skylicht-engine' (757★, C++): Skylicht Engine is C++ Game Engine based on Irrlicht 3D. And my goal is to create a high-performance and lightweight Game Framework that can seamlessly function on both web and mobile platforms. This framework will be available to everyone for free. Topics: directx11, game-development, game-engine, google-angle, irrlicht-engine, lightmapper, opengles3, particle.",
+    "stars": 757,
+    "topics": [
+      "directx11",
+      "game-development",
+      "game-engine",
+      "google-angle",
+      "irrlicht-engine",
+      "lightmapper",
+      "opengles3",
+      "particle"
+    ],
+    "url": "https://github.com/skylicht-lab/skylicht-engine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.881,
+      "pos": 0.119,
+      "compound": 0.6597
+    }
+  }
+]

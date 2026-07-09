@@ -1,0 +1,156 @@
+[
+  {
+    "source": "wikipedia",
+    "article": "Mobile game",
+    "title": "Mobile game — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Mobile game' during 2026: 80,156 total pageviews across 7 months, trend falling (13,678/mo → 2,424/mo).",
+    "views_total": 80156,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.078,
+      "neu": 0.777,
+      "pos": 0.146,
+      "compound": 0.34
+    }
+  },
+  {
+    "source": "wikipedia",
+    "article": "Fighting game",
+    "title": "Fighting game — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Fighting game' during 2026: 102,735 total pageviews across 7 months, trend falling (16,253/mo → 2,772/mo).",
+    "views_total": 102735,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.186,
+      "neu": 0.679,
+      "pos": 0.136,
+      "compound": -0.0258
+    }
+  },
+  {
+    "source": "wikipedia",
+    "article": "Battle royale game",
+    "title": "Battle royale game — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Battle royale game' during 2026: 81,643 total pageviews across 7 months, trend falling (15,865/mo → 1,987/mo).",
+    "views_total": 81643,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.181,
+      "neu": 0.69,
+      "pos": 0.129,
+      "compound": -0.0516
+    }
+  },
+  {
+    "source": "wikipedia",
+    "article": "Gacha game",
+    "title": "Gacha game — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Gacha game' during 2026: 187,050 total pageviews across 7 months, trend falling (31,130/mo → 4,862/mo).",
+    "views_total": 187050,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.078,
+      "neu": 0.777,
+      "pos": 0.146,
+      "compound": 0.34
+    }
+  },
+  {
+    "source": "wikipedia",
+    "article": "Free-to-play",
+    "title": "Free-to-play — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Free-to-play' during 2026: 63,519 total pageviews across 7 months, trend falling (11,211/mo → 1,710/mo).",
+    "views_total": 63519,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.082,
+      "neu": 0.765,
+      "pos": 0.153,
+      "compound": 0.34
+    }
+  },
+  {
+    "source": "wikipedia",
+    "article": "Esports",
+    "title": "Esports — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Esports' during 2026: 223,188 total pageviews across 7 months, trend falling (34,803/mo → 7,132/mo).",
+    "views_total": 223188,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.082,
+      "neu": 0.765,
+      "pos": 0.153,
+      "compound": 0.34
+    }
+  },
+  {
+    "source": "wikipedia",
+    "article": "Street Fighter 6",
+    "title": "Street Fighter 6 — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Street Fighter 6' during 2026: 166,000 total pageviews across 7 months, trend falling (26,936/mo → 4,369/mo).",
+    "views_total": 166000,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.072,
+      "neu": 0.721,
+      "pos": 0.207,
+      "compound": 0.4588
+    }
+  },
+  {
+    "source": "wikipedia",
+    "article": "Tekken 8",
+    "title": "Tekken 8 — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Tekken 8' during 2026: 153,048 total pageviews across 7 months, trend falling (24,721/mo → 4,540/mo).",
+    "views_total": 153048,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.078,
+      "neu": 0.777,
+      "pos": 0.146,
+      "compound": 0.34
+    }
+  },
+  {
+    "source": "wikipedia",
+    "article": "Mortal Kombat 1",
+    "title": "Mortal Kombat 1 — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Mortal Kombat 1' during 2026: 316,477 total pageviews across 7 months, trend falling (36,781/mo → 6,536/mo).",
+    "views_total": 316477,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.074,
+      "neu": 0.787,
+      "pos": 0.139,
+      "compound": 0.34
+    }
+  },
+  {
+    "source": "wikipedia",
+    "article": "Brawl Stars",
+    "title": "Brawl Stars — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Brawl Stars' during 2026: 238,456 total pageviews across 7 months, trend falling (28,140/mo → 5,263/mo).",
+    "views_total": 238456,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.078,
+      "neu": 0.777,
+      "pos": 0.146,
+      "compound": 0.34
+    }
+  },
+  {
+    "source": "wikipedia",
+    "article": "Clash Royale",
+    "title": "Clash Royale — Wikipedia interest 2026",
+    "text": "Wikipedia interest in 'Clash Royale' during 2026: 121,197 total pageviews across 7 months, trend falling (33,780/mo → 1,994/mo).",
+    "views_total": 121197,
+    "trend": "falling",
+    "sentiment": {
+      "neg": 0.078,
+      "neu": 0.777,
+      "pos": 0.146,
+      "compound": 0.34
+    }
+  }
+]
