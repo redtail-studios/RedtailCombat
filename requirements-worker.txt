@@ -1,0 +1,12 @@
+# Deps for the SQS scrape worker Lambda (lore_engine/worker.py) ONLY.
+# Deliberately excludes fastapi/uvicorn/anthropic/openai/pypdf/awscli — none of
+# that is imported by the worker or the scrapers it runs, and it's most of what
+# pushed the zip past Lambda's 250 MB uncompressed limit. boto3/botocore are
+# also excluded on purpose: every standard Lambda Python runtime already ships
+# them, so bundling our own is wasted space (and a version-skew risk).
+python-dotenv>=1.0.0
+requests>=2.31.0
+google-play-scraper>=1.2.7
+vaderSentiment>=3.3.2
+beautifulsoup4>=4.12.0
+pytrends>=4.9.2          # Google Trends (no key) — pulls in pandas/numpy, unavoidable

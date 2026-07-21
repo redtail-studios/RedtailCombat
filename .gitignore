@@ -1,0 +1,8 @@
+.env
+.env.*
+__pycache__/
+*.pyc
+lore_snapshots/
+.DS_Store
+.git
+.claude

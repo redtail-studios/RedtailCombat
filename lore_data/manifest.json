@@ -1,0 +1,26 @@
+{
+  "scraped_at": "2026-07-20 22:16 UTC",
+  "years": {
+    "2026": {
+      "sources": {
+        "appcharts": 500,
+        "appstore": 11,
+        "gamenews": 445,
+        "github": 53,
+        "googleplay": 25,
+        "googletrends": 9,
+        "hackernews": 153,
+        "itch": 10,
+        "rawg": 116,
+        "reddit": 268,
+        "steam": 32,
+        "steamcharts": 50,
+        "steamtrending": 60,
+        "twitch": 60,
+        "wikipedia": 9,
+        "youtube": 30
+      },
+      "total": 1831
+    }
+  }
+}
