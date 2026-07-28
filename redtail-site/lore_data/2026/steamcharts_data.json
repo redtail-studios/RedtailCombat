@@ -1,0 +1,752 @@
+[
+  {
+    "source": "steamcharts",
+    "chart": "top seller",
+    "rank": 1,
+    "app_id": 4165910,
+    "title": "#1 top seller: Steam Machine",
+    "text": "#1 Steam top seller: 'Steam Machine'.",
+    "name": "Steam Machine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.735,
+      "pos": 0.265,
+      "compound": 0.2023
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "top seller",
+    "rank": 2,
+    "app_id": 4165910,
+    "title": "#2 top seller: Steam Machine",
+    "text": "#2 Steam top seller: 'Steam Machine'.",
+    "name": "Steam Machine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.735,
+      "pos": 0.265,
+      "compound": 0.2023
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "top seller",
+    "rank": 3,
+    "app_id": 4165910,
+    "title": "#3 top seller: Steam Machine",
+    "text": "#3 Steam top seller: 'Steam Machine'.",
+    "name": "Steam Machine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.735,
+      "pos": 0.265,
+      "compound": 0.2023
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "top seller",
+    "rank": 4,
+    "app_id": 4165910,
+    "title": "#4 top seller: Steam Machine",
+    "text": "#4 Steam top seller: 'Steam Machine'.",
+    "name": "Steam Machine",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.735,
+      "pos": 0.265,
+      "compound": 0.2023
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "top seller",
+    "rank": 5,
+    "app_id": 4704690,
+    "title": "#5 top seller: MECCHA CHAMELEON",
+    "text": "#5 Steam top seller: 'MECCHA CHAMELEON'.",
+    "name": "MECCHA CHAMELEON",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.735,
+      "pos": 0.265,
+      "compound": 0.2023
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "top seller",
+    "rank": 6,
+    "app_id": 1675200,
+    "title": "#6 top seller: Steam Deck",
+    "text": "#6 Steam top seller: 'Steam Deck'.",
+    "name": "Steam Deck",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.735,
+      "pos": 0.265,
+      "compound": 0.2023
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "top seller",
+    "rank": 7,
+    "app_id": 1675200,
+    "title": "#7 top seller: Steam Deck",
+    "text": "#7 Steam top seller: 'Steam Deck'.",
+    "name": "Steam Deck",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.735,
+      "pos": 0.265,
+      "compound": 0.2023
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "top seller",
+    "rank": 8,
+    "app_id": 1431300,
+    "title": "#8 top seller: SAND: Raiders of Sophie",
+    "text": "#8 Steam top seller: 'SAND: Raiders of Sophie'.",
+    "name": "SAND: Raiders of Sophie",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.795,
+      "pos": 0.205,
+      "compound": 0.2023
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "top seller",
+    "rank": 9,
+    "app_id": 1091500,
+    "title": "#9 top seller: Cyberpunk 2077",
+    "text": "#9 Steam top seller: 'Cyberpunk 2077'.",
+    "name": "Cyberpunk 2077",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.735,
+      "pos": 0.265,
+      "compound": 0.2023
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "top seller",
+    "rank": 10,
+    "app_id": 1086940,
+    "title": "#10 top seller: Baldur's Gate 3",
+    "text": "#10 Steam top seller: 'Baldur's Gate 3'.",
+    "name": "Baldur's Gate 3",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.769,
+      "pos": 0.231,
+      "compound": 0.2023
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 1,
+    "app_id": 4844080,
+    "title": "#1 new release: Prison CAT",
+    "text": "#1 Steam new release: 'Prison CAT'.",
+    "name": "Prison CAT",
+    "sentiment": {
+      "neg": 0.398,
+      "neu": 0.602,
+      "pos": 0.0,
+      "compound": -0.5106
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 2,
+    "app_id": 4508100,
+    "title": "#2 new release: StellarUniversity:FurryHearts",
+    "text": "#2 Steam new release: 'StellarUniversity:FurryHearts'.",
+    "name": "StellarUniversity:FurryHearts",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 3,
+    "app_id": 4418430,
+    "title": "#3 new release: STRAFEST",
+    "text": "#3 Steam new release: 'STRAFEST'.",
+    "name": "STRAFEST",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 4,
+    "app_id": 4783190,
+    "title": "#4 new release: Village Coop Clicker",
+    "text": "#4 Steam new release: 'Village Coop Clicker'.",
+    "name": "Village Coop Clicker",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 5,
+    "app_id": 4708090,
+    "title": "#5 new release: Save the Red Box: Prologue",
+    "text": "#5 Steam new release: 'Save the Red Box: Prologue'.",
+    "name": "Save the Red Box: Prologue",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.714,
+      "pos": 0.286,
+      "compound": 0.4939
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 6,
+    "app_id": 4216940,
+    "title": "#6 new release: Lullabies Made of Static",
+    "text": "#6 Steam new release: 'Lullabies Made of Static'.",
+    "name": "Lullabies Made of Static",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 7,
+    "app_id": 4162150,
+    "title": "#7 new release: Ash of Gods: Tactics",
+    "text": "#7 Steam new release: 'Ash of Gods: Tactics'.",
+    "name": "Ash of Gods: Tactics",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 8,
+    "app_id": 4835520,
+    "title": "#8 new release: Tower Vibes",
+    "text": "#8 Steam new release: 'Tower Vibes'.",
+    "name": "Tower Vibes",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 9,
+    "app_id": 4505500,
+    "title": "#9 new release: MergePiece: Merge pixels into masterpieces",
+    "text": "#9 Steam new release: 'MergePiece: Merge pixels into masterpieces'.",
+    "name": "MergePiece: Merge pixels into masterpieces",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.696,
+      "pos": 0.304,
+      "compound": 0.5423
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 10,
+    "app_id": 4528600,
+    "title": "#10 new release: LINOVICTUS",
+    "text": "#10 Steam new release: 'LINOVICTUS'.",
+    "name": "LINOVICTUS",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 11,
+    "app_id": 4766500,
+    "title": "#11 new release: Nybble",
+    "text": "#11 Steam new release: 'Nybble'.",
+    "name": "Nybble",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 12,
+    "app_id": 4836490,
+    "title": "#12 new release: Moonrise",
+    "text": "#12 Steam new release: 'Moonrise'.",
+    "name": "Moonrise",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 13,
+    "app_id": 4679180,
+    "title": "#13 new release: The Abyss Below",
+    "text": "#13 Steam new release: 'The Abyss Below'.",
+    "name": "The Abyss Below",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 14,
+    "app_id": 4370410,
+    "title": "#14 new release: Drop Jump",
+    "text": "#14 Steam new release: 'Drop Jump'.",
+    "name": "Drop Jump",
+    "sentiment": {
+      "neg": 0.296,
+      "neu": 0.704,
+      "pos": 0.0,
+      "compound": -0.2732
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 15,
+    "app_id": 3073280,
+    "title": "#15 new release: immerGallery",
+    "text": "#15 Steam new release: 'immerGallery'.",
+    "name": "immerGallery",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 16,
+    "app_id": 4656060,
+    "title": "#16 new release: マイ・プラネット─MOON CHILD─",
+    "text": "#16 Steam new release: 'マイ・プラネット─MOON CHILD─'.",
+    "name": "マイ・プラネット─MOON CHILD─",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 17,
+    "app_id": 4599720,
+    "title": "#17 new release: Magic Puzzles: Twins",
+    "text": "#17 Steam new release: 'Magic Puzzles: Twins'.",
+    "name": "Magic Puzzles: Twins",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 18,
+    "app_id": 4474960,
+    "title": "#18 new release: Ratatouille Builder",
+    "text": "#18 Steam new release: 'Ratatouille Builder'.",
+    "name": "Ratatouille Builder",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 19,
+    "app_id": 2600970,
+    "title": "#19 new release: Flawed Tactics",
+    "text": "#19 Steam new release: 'Flawed Tactics'.",
+    "name": "Flawed Tactics",
+    "sentiment": {
+      "neg": 0.383,
+      "neu": 0.617,
+      "pos": 0.0,
+      "compound": -0.4767
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 20,
+    "app_id": 3844000,
+    "title": "#20 new release: void future prologue",
+    "text": "#20 Steam new release: 'void future prologue'.",
+    "name": "void future prologue",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 21,
+    "app_id": 4273060,
+    "title": "#21 new release: Breeding Estate",
+    "text": "#21 Steam new release: 'Breeding Estate'.",
+    "name": "Breeding Estate",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 22,
+    "app_id": 4489330,
+    "title": "#22 new release: Inclination",
+    "text": "#22 Steam new release: 'Inclination'.",
+    "name": "Inclination",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 23,
+    "app_id": 4409970,
+    "title": "#23 new release: Mosaic Garden: The Flower Game",
+    "text": "#23 Steam new release: 'Mosaic Garden: The Flower Game'.",
+    "name": "Mosaic Garden: The Flower Game",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 24,
+    "app_id": 4656460,
+    "title": "#24 new release: Idle Aqua Driller",
+    "text": "#24 Steam new release: 'Idle Aqua Driller'.",
+    "name": "Idle Aqua Driller",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 25,
+    "app_id": 4532000,
+    "title": "#25 new release: The Sound of Piano",
+    "text": "#25 Steam new release: 'The Sound of Piano'.",
+    "name": "The Sound of Piano",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 26,
+    "app_id": 4831590,
+    "title": "#26 new release: CrueArcade Alive",
+    "text": "#26 Steam new release: 'CrueArcade Alive'.",
+    "name": "CrueArcade Alive",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.658,
+      "pos": 0.342,
+      "compound": 0.3818
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 27,
+    "app_id": 4720010,
+    "title": "#27 new release: Miracle Brave: Beast Defense Line",
+    "text": "#27 Steam new release: 'Miracle Brave: Beast Defense Line'.",
+    "name": "Miracle Brave: Beast Defense Line",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.408,
+      "pos": 0.592,
+      "compound": 0.8271
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 28,
+    "app_id": 4442280,
+    "title": "#28 new release: Engine of Chaos",
+    "text": "#28 Steam new release: 'Engine of Chaos'.",
+    "name": "Engine of Chaos",
+    "sentiment": {
+      "neg": 0.381,
+      "neu": 0.619,
+      "pos": 0.0,
+      "compound": -0.5719
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 29,
+    "app_id": 4156370,
+    "title": "#29 new release: Antivirus Girl",
+    "text": "#29 Steam new release: 'Antivirus Girl'.",
+    "name": "Antivirus Girl",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "new release",
+    "rank": 30,
+    "app_id": 4386920,
+    "title": "#30 new release: Nihongo Hunter",
+    "text": "#30 Steam new release: 'Nihongo Hunter'.",
+    "name": "Nihongo Hunter",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 1.0,
+      "pos": 0.0,
+      "compound": 0.0
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "discounted",
+    "rank": 1,
+    "app_id": 1091500,
+    "title": "#1 discounted: Cyberpunk 2077",
+    "text": "#1 Steam discounted: 'Cyberpunk 2077'.",
+    "name": "Cyberpunk 2077",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.769,
+      "pos": 0.231,
+      "compound": 0.0516
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "discounted",
+    "rank": 2,
+    "app_id": 1086940,
+    "title": "#2 discounted: Baldur's Gate 3",
+    "text": "#2 Steam discounted: 'Baldur's Gate 3'.",
+    "name": "Baldur's Gate 3",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.806,
+      "pos": 0.194,
+      "compound": 0.0516
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "discounted",
+    "rank": 3,
+    "app_id": 1174180,
+    "title": "#3 discounted: Red Dead Redemption 2",
+    "text": "#3 Steam discounted: 'Red Dead Redemption 2'.",
+    "name": "Red Dead Redemption 2",
+    "sentiment": {
+      "neg": 0.41,
+      "neu": 0.476,
+      "pos": 0.114,
+      "compound": -0.6249
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "discounted",
+    "rank": 4,
+    "app_id": 1671210,
+    "title": "#4 discounted: DELTARUNE",
+    "text": "#4 Steam discounted: 'DELTARUNE'.",
+    "name": "DELTARUNE",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.714,
+      "pos": 0.286,
+      "compound": 0.0516
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "discounted",
+    "rank": 5,
+    "app_id": 3240220,
+    "title": "#5 discounted: Grand Theft Auto V Enhanced",
+    "text": "#5 Steam discounted: 'Grand Theft Auto V Enhanced'.",
+    "name": "Grand Theft Auto V Enhanced",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.588,
+      "pos": 0.412,
+      "compound": 0.4939
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "discounted",
+    "rank": 6,
+    "app_id": 3240220,
+    "title": "#6 discounted: Grand Theft Auto V Enhanced",
+    "text": "#6 Steam discounted: 'Grand Theft Auto V Enhanced'.",
+    "name": "Grand Theft Auto V Enhanced",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.588,
+      "pos": 0.412,
+      "compound": 0.4939
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "discounted",
+    "rank": 7,
+    "app_id": 2651280,
+    "title": "#7 discounted: Marvel's Spider-Man 2",
+    "text": "#7 Steam discounted: 'Marvel's Spider-Man 2'.",
+    "name": "Marvel's Spider-Man 2",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.806,
+      "pos": 0.194,
+      "compound": 0.0516
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "discounted",
+    "rank": 8,
+    "app_id": 814380,
+    "title": "#8 discounted: Sekiro™: Shadows Die Twice - GOTY Edition",
+    "text": "#8 Steam discounted: 'Sekiro™: Shadows Die Twice - GOTY Edition'.",
+    "name": "Sekiro™: Shadows Die Twice - GOTY Edition",
+    "sentiment": {
+      "neg": 0.258,
+      "neu": 0.662,
+      "pos": 0.079,
+      "compound": -0.5719
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "discounted",
+    "rank": 9,
+    "app_id": 2138330,
+    "title": "#9 discounted: Cyberpunk 2077: Phantom Liberty",
+    "text": "#9 Steam discounted: 'Cyberpunk 2077: Phantom Liberty'.",
+    "name": "Cyberpunk 2077: Phantom Liberty",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.521,
+      "pos": 0.479,
+      "compound": 0.5574
+    }
+  },
+  {
+    "source": "steamcharts",
+    "chart": "discounted",
+    "rank": 10,
+    "app_id": 1623730,
+    "title": "#10 discounted: Palworld",
+    "text": "#10 Steam discounted: 'Palworld'.",
+    "name": "Palworld",
+    "sentiment": {
+      "neg": 0.0,
+      "neu": 0.714,
+      "pos": 0.286,
+      "compound": 0.0516
+    }
+  }
+]

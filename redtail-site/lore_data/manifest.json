@@ -1,0 +1,56 @@
+{
+  "scraped_at": "2026-07-02 07:21 UTC",
+  "years": {
+    "2022": {
+      "sources": {
+        "hackernews": 83,
+        "steam": 13,
+        "googleplay": 5,
+        "appstore": 3
+      },
+      "total": 104
+    },
+    "2023": {
+      "sources": {
+        "hackernews": 80,
+        "steam": 13,
+        "googleplay": 5,
+        "appstore": 3
+      },
+      "total": 101
+    },
+    "2024": {
+      "sources": {
+        "hackernews": 85,
+        "steam": 13,
+        "googleplay": 5
+      },
+      "total": 103
+    },
+    "2025": {
+      "sources": {
+        "reddit": 26,
+        "hackernews": 90,
+        "steam": 13,
+        "googleplay": 5
+      },
+      "total": 134
+    },
+    "2026": {
+      "sources": {
+        "github": 54,
+        "wikipedia": 10,
+        "reddit": 411,
+        "itch": 10,
+        "gamenews": 445,
+        "hackernews": 90,
+        "steamcharts": 50,
+        "steamtrending": 60,
+        "steam": 13,
+        "googleplay": 5,
+        "appstore": 3
+      },
+      "total": 1151
+    }
+  }
+}

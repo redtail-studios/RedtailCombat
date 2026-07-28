@@ -1,0 +1,1798 @@
+[
+  {
+    "source": "steam",
+    "app_id": "291550",
+    "name": "Brawlhalla",
+    "developer": "Blue Mammoth Games",
+    "owners": "20,000,000 .. 50,000,000",
+    "tags": [
+      "Free to Play",
+      "Multiplayer",
+      "Fighting",
+      "2D Fighter",
+      "2D Platformer",
+      "Casual",
+      "Local Multiplayer",
+      "Co-op",
+      "Controller",
+      "Platformer",
+      "Action",
+      "Online Co-Op"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "1203220",
+    "name": "NARAKA: BLADEPOINT",
+    "developer": "24 Entertainment",
+    "owners": "10,000,000 .. 20,000,000",
+    "tags": [
+      "Battle Royale",
+      "Multiplayer",
+      "Martial Arts",
+      "Mature",
+      "PvP",
+      "Action",
+      "Female Protagonist",
+      "Character Customization",
+      "Massively Multiplayer",
+      "Fighting",
+      "Survival",
+      "Third Person"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "417910",
+    "name": "Street Warriors Online",
+    "developer": "Crazy Rocks Studios",
+    "owners": "10,000,000 .. 20,000,000",
+    "tags": [
+      "Fighting",
+      "Action",
+      "Multiplayer",
+      "Sports",
+      "Violent",
+      "Massively Multiplayer",
+      "Simulation",
+      "Open World",
+      "Free to Play",
+      "PvP",
+      "Early Access",
+      "Co-op"
+    ],
+    "reviews": [
+      {
+        "text": "Money thrown away.\n",
+        "voted_up": false,
+        "timestamp": 1704554989,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      }
+    ]
+  },
+  {
+    "source": "steam",
+    "app_id": "275390",
+    "name": "Guacamelee! Super Turbo Championship Edition",
+    "developer": "Drinkbox Studios",
+    "owners": "5,000,000 .. 10,000,000",
+    "tags": [
+      "Platformer",
+      "2D",
+      "Metroidvania",
+      "Beat 'em up",
+      "Action",
+      "Colorful",
+      "Cartoony",
+      "Indie",
+      "Local Co-Op",
+      "Adventure",
+      "Funny",
+      "Difficult"
+    ],
+    "reviews": [
+      {
+        "text": "Great fun. Jump, slam and smash in a world that is fun and doesn't take itself to serious. Just a nice mood and with all the references to other games and media it is fairly nostalgic.",
+        "voted_up": true,
+        "timestamp": 1735557340,
+        "sentiment": {
+          "neg": 0.082,
+          "neu": 0.633,
+          "pos": 0.285,
+          "compound": 0.891
+        }
+      },
+      {
+        "text": "Great couch co-op game! A combo of Super Mario, Streets of Rage and Ori and the Blind Forest.",
+        "voted_up": true,
+        "timestamp": 1735523484,
+        "sentiment": {
+          "neg": 0.22,
+          "neu": 0.49,
+          "pos": 0.29,
+          "compound": 0.4574
+        }
+      },
+      {
+        "text": "Why do you need a review of game from 2014? It's a decent enough metroidvania. I did 100% it so it's not as difficult as some get-good games, but definitely some of the combats are a challenge. The only thing I hated was the yellow special attack. It was hard to use and I'd rather it had been dropped in favor of just red, green and blue attacks. Or map it to something else.",
+        "voted_up": true,
+        "timestamp": 1735340542,
+        "sentiment": {
+          "neg": 0.185,
+          "neu": 0.672,
+          "pos": 0.143,
+          "compound": -0.7136
+        }
+      },
+      {
+        "text": "Muy bueno pollo. Super fun game. Loved it.\r\n\r\nEggs/Chicken.",
+        "voted_up": true,
+        "timestamp": 1735020832,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.351,
+          "pos": 0.649,
+          "compound": 0.9022
+        }
+      },
+      {
+        "text": "[u][b]-Quick Review-[/b][/u]\nGuacamelee is a Metroidvania 2d Platformer Brawler Beat ‘em Up, all mixed together and wrapped with traditional Mexican culture and folklore theming. Guacamelee! Super Turbo Charge Edition was developed by DrinkBox Studios and released in 2014, Just a year after Guacamelee Gold Edition Release in 2013.\n\n[u][b]Review Video:[/b][/u]\nIf you don't like reading, or are curious about watching gameplay check out my video here:\nhttps://youtu.be/ftMIzo5vAW4\n\n[u][b]-Detailed breakdown review-[/b][/u]\n[b]Story:[/b] You play as Juan, a humble agave farmer who goes into town and bumps into his childhood friend and love interest “El Presidente's daughter”. He also ends up confronting the Antagonist Carlos Calaca, a once famous rodeo Horsman before he broke his arm and sold h",
+        "voted_up": true,
+        "timestamp": 1734961316,
+        "sentiment": {
+          "neg": 0.069,
+          "neu": 0.788,
+          "pos": 0.142,
+          "compound": 0.8975
+        }
+      },
+      {
+        "text": "The Mexiverse is a really hilarious and entertaining place to set a game. Then they called the protagonist the Chosen Juan, and that's some god tier world building. It's a cartoony version of the Dias del los Muertos aesthetic. I think Guacamelee has an incredible art style, a good sense of humor, and is a great beat 'em up / Metroidvania too.\n\nI got a little confused by all of the fighting combos in the menu, but it's easy enough to just button mash all the way to the end on normal difficulty. Some of the stand out mechanics are that you can switch between the world of the living and the dead, which completely changes the game's environments. You can also travel to hell, visit the devil, do some challenge based time trials, and I had a good time trying to get gold on them.\n\nThe music migh",
+        "voted_up": true,
+        "timestamp": 1734658022,
+        "sentiment": {
+          "neg": 0.138,
+          "neu": 0.746,
+          "pos": 0.116,
+          "compound": -0.8743
+        }
+      },
+      {
+        "text": "Short Version:\nWhile \"Guacamelee! STCE\" gets the basics of what it wants to do right, I feel it also tries to tackle too much at once to utilize its full potential. I would recommend the game, but only to those who desire a simple-minded action adventure with brawling focus and decent OST as it is held back by its unforgiving platforming and no way to obtain completion without the will to re-visit the same areas over and over aimlessly.\n\nLong Version:\nGrowing up, I played lots of Asterix and Obelix XXL, a game that reminds me a good bit of Guacamelee. Both games present a relatively simple story, are mostly linear action adventures where you need to backtrack to gather all the available collectibles as well as that they are primarily emphasized on their repetitive yet somewhat charming com",
+        "voted_up": true,
+        "timestamp": 1734646274,
+        "sentiment": {
+          "neg": 0.033,
+          "neu": 0.793,
+          "pos": 0.174,
+          "compound": 0.9711
+        }
+      },
+      {
+        "text": "What a great game. I wish Mexicans were real.",
+        "voted_up": true,
+        "timestamp": 1733950026,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.507,
+          "pos": 0.493,
+          "compound": 0.7783
+        }
+      },
+      {
+        "text": " i don’ usually play metroidvania games but Guacamelee was special",
+        "voted_up": true,
+        "timestamp": 1733685830,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.604,
+          "pos": 0.396,
+          "compound": 0.6428
+        }
+      },
+      {
+        "text": "I really like the style and humor of this game and it is a really solid metroidvania.\r\n\r\nIt is pretty easy overall, which is nice. But as you play more.... they start adding some annoying enemies and there are a couple of dreaded platform challenges. There is a lot of backtracking if you want all the powerups, but you really don't need them all to get the normal ending.  So it is worth playing but I feel like there are some annoying parts.",
+        "voted_up": true,
+        "timestamp": 1733536873,
+        "sentiment": {
+          "neg": 0.152,
+          "neu": 0.618,
+          "pos": 0.231,
+          "compound": 0.1502
+        }
+      },
+      {
+        "text": "the games are good soooooo good",
+        "voted_up": true,
+        "timestamp": 1733181652,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.408,
+          "pos": 0.592,
+          "compound": 0.7003
+        }
+      },
+      {
+        "text": "It's Still Awesome, but Practically DLC. Not that necessary if you already own the original.",
+        "voted_up": true,
+        "timestamp": 1732604143,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.703,
+          "pos": 0.297,
+          "compound": 0.6705
+        }
+      },
+      {
+        "text": "I originally got this game free on Epic Games and I personally loved it so much I decided to buy it AND the second one for me and my girlfriend on Steam. I also 100% achievements. My biggest issues with this game are it is 4 player co-op but only locally. I wish this had online play. I also noticed when playing in multiplayer the second player can't use the headbutt move. which I find really strange. I've never played it with more than 2 players so I don't know if there are similar problems for player 3-4. I honestly hope they continue the series!",
+        "voted_up": true,
+        "timestamp": 1732020358,
+        "sentiment": {
+          "neg": 0.07,
+          "neu": 0.758,
+          "pos": 0.172,
+          "compound": 0.9161
+        }
+      },
+      {
+        "text": "A solid game that I thoroughly enjoyed, especially while listening to my own music in the background. It’s a relaxing, laid-back experience that’s perfect for passing the time, with an engaging story to dive into while keeping things chill. Highly recommend!",
+        "voted_up": true,
+        "timestamp": 1731968652,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.666,
+          "pos": 0.334,
+          "compound": 0.9483
+        }
+      },
+      {
+        "text": "Very fun beat-em-up with some pretty compelling combat, as well as really in depth platforming. It's a fun time.",
+        "voted_up": true,
+        "timestamp": 1730932683,
+        "sentiment": {
+          "neg": 0.081,
+          "neu": 0.441,
+          "pos": 0.478,
+          "compound": 0.8932
+        }
+      },
+      {
+        "text": "It's decent, the platforming was a little frustrating but it usually doesn't put you too far back to keep trying. Took 9 hours to beat, I didn't bother going back for all the collectibles.",
+        "voted_up": true,
+        "timestamp": 1729652061,
+        "sentiment": {
+          "neg": 0.05,
+          "neu": 0.88,
+          "pos": 0.07,
+          "compound": 0.1902
+        }
+      },
+      {
+        "text": "very fun combat, with the perfect length, with the perfect difficulty curve. extremely good.",
+        "voted_up": true,
+        "timestamp": 1729298649,
+        "sentiment": {
+          "neg": 0.186,
+          "neu": 0.293,
+          "pos": 0.52,
+          "compound": 0.8781
+        }
+      },
+      {
+        "text": "For me it looked like somewhat not interesting game and so on.. until i tried.. Then i finished Guacamelle 1, then 2, then 1 on Hard Mode and now i'm going to start 2 on hard mode..\r\n\r\nIt's suprisingly awesome game!",
+        "voted_up": true,
+        "timestamp": 1729275367,
+        "sentiment": {
+          "neg": 0.1,
+          "neu": 0.755,
+          "pos": 0.145,
+          "compound": 0.6264
+        }
+      },
+      {
+        "text": "Great fun with the kids. Up to 4 players couch coop. Great. \r\nThe only minor thing is the screen's focus is on P1, and it's a platformer so if you fall down as P2 or P3 - you're screwed.",
+        "voted_up": true,
+        "timestamp": 1729020843,
+        "sentiment": {
+          "neg": 0.064,
+          "neu": 0.704,
+          "pos": 0.231,
+          "compound": 0.8519
+        }
+      },
+      {
+        "text": "I believe this is like the original just with some extra features, but it still has the great gameplay and humor of the older edition and is really worth playing! I had fun with Guacamelee and am looking forward to playing the sequel!",
+        "voted_up": true,
+        "timestamp": 1728782833,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.59,
+          "pos": 0.41,
+          "compound": 0.973
+        }
+      },
+      {
+        "text": "A great Metroidvania beat-em-up with a quirky cast and simple story. It's fairly short, beatable in about 6 hours, but it's a good time.",
+        "voted_up": true,
+        "timestamp": 1728183317,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.775,
+          "pos": 0.225,
+          "compound": 0.7506
+        }
+      },
+      {
+        "text": "Does not launch.",
+        "voted_up": false,
+        "timestamp": 1728079436,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "Its a very nice game with great graphics and gameplay.",
+        "voted_up": true,
+        "timestamp": 1727633507,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.527,
+          "pos": 0.473,
+          "compound": 0.8016
+        }
+      },
+      {
+        "text": "GUACAMELEE SUPA TOBO CHAMPIONSHIP EDITION",
+        "voted_up": true,
+        "timestamp": 1727461082,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.58,
+          "pos": 0.42,
+          "compound": 0.4404
+        }
+      },
+      {
+        "text": "didnt realize it was short and enjoy it 9/10",
+        "voted_up": true,
+        "timestamp": 1727292289,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.714,
+          "pos": 0.286,
+          "compound": 0.4939
+        }
+      },
+      {
+        "text": "I don't want to play super meat boy anymore",
+        "voted_up": false,
+        "timestamp": 1727196431,
+        "sentiment": {
+          "neg": 0.248,
+          "neu": 0.456,
+          "pos": 0.296,
+          "compound": 0.3903
+        }
+      },
+      {
+        "text": "As always with Drinkbox Studios:\n\nart and music 9/10 ...\n... gameplay 2/10",
+        "voted_up": false,
+        "timestamp": 1727101353,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "This game is one of my top 10 its art, music and humor are all on point, buy this game when you can it will be amazing (the controls do take some getting used to for keyboard)",
+        "voted_up": true,
+        "timestamp": 1727029640,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.815,
+          "pos": 0.185,
+          "compound": 0.7717
+        }
+      },
+      {
+        "text": "really good indie game",
+        "voted_up": true,
+        "timestamp": 1726800205,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.484,
+          "pos": 0.516,
+          "compound": 0.4927
+        }
+      },
+      {
+        "text": "The combat is pretty damn fun in here!\n\nThroughout the game there are a bunch of cute funny references and details which make it super charming.\n\nPower ups are pretty exciting as a metroidvania standpoint. My only complaint would probably be that the game tells you where to go (with a marker on the map) pretty often; that can hold the exploration back, but nothing too bad.\n\nThe game's awesome overall!",
+        "voted_up": true,
+        "timestamp": 1725693497,
+        "sentiment": {
+          "neg": 0.056,
+          "neu": 0.609,
+          "pos": 0.335,
+          "compound": 0.974
+        }
+      },
+      {
+        "text": "A short but very solid metroidvania with tight platforming and very fun combat. The platforming sections are fun challenges especially once most abilities are unlocked and especially demanding in the Infierno Challenges. The combat encounters while fun seem a bit too easy, like enemies usually die before you can even finish your sick combo. Wish hard difficulty was unlocked from the start.\n\nThe presentation in this game is top-notch, charming artstyle, fantastic soundtrack and the whole mexican setting with some fun references put in there was great. The story is alright, nothing you haven't seen before. There's alot of replay value if you're going for the true ending and 100%. Its not the greatest metroidvanias but it is a fun time which doesn't need hours invested in it which is honestly",
+        "voted_up": true,
+        "timestamp": 1725678820,
+        "sentiment": {
+          "neg": 0.158,
+          "neu": 0.498,
+          "pos": 0.343,
+          "compound": 0.9907
+        }
+      },
+      {
+        "text": "Pretty great metroidvania with a latino theme. Artwork and animations are incredible. Abilities are fun and execution late game gets pretty crazy.",
+        "voted_up": true,
+        "timestamp": 1725658645,
+        "sentiment": {
+          "neg": 0.069,
+          "neu": 0.46,
+          "pos": 0.471,
+          "compound": 0.932
+        }
+      },
+      {
+        "text": "Very solid Metroidvania with a strong focus on combat and combos. The start drags a little bit, but once you get most of your abilities, the mid to late game becomes really fun and expressive. Also has a really cool aesthetic and soundtrack.",
+        "voted_up": true,
+        "timestamp": 1725014582,
+        "sentiment": {
+          "neg": 0.057,
+          "neu": 0.669,
+          "pos": 0.274,
+          "compound": 0.9139
+        }
+      },
+      {
+        "text": "2 major issues. One is that projectiles constantly hit you while you are waiting for attack animations to finish and you can't do anything about it. The second is jumping up a level. It just isn't consistent...which...in a platformer is pretty important. Other than that the characters and art style are great. THe music is pretty annoying.  Those two major issues tho will cause you to have to redo battles over and over again.",
+        "voted_up": false,
+        "timestamp": 1724987738,
+        "sentiment": {
+          "neg": 0.096,
+          "neu": 0.764,
+          "pos": 0.14,
+          "compound": 0.5994
+        }
+      },
+      {
+        "text": "really cool culture representation",
+        "voted_up": true,
+        "timestamp": 1724790039,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.536,
+          "pos": 0.464,
+          "compound": 0.3804
+        }
+      },
+      {
+        "text": "I bought the original Guacamelee and played it more than once, then they released an updated version and gave it to me for free and I played that through twice, now there's this version which they gave to me for free and it's changed significantly and I'm playing it through again...\r\nI love this game - it's a fantastic update of side-scrolling, platform game. The mechanics are cool. The challenges are cool. The style of the art is cool. It's just a rad, fun game.",
+        "voted_up": true,
+        "timestamp": 1724761068,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.674,
+          "pos": 0.326,
+          "compound": 0.9846
+        }
+      },
+      {
+        "text": "A great metroidvania where your combat abilities also act as traversal options. Also there are memes, which I appreciate.",
+        "voted_up": true,
+        "timestamp": 1724654409,
+        "sentiment": {
+          "neg": 0.092,
+          "neu": 0.573,
+          "pos": 0.336,
+          "compound": 0.7506
+        }
+      },
+      {
+        "text": "I wanted to play this game for so long and finally got around to it.\nIt WAS NOT what I expected. I thought it would be a 2D fighter, but it was much more than that.\nA puzzle, a parkour and even exploration game.\nI never thought such a \"simple\" game could be played for 21 hours and I only opened like %33 of the map.\nFantastic production. Gracias.",
+        "voted_up": true,
+        "timestamp": 1724405656,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.791,
+          "pos": 0.209,
+          "compound": 0.9393
+        }
+      },
+      {
+        "text": "Very fun combat, never got tired of it\nif you need reasons to buy this game, just so you know, you can turn into a chicken",
+        "voted_up": true,
+        "timestamp": 1723965296,
+        "sentiment": {
+          "neg": 0.085,
+          "neu": 0.726,
+          "pos": 0.189,
+          "compound": 0.514
+        }
+      },
+      {
+        "text": "It´s good and silly, not so funny if you're over 15 or 10 but it is a good game, I personally love the enviroments because they are well done. 8/10 Overall.",
+        "voted_up": true,
+        "timestamp": 1723832134,
+        "sentiment": {
+          "neg": 0.043,
+          "neu": 0.594,
+          "pos": 0.363,
+          "compound": 0.9258
+        }
+      },
+      {
+        "text": "Very good platformer-metroidvania. I really like the colors. Characters are funny.",
+        "voted_up": true,
+        "timestamp": 1723551733,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.474,
+          "pos": 0.526,
+          "compound": 0.8354
+        }
+      },
+      {
+        "text": "Great fun platformer and arcadey \"luchita\" game. \r\nRecommended.",
+        "voted_up": true,
+        "timestamp": 1723353507,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.352,
+          "pos": 0.648,
+          "compound": 0.8481
+        }
+      },
+      {
+        "text": "decent platformer, mucho de inglespaniol",
+        "voted_up": true,
+        "timestamp": 1723337042,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "I can't believe this game was released 4 years prior to hollow knight and it actually feels just as good!\nAn extremely great metroidvania with amazing mechanics.",
+        "voted_up": true,
+        "timestamp": 1722432408,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.678,
+          "pos": 0.322,
+          "compound": 0.9078
+        }
+      },
+      {
+        "text": "First game i've 100%'d. totally worth it. so fun",
+        "voted_up": true,
+        "timestamp": 1722392924,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.547,
+          "pos": 0.453,
+          "compound": 0.699
+        }
+      },
+      {
+        "text": "Funny Game... Very Chill...",
+        "voted_up": true,
+        "timestamp": 1721815119,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.508,
+          "pos": 0.492,
+          "compound": 0.4404
+        }
+      },
+      {
+        "text": "This game has great elements to it. Great artwork, combat and cool abilities. The story I found was lackluster and the game itself was quite short. I was able to beat it in 5 hours the first time through and I was a bit taken back since I beat it in one day. The abilities were great and offered for some cool puzzles and platforming which I enjoyed. The combat was solid with a lot of different enemy types. I loved the artstyle and would recommend this game since it is considered a classic. I would rate this a 7/10. Wasn't as good as I thought it was going to be but still fun.",
+        "voted_up": true,
+        "timestamp": 1721784246,
+        "sentiment": {
+          "neg": 0.056,
+          "neu": 0.746,
+          "pos": 0.198,
+          "compound": 0.9403
+        }
+      },
+      {
+        "text": "Guacamelee is a creative mashup between the metroidvania and beat 'em up genres. It has great humor and a unique artstyle. I've played the second game on Playstation 4 and didn't find as good, but this one is definetly worth your time and money!",
+        "voted_up": true,
+        "timestamp": 1721086865,
+        "sentiment": {
+          "neg": 0.034,
+          "neu": 0.759,
+          "pos": 0.207,
+          "compound": 0.771
+        }
+      },
+      {
+        "text": "Terrific and super fun game. Lots is Easter eggs and references to others games",
+        "voted_up": true,
+        "timestamp": 1721005298,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.516,
+          "pos": 0.484,
+          "compound": 0.8834
+        }
+      },
+      {
+        "text": "It is a very fun game. Exploration is not as good as other Metroidvanias but it is still an enjoyable experience.",
+        "voted_up": true,
+        "timestamp": 1720853802,
+        "sentiment": {
+          "neg": 0.064,
+          "neu": 0.643,
+          "pos": 0.292,
+          "compound": 0.7206
+        }
+      },
+      {
+        "text": "heeellllllll yeah punch thabgt guy",
+        "voted_up": true,
+        "timestamp": 1720841346,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.645,
+          "pos": 0.355,
+          "compound": 0.296
+        }
+      },
+      {
+        "text": "Quick review: 3\n\n### Metric ###\n1- Garbage. :(\n2- Did not fulfill the purpose.\n3 - Ok, fulfilled the purpose.\n4 - A good game!\n5 - Just play and be happy. :)",
+        "voted_up": true,
+        "timestamp": 1720811556,
+        "sentiment": {
+          "neg": 0.112,
+          "neu": 0.57,
+          "pos": 0.318,
+          "compound": 0.8685
+        }
+      }
+    ]
+  },
+  {
+    "source": "steam",
+    "app_id": "844870",
+    "name": "KurtzPel",
+    "developer": "KOG",
+    "owners": "5,000,000 .. 10,000,000",
+    "tags": [
+      "Anime",
+      "Free to Play",
+      "Character Customization",
+      "Multiplayer",
+      "Action",
+      "PvP",
+      "Fantasy",
+      "Fighting",
+      "Third Person",
+      "Massively Multiplayer",
+      "Co-op",
+      "Sexual Content"
+    ],
+    "reviews": [
+      {
+        "text": "If Kurtzpel was handled by a better company, the game would have been far more successful than it is currently.\n\n[For context: I'm a returning player who was around in 2019.]\n\nI like the game and it has a lot of potential but it is effectively the neglected child of KOG.\n\nI WANT there to be new players because I want to enjoy the game more — but the game falls behind when it comes to F2P games as of December 31, 2024.\n\nEither KOG has something big in store for 2025 or not at all that will determine if the game dies or not.\n\nThe biggest issue is very much the lack of players that modes to get the Resurrection Stone for free is ONLY multiplayer.\n\nIt's like KOG is so afraid that Elsword will flop the moment they focus on other games that such games like Kurtzpel is the way it is.",
+        "voted_up": true,
+        "timestamp": 1735689058,
+        "sentiment": {
+          "neg": 0.061,
+          "neu": 0.777,
+          "pos": 0.162,
+          "compound": 0.946
+        }
+      },
+      {
+        "text": "Amazing Fight",
+        "voted_up": true,
+        "timestamp": 1735524760,
+        "sentiment": {
+          "neg": 0.406,
+          "neu": 0.0,
+          "pos": 0.594,
+          "compound": 0.296
+        }
+      },
+      {
+        "text": "Boring content",
+        "voted_up": false,
+        "timestamp": 1735521409,
+        "sentiment": {
+          "neg": 0.697,
+          "neu": 0.303,
+          "pos": 0.0,
+          "compound": -0.3182
+        }
+      },
+      {
+        "text": "Fena sayılmaz kafa dağıtmalık",
+        "voted_up": true,
+        "timestamp": 1735412538,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "Here I will leave the cat, friends who pass by can pet it and give it a thumbs up (i need steam points)\n　　　 　　／＞　　フ\n　　　 　　| 　_　 _ l\n　 　　 　／` ミ＿xノ\n　　 　 /　　　 　 |\n　　　 /　 ヽ　　 ﾉ\n　 　 │　　|　|　|\n　／￣|　　 |　|　|\n　| (￣ヽ＿_ヽ_)__)\n　＼二つ",
+        "voted_up": true,
+        "timestamp": 1734645309,
+        "sentiment": {
+          "neg": 0.023,
+          "neu": 0.858,
+          "pos": 0.119,
+          "compound": 0.7096
+        }
+      },
+      {
+        "text": "riktigt dåligt",
+        "voted_up": false,
+        "timestamp": 1734040762,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "A rough decision, but I disapprove. \r\nA shameful vouch under the devs of Elsword & Grand Chase, albeit there's much worse than this. This is another of those \"Cute/cool character designs, subpar gameplay\" types due to heavy PVP focus kinds of traps. Customization was actually pretty good and fashion sense was something to look at, not bad actually, but there's just that... \r\n\r\nThere's several other drawbacks as well. Adding the majority of other complaints from the others (i.e: hard to unlock stuff, going Overwatch style on BP seasonal stuff etc.), I've found quite a few problems of my own to add: \r\n\r\nFirst problem is that PVP is kind of forced in the tutorial phase of the game at a point and it has to be done three times, painfully (dumb luck I actually got lucky twice as MVP and it wasn'",
+        "voted_up": false,
+        "timestamp": 1733883300,
+        "sentiment": {
+          "neg": 0.186,
+          "neu": 0.673,
+          "pos": 0.141,
+          "compound": -0.8523
+        }
+      },
+      {
+        "text": "[h1]5.5 Overall[/h1]\nHas potential but is not very good as it is today. The game has a nice looking anime art style with terrible graphics performance. Matches are pretty good - usually lasting a couple minutes, but after a few matches it gets boring. There is a lot of extra clicks that are annoying to start a match and you have to view a report after each match which is bad design. Too many menu clicks for no reason.\n\n[b]Pros[/b]\n- 7/10 Menu UI - pretty but extra clicks are needed for unknown reasons. some is non-intuitive. \n- 7/10 Character Customization. Characters have fat waists and look a bit chunky. Faces all look very similar. Hair colors all look very similar. Lots of things you can change but all have very little impact. Very few clothing options.\n- 6/10 Environment Quality - alm",
+        "voted_up": false,
+        "timestamp": 1733692864,
+        "sentiment": {
+          "neg": 0.127,
+          "neu": 0.779,
+          "pos": 0.095,
+          "compound": -0.6688
+        }
+      },
+      {
+        "text": "This game has been in early access even before the pandemic started.\n\nWhales are the only people keeping this game alive methinks...\n\nThey removed the story and gutted the PVE. It could've become something if it actually stopped being an PvP only game.",
+        "voted_up": false,
+        "timestamp": 1733604384,
+        "sentiment": {
+          "neg": 0.042,
+          "neu": 0.901,
+          "pos": 0.057,
+          "compound": 0.1779
+        }
+      },
+      {
+        "text": "i have not played this",
+        "voted_up": false,
+        "timestamp": 1733558868,
+        "sentiment": {
+          "neg": 0.337,
+          "neu": 0.663,
+          "pos": 0.0,
+          "compound": -0.2584
+        }
+      },
+      {
+        "text": "there's no way this game isn't a money laundering scheme",
+        "voted_up": false,
+        "timestamp": 1733275723,
+        "sentiment": {
+          "neg": 0.196,
+          "neu": 0.804,
+          "pos": 0.0,
+          "compound": -0.296
+        }
+      },
+      {
+        "text": "Does anyone even still play this ♥♥♥♥? Whenever i hop on i see so many mfs chilling in the lobby but can never get a pvp match going on. Like what do these mfs do all day?!",
+        "voted_up": false,
+        "timestamp": 1732780455,
+        "sentiment": {
+          "neg": 0.022,
+          "neu": 0.659,
+          "pos": 0.319,
+          "compound": 0.9357
+        }
+      },
+      {
+        "text": "i think this game should be EOS already and rebranding their game and make the improvement so could compared to games these days though. Make it dies faster, it more appropiate than  dies slowly",
+        "voted_up": false,
+        "timestamp": 1732521370,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.917,
+          "pos": 0.083,
+          "compound": 0.4588
+        }
+      },
+      {
+        "text": "I fw this game heavy 🗣️🗣️🔥🔥🔥🔥",
+        "voted_up": true,
+        "timestamp": 1732345725,
+        "sentiment": {
+          "neg": 0.516,
+          "neu": 0.484,
+          "pos": 0.0,
+          "compound": -0.8225
+        }
+      },
+      {
+        "text": "It had potential years ago, but it hasn't done anything interesting in years.",
+        "voted_up": false,
+        "timestamp": 1732236088,
+        "sentiment": {
+          "neg": 0.194,
+          "neu": 0.806,
+          "pos": 0.0,
+          "compound": -0.438
+        }
+      },
+      {
+        "text": "Honestly, This shouldn't be set up the way it is, Please actually think about IMPROVING the game. I want a story, I want an easier time to connect with people and level up. This is just now like Valorant or another shooter game. Nothing really speaks \"Look I'm a fun game\" I want details, I want a good ♥♥♥♥♥♥♥ story. Not something where is cool for two seconds then turns out it's just lame to hangout on...",
+        "voted_up": false,
+        "timestamp": 1732223887,
+        "sentiment": {
+          "neg": 0.022,
+          "neu": 0.538,
+          "pos": 0.44,
+          "compound": 0.9944
+        }
+      },
+      {
+        "text": "Very good game\r\n⣿⣿⣿⣿⠛⠛⠉⠄⠁⠄⠄⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⡟⠁⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⡇⠄⠄⠄⠐⠄⠄⠄⠄⠄⠄⠄⠠⣿⣿⣿⣿⣿⣿\r\n⣿⣿⡇⠄⢀⡀⠠⠃⡐⡀⠠⣶⠄⠄⢀⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣶⠄⠰⣤⣕⣿⣾⡇⠄⢛⠃⠄⢈⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⡇⢀⣻⠟⣻⣿⡇⠄⠧⠄⢀⣾⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⣟⢸⣻⣭⡙⢄⢀⠄⠄⠄⠈⢹⣯⣿⣿⣿⣿⣿\r\n⣿⣿⣿⣭⣿⣿⣿⣧⢸⠄⠄⠄⠄⠄⠈⢸⣿⣿⣿⣿⣿\r\n⣿⣿⣿⣼⣿⣿⣿⣽⠘⡄⠄⠄⠄⠄⢀⠸⣿⣿⣿⣿⣿\r\n⡿⣿⣳⣿⣿⣿⣿⣿⠄⠓⠦⠤⠤⠤⠼⢸⣿⣿⣿⣿⣿\r\n⡹⣧⣿⣿⣿⠿⣿⣿⣿⣿⣿⣿⣿⢇⣓⣾⣿⣿⣿⣿⣿\r\n⡞⣸⣿⣿⢏⣼⣶⣶⣶⣶⣤⣶⡤⠐⣿⣿⣿⣿⣿⣿⣿\r\n⣯⣽⣛⠅⣾⣿⣿⣿⣿⣿⡽⣿⣧⡸⢿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⡷⠹⠛⠉⠁⠄⠄⠄⠄⠄⠄⠐⠛⠻⣿⣿⣿⣿\r\n⣿⣿⣿⠃⠄⠄⠄⠄⠄⣠⣤⣤⣤⡄⢤⣤⣤⣤⡘⠻⣿\r\n⣿⣿⡟⠄⠄⣀⣤⣶⣿⣿⣿⣿⣿⣿⣆⢻⣿⣿⣿⡎⠝\r\n⣿⡏⠄⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡎⣿⣿⣿⣿⠐\r\n⣿⡏⣲⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢇⣿⣿⣿⡟⣼\r\n⣿⡠⠜⣿⣿⣿⣿⣟⡛⠿⠿⠿⠿⠟⠃⠾⠿⢟⡋⢶⣿\r\n⣿⣧⣄⠙⢿⣿⣿⣿⣿⣿⣷⣦⡀⢰⣾⣿⣿⡿⢣⣿⣿\r\n⣿⣿⣿⠂⣷⣶⣬⣭⣭⣭⣭⣵⢰⣴⣤⣤⣶⡾⢐⣿⣿\r\n⣿⣿⣿⣷⡘⣿⣿⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⢃⣼⣿⣿",
+        "voted_up": true,
+        "timestamp": 1732196800,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.883,
+          "pos": 0.117,
+          "compound": 0.4927
+        }
+      },
+      {
+        "text": "randomly got achievement today from a game i never touch since 5 years ago bruh",
+        "voted_up": false,
+        "timestamp": 1731943750,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "It's all alot more fun with friends",
+        "voted_up": true,
+        "timestamp": 1731194157,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.418,
+          "pos": 0.582,
+          "compound": 0.788
+        }
+      },
+      {
+        "text": "Waste of time",
+        "voted_up": false,
+        "timestamp": 1731056137,
+        "sentiment": {
+          "neg": 0.583,
+          "neu": 0.417,
+          "pos": 0.0,
+          "compound": -0.4215
+        }
+      },
+      {
+        "text": "what a joke...",
+        "voted_up": false,
+        "timestamp": 1731003434,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.476,
+          "pos": 0.524,
+          "compound": 0.296
+        }
+      },
+      {
+        "text": "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠡⠀⠘⢿⣦⠹⣿⣦⣀⠀⠀⠀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⢿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢡⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⢀⣿⣿⣿⠏⢼⣿⣿⠃⠛⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠏⣿⣿⣦⣀⠀⠀⠠⢀⢠⠔⢌⠀⠀⠀⣸⣿⣿⡏⠌⡘⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠴⠁⢠⣿⣿⣿⠁⠈⢐⢴⠃⢸⠀⠈⢗⢄⠚⣿⣿⡟⠰⠈⡅⢙⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⡀⢸⣿⣿⡏⣠⠖⢠⠃⠀⠀⠀⠀⠀⢂⠛⢿⣿⡁⠃⠥⡈⣜⠊⢈⢤⣆⢤⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢦⠀⢰⢸⣿⣿⡷⡏⠁⡇⠀⠀⠀⡆⠀⠀⠈⡦⠈⢃⠌⣱⠶⠿⡯⠿⢓⡨⠎⢋⡈⠽⢂⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠌⠧⠄⣞⠬⢯⣱⡡⣤⢰⠀⠀⠀⠀⡇⠀⠀⠀⠠⢡⠀⠡⣶⡀⣬⠡⠸⢊⡤⠚⠉⠀⠀⠀⠑⡀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠌⠀⠈⢊⡄⠀⠄⠠⣑⠮⣧⠀⠀⠀⠀⠇⣇⠀⠀⠀⠀⠡⠀⠘⠵⡄⣑⢣⠃⠀⠀⠀⠀⠀⠀⠀⣠\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠌⠀⠀⠀⠘⠴⣨⠲⠢⣦⠋⠐⠈⠉⠠⡐⢶⠞⡀⠀⠀⠀⠀⠁⡀⠘⠗⣨⠃⠀⠀⠀⠀⠀⠀⠀⠀⢀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠐⠁⠊⠀⠀⠀⠀⠔⠂⠀⠀⠀⠈⢻⡡⢢⢠⢶⡀⠈⠁⠉⠉⣲⣦⠄⣀⠐⢳⡌⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠀⠁⠀⠀⠀⠐⠐⠒⢂⡦⢟⣲⣆⣄⡤⡶⢶⡳⢟⡹⢮⣝⠛⢝⡶⠾⠟⠋⠿⣫⡽⠃⢾⠈⢄⠀⠀⠀⠀⠀⠀⠀⢈⠃\n⠀⠀⠀⠀⠀⠀⠠⠀⠁⠀⠀⠀⠀⠀⠀⡀⠔⡨⠒⠊⢁⠄⡌⡡⠜⠩⠡⢙⢚⡱⠋⡜⢓⡠⡙⢶⢄⡀⠰⣮⡢⠀⠸⣀⠔⠀⠀⠀⠀⠀⠀⢐⠂⠀\n⠀⠀⠀⡠⠀⠁⠀⠀⠀⠀⠀⠀⠀⢀⡾⡡⠊⢀⡄⠮⠒⠉⠀⠀⠀⠈⢁⠎⠁⠀⠉⠉⠉⠄⣙⠢⣙⣞⣄⠈⠳⡈⠂⠏⠀⠀⠀⠀⠀⠀⢐⠂⠀⠀\n⠀⠀⠊⠀⠀⠀⠀⠀⠀⠀⠀⡠⢂⣾⡏⡠⠒⠉⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠄⠀⠒⠗⠀⡀⠙⢦⡁⠢⢌⣴⢟⠀⠀⠀⠀⠀⢐⠂⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠮⡧⢂⠗⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⠀⠀⠀⠀",
+        "voted_up": true,
+        "timestamp": 1730957179,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "go play soulworker insted!",
+        "voted_up": false,
+        "timestamp": 1730656302,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.527,
+          "pos": 0.473,
+          "compound": 0.4003
+        }
+      },
+      {
+        "text": "To anyone still logging into this, whatever it is because it's not a game, just let it die.\n\nThis is a bank and the only thing you can do is deposit money into the banks account.",
+        "voted_up": false,
+        "timestamp": 1730651195,
+        "sentiment": {
+          "neg": 0.1,
+          "neu": 0.9,
+          "pos": 0.0,
+          "compound": -0.5994
+        }
+      },
+      {
+        "text": "They say laughter is the best medicine, but even a barrel of giggles can't cure the disappointment that is KurtzPel.",
+        "voted_up": true,
+        "timestamp": 1730607472,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.605,
+          "pos": 0.395,
+          "compound": 0.8574
+        }
+      },
+      {
+        "text": "bring back 2019 ver fr",
+        "voted_up": false,
+        "timestamp": 1730521651,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "Reminiscent of action-packed titles like TERA, KurtzPel impresses with its engaging PvP battles. However, it falls short with a less developed storyline and limited PvE content, making it a mixed bag overall.",
+        "voted_up": true,
+        "timestamp": 1730356734,
+        "sentiment": {
+          "neg": 0.114,
+          "neu": 0.684,
+          "pos": 0.203,
+          "compound": 0.5423
+        }
+      },
+      {
+        "text": "Like a rebellious teen, KurtzPel borrows from MMO titans yet lacks their depth. It's like having a pizza with only the cheese, forgetting the toppings.",
+        "voted_up": true,
+        "timestamp": 1730039569,
+        "sentiment": {
+          "neg": 0.075,
+          "neu": 0.753,
+          "pos": 0.171,
+          "compound": 0.4215
+        }
+      },
+      {
+        "text": "the pvp is laggy and play to win, and the pve is lacking in content",
+        "voted_up": false,
+        "timestamp": 1730003489,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.677,
+          "pos": 0.323,
+          "compound": 0.7351
+        }
+      },
+      {
+        "text": "Perpetual early access",
+        "voted_up": false,
+        "timestamp": 1729856961,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "game has the worst matchmaking and skill based pvp i have ever seen, and each time the game gets an update, it gets more greedier and worse than before, it was a great game back then where i meet good friends and good communities, but now its just an utter garbage of greed",
+        "voted_up": false,
+        "timestamp": 1729590813,
+        "sentiment": {
+          "neg": 0.168,
+          "neu": 0.7,
+          "pos": 0.132,
+          "compound": -0.5145
+        }
+      },
+      {
+        "text": "Very interactive and i enjoyed the quality and detail the game had i would definitely buy it.",
+        "voted_up": true,
+        "timestamp": 1729556496,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.714,
+          "pos": 0.286,
+          "compound": 0.7184
+        }
+      },
+      {
+        "text": "I think I played this game in 2019/2020. Just saw this in my library and remembered how much it sucked.",
+        "voted_up": false,
+        "timestamp": 1728555713,
+        "sentiment": {
+          "neg": 0.128,
+          "neu": 0.769,
+          "pos": 0.103,
+          "compound": -0.1531
+        }
+      },
+      {
+        "text": "worst game ever made too many try hards",
+        "voted_up": false,
+        "timestamp": 1728237386,
+        "sentiment": {
+          "neg": 0.369,
+          "neu": 0.631,
+          "pos": 0.0,
+          "compound": -0.6249
+        }
+      },
+      {
+        "text": "the game is pay2win, very repetitive \nhad fun for the first 4 hours then got boring.",
+        "voted_up": false,
+        "timestamp": 1727916957,
+        "sentiment": {
+          "neg": 0.217,
+          "neu": 0.614,
+          "pos": 0.168,
+          "compound": -0.0076
+        }
+      },
+      {
+        "text": "⣿⣿⡻⠿⣳⠸⢿⡇⢇⣿⡧⢹⠿⣿⣿⣿⣿⣾⣿⡇⣿⣿⣿⣿⡿⡐⣯⠁ ⠄⠄\n⠟⣛⣽⡳⠼⠄⠈⣷⡾⣥⣱⠃⠣⣿⣿⣿⣯⣭⠽⡇⣿⣿⣿⣿⣟⢢⠏⠄ ⠄\n⢠⡿⠶⣮⣝⣿⠄⠄⠈⡥⢭⣥⠅⢌⣽⣿⣻⢶⣭⡿⠿⠜⢿⣿⣿⡿⠁⠄⠄\n⠄⣼⣧⠤⢌⣭⡇⠄⠄⠄⠭⠭⠭⠯⠴⣚⣉⣛⡢⠭⠵⢶⣾⣦⡍⠁⠄⠄⠄⠄\n⠄⣿⣷⣯⣭⡷⠄⠄⢀⣀⠩⠍⢉⣛⣛⠫⢏⣈⣭⣥⣶⣶⣦⣭⣛⠄⠄⠄⠄⠄\n⢀⣿⣿⣿⡿⠃⢀⣴⣿⣿⣿⣎⢩⠌⣡⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⠄⠄⠄\n⢸⡿⢟⣽⠎⣰⣿⣿⣿⣿⣿⣿⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠄⠄\n⣰⠯⣾⢅⣼⣿⣿⣿⣿⣿⣿⡇⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠄\n⢰⣄⡉⣼⣿⣿⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠄\n⢯⣌⢹⣿⣿⣿⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄\n⢸⣇⣽⣿⣿⣿⣿⣿⣿⣿⣿⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄\n⢸⣟⣧⡻⣿⣿⣿⣿⣿⣿⣿⣧⡻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄\n⠈⢹⡧⣿⣸⠿⢿⣿⣿⣿⣿⡿⠗⣈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠄\n⠄⠘⢷⡳⣾⣷⣶⣶⣶⣶⣶⣾⣿⣿⢀⣶⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠄\n⠄⠄⠈⣵⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄⠄\n⠄⠄⠄⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠄⠄",
+        "voted_up": true,
+        "timestamp": 1727698555,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "My friend who I started playing Counter Strike 2 with said that if I post a review of this game and it gets 3000 likes and 3000 rewards, he will buy me an RTX 4060 and 3 kilos of pork ham. So I'll just leave it here~\n\n　∧＿∧\n（｡･ω･｡)つ━☆・*。\n⊂　　 ノ 　　　・゜+.\n　しーＪ　　　°。+ *´¨)\n　　　　　　　　　.• ´¸.•*´¨) ¸.•*¨)\n　　　　　　　　　　(¸.•´ (¸.•’*",
+        "voted_up": true,
+        "timestamp": 1727689809,
+        "sentiment": {
+          "neg": 0.044,
+          "neu": 0.796,
+          "pos": 0.161,
+          "compound": 0.8375
+        }
+      },
+      {
+        "text": "Don't put achievements on live service games.",
+        "voted_up": false,
+        "timestamp": 1727064163,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "Game pay2win. game old and game boring",
+        "voted_up": false,
+        "timestamp": 1726924885,
+        "sentiment": {
+          "neg": 0.277,
+          "neu": 0.723,
+          "pos": 0.0,
+          "compound": -0.3182
+        }
+      },
+      {
+        "text": "Slop. Game fell off hard.\n",
+        "voted_up": false,
+        "timestamp": 1726730481,
+        "sentiment": {
+          "neg": 0.259,
+          "neu": 0.741,
+          "pos": 0.0,
+          "compound": -0.1027
+        }
+      },
+      {
+        "text": "Don't listen to the positive reviews (pretty sure those people just be playing with their joystick or just like to look at the cool/sexy anime inspired characters even tho the game itself is absolute garbage) The only good thing this game has is character creation. PvP is pay to win, better loot/gear/power or anything is all pay to win. Pls don't get this game. It's been in \"early access\" since 2019 (pretty sure its a scam at this point) by scam I mean that the devs removed things players liked and made it a full pay to win game without ever updating or adding content (except for cosmetics which is not content) Don't give the game a chance it genuinely does not deserve it. I only write reviews when a game is good but I can't watch people play this garbage when it deserves to be deleted fro",
+        "voted_up": false,
+        "timestamp": 1726593340,
+        "sentiment": {
+          "neg": 0.064,
+          "neu": 0.726,
+          "pos": 0.21,
+          "compound": 0.9493
+        }
+      },
+      {
+        "text": "Been a minute since I played this game. Was here for the initial release and it started out as having passion as the PvE was fun, skills looked nice, no bugs (at least when I played it), and it was f2p friendly since you could ignore pvp and do pve. Some classes were behind a paywall which I slightly regret but any character was pretty viable.\n\nThen they removed every semblance of story, the game fully focusing on pvp class arena fighter and high class cosmetics being locked behind premium currency (if I remember correctly.). That was when I had came back to see what was up. Proceeded to get whiplashed at there being little to no pve content anymore or much story for the characters. Overall, I wasn't mad, just disappointed at the sudden change. Never really looked back when I immediately d",
+        "voted_up": false,
+        "timestamp": 1726534793,
+        "sentiment": {
+          "neg": 0.046,
+          "neu": 0.802,
+          "pos": 0.151,
+          "compound": 0.9436
+        }
+      },
+      {
+        "text": "PVP game. No world to explore. Pay to win from what I hear. Story was gutted to focus on PVP and shop. Don't waste your time.",
+        "voted_up": false,
+        "timestamp": 1726380323,
+        "sentiment": {
+          "neg": 0.113,
+          "neu": 0.693,
+          "pos": 0.193,
+          "compound": 0.5472
+        }
+      },
+      {
+        "text": "Amazing character customizer, if you like anime aesthetics and artstyles. as well the combat is inventive and reminds me of TERA, This might just be the game I have been looking for.\r\n",
+        "voted_up": true,
+        "timestamp": 1726242470,
+        "sentiment": {
+          "neg": 0.062,
+          "neu": 0.722,
+          "pos": 0.216,
+          "compound": 0.7184
+        }
+      },
+      {
+        "text": "Please reward this comment. I still have 3000 points left to buy those slut avatars and backgrounds. Give me thumbs up, and you will grow 3cm. Reward this and you will grow 30cm.\n.⠄⠄⣿⣿⣿⣿⠘⡿⢛⣿⣿⣿⣿⣿⣧⢻⣿⣿⠃⠸⣿⣿⣿⠄⠄⠄⠄⠄\n⠄⠄⣿⣿⣿⣿⢀⠼⣛⣛⣭⢭⣟⣛⣛⣛⠿⠿⢆⡠⢿⣿⣿⠄⠄⠄⠄⠄\n⠄⠄⠸⣿⣿⢣⢶⣟⣿⣖⣿⣷⣻⣮⡿⣽⣿⣻⣖⣶⣤⣭⡉⠄⠄⠄⠄⠄\n⠄⠄⠄⢹⠣⣛⣣⣭⣭⣭⣁⡛⠻⢽⣿⣿⣿⣿⢻⣿⣿⣿⣽⡧⡄⠄⠄⠄\n⠄⠄⠄⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣶⣌⡛⢿⣽⢘⣿⣷⣿⡻⠏⣛⣀⠄⠄\n⠄⠄⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠙⡅⣿⠚⣡⣴⣿⣿⣿⡆⠄\n⠄⠄⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠄⣱⣾⣿⣿⣿⣿⣿⣿⠄\n⠄⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⣿⣿⣿⣿⠄\n⠄⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠣⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄\n⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠑⣿⣮⣝⣛⠿⠿⣿⣿⣿⣿⠄\n⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⠄⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄",
+        "voted_up": true,
+        "timestamp": 1726147935,
+        "sentiment": {
+          "neg": 0.071,
+          "neu": 0.748,
+          "pos": 0.181,
+          "compound": 0.7096
+        }
+      },
+      {
+        "text": "this game was fire... till January 15 has arrived.. this game one became from one of the most fun games to one of the most garbage games. and it went downhill slowly to the lowest pit",
+        "voted_up": false,
+        "timestamp": 1725867217,
+        "sentiment": {
+          "neg": 0.12,
+          "neu": 0.793,
+          "pos": 0.086,
+          "compound": -0.1045
+        }
+      },
+      {
+        "text": "no (controller support is bad)",
+        "voted_up": false,
+        "timestamp": 1725602200,
+        "sentiment": {
+          "neg": 0.799,
+          "neu": 0.201,
+          "pos": 0.0,
+          "compound": -0.7881
+        }
+      },
+      {
+        "text": "BRO THIS GAME P2W RN.....",
+        "voted_up": false,
+        "timestamp": 1724693875,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "hot garbage now what a waste",
+        "voted_up": false,
+        "timestamp": 1724535236,
+        "sentiment": {
+          "neg": 0.359,
+          "neu": 0.641,
+          "pos": 0.0,
+          "compound": -0.4215
+        }
+      },
+      {
+        "text": "If you want to collect lots of free clothes, I can recommend this game.\nIf you want to create many different characters, I can recommend this game.\nIf you like to play with sexy clothes and characters, then I can recommend this game.\nIf you want to play varied pve, then I can't recommend this game to you.\nIf you don't want to spend months practicing for PvP, then I can't recommend this game to you.\nIf you don't feel like looking for a good team player for PvP ranking, then I can't recommend this game to you.",
+        "voted_up": true,
+        "timestamp": 1724393727,
+        "sentiment": {
+          "neg": 0.08,
+          "neu": 0.666,
+          "pos": 0.253,
+          "compound": 0.9568
+        }
+      },
+      {
+        "text": "fix ur game ur game is ♥♥♥♥♥♥♥♥   fix the  ♥♥♥♥♥♥♥ bugs and the dc u ♥♥♥♥",
+        "voted_up": false,
+        "timestamp": 1723976662,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.286,
+          "pos": 0.714,
+          "compound": 0.998
+        }
+      },
+      {
+        "text": "havent played this for a while but it used to be good, sadly after each Update it just got worse. everything used to be f2p this is so far worse than OW2 game that i played. for Context OW2 basically never deliver the promise of story mode and remove some f2p feature. while Kurtzpel Remove the main purpose of the game.",
+        "voted_up": false,
+        "timestamp": 1723255432,
+        "sentiment": {
+          "neg": 0.212,
+          "neu": 0.698,
+          "pos": 0.09,
+          "compound": -0.8566
+        }
+      },
+      {
+        "text": "⠀⠀⢀⣀⠤⠿⢤⢖⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⡔⢩⠂⠀⠒⠗⠈⠀⠉⠢⠄⣀⠠⠤⠄⠒⢖⡒⢒⠂⠤⢄⠀⠀⠀⠀\n⠇⠤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠈⠀⠈⠈⡨⢀⠡⡪⠢⡀⠀\n⠈⠒⠀⠤⠤⣄⡆⡂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠢⠀⢕⠱⠀\n⠀⠀⠀⠀⠀⠈⢳⣐⡐⠐⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠁⠇\n⠀⠀⠀⠀⠀⠀⠀⠑⢤⢁⠀⠆⠀⠀⠀⠀⠀⢀⢰⠀⠀⠀⡀⢄⡜⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠘⡦⠄⡷⠢⠤⠤⠤⠤⢬⢈⡇⢠⣈⣰⠎⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣃⢸⡇⠀⠀⠀⠀⠀⠈⢪⢀⣺⡅⢈⠆⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠶⡿⠤⠚⠁⠀⠀⠀⢀⣠⡤⢺⣥⠟⢡⠃⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀\nHere I will leave this beautiful Capybara, whoever passes by can pet it and give it a thumbs up (I need Steam Points).",
+        "voted_up": true,
+        "timestamp": 1723232557,
+        "sentiment": {
+          "neg": 0.033,
+          "neu": 0.842,
+          "pos": 0.126,
+          "compound": 0.6625
+        }
+      },
+      {
+        "text": "Heavily pay to play, in game inflation went hard, and good luck grinding for even the cheapest cosmetics.",
+        "voted_up": false,
+        "timestamp": 1723181519,
+        "sentiment": {
+          "neg": 0.116,
+          "neu": 0.539,
+          "pos": 0.344,
+          "compound": 0.7579
+        }
+      },
+      {
+        "text": "booooooooooo",
+        "voted_up": false,
+        "timestamp": 1723158632,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "Best game to install then uninstall\n설치한 다음 삭제하기에 가장 적합한 게임\n\nAs a \"Community Partner\" I have some pretty strong opinions about this game.\nAt first it was great, the balancing was good, the story was great, and the game felt fair for everyone. After the January 15th update, the Dev's decided it would be a good idea to rework the game. They were wrong. What once felt like a fair and balanced game turned into a ♥♥♥♥ fest of P2W and abusing mechanics. When people complained about the update, the Dev's ignored it and changed it further. They ruined what the game once was, and I doubt it will ever be the same. The combat is EXTREMELY catered to specific classes, whilst others get the shaft. They removed the story mode entirely in favor of a broken PvP system. On top of that, The gear that was onc",
+        "voted_up": true,
+        "timestamp": 1722859286,
+        "sentiment": {
+          "neg": 0.106,
+          "neu": 0.638,
+          "pos": 0.256,
+          "compound": 0.9863
+        }
+      },
+      {
+        "text": "KOG sucks. Don't play any of their games. Extremely money-hungry, high-promising, never giving as they should. Low-quality, support is a disaster, and everything associated to them is catastrophic. Not worth it.",
+        "voted_up": false,
+        "timestamp": 1722764759,
+        "sentiment": {
+          "neg": 0.368,
+          "neu": 0.568,
+          "pos": 0.064,
+          "compound": -0.8965
+        }
+      },
+      {
+        "text": "Ayoo devs, make it shine! It was a great idea but the devs wants money and what u need to do when u dont have money? Pay to win! And what is the second major problem of this game? Unbalanced... I need to say that I hate that game with my 109 hours.. it was a cool idea.. IT WAS A COOL IDEA THO",
+        "voted_up": false,
+        "timestamp": 1722495771,
+        "sentiment": {
+          "neg": 0.109,
+          "neu": 0.685,
+          "pos": 0.206,
+          "compound": 0.7963
+        }
+      },
+      {
+        "text": "An instance-based MMORPG that diverges from the typical genre formula of exploration, collecting, mob killing, and farming. Instead, players queue into dungeons to complete quests. Visually, the game is appealing with its attractive graphics and colorful, anime-inspired art style. However, some animations can seem simplistic and lacking in polish, which might not appeal to everyone.\n\nThe game primarily focuses on PvP, but this is where its major flaws become apparent. KurtzPel is P2W, giving significant advantages to players who spend money. PvP balancing issues are also prevalent, with some classes being noticeably overpowered. On top of that, the stunlock mechanics make it even worse, leaving players feeling frustrated and unable to react or fight back properly.\n\nThe PvE content in Kurtz",
+        "voted_up": false,
+        "timestamp": 1722033249,
+        "sentiment": {
+          "neg": 0.106,
+          "neu": 0.782,
+          "pos": 0.113,
+          "compound": -0.4497
+        }
+      },
+      {
+        "text": "it was a lot more fun in the beta. I remember i did pretty well in pve stuff, pvp not really\nWhen it came out of beta i totally stopped playing, they changed a few things that ruined it for me.\nwhat a shame",
+        "voted_up": false,
+        "timestamp": 1721604996,
+        "sentiment": {
+          "neg": 0.149,
+          "neu": 0.656,
+          "pos": 0.195,
+          "compound": 0.3774
+        }
+      },
+      {
+        "text": "i miss you",
+        "voted_up": true,
+        "timestamp": 1721445654,
+        "sentiment": {
+          "neg": 0.444,
+          "neu": 0.556,
+          "pos": 0.0,
+          "compound": -0.1531
+        }
+      },
+      {
+        "text": "Game was very fun back in 2020 with the raid bosses and suddenly they just decided to remove all killing all fun in the process and just keep adding cosmetic items to just prove that they don't care.Even the duo bosses were fun and the 2019 story mode 😢 and they just remove it 🥺",
+        "voted_up": false,
+        "timestamp": 1721285645,
+        "sentiment": {
+          "neg": 0.108,
+          "neu": 0.746,
+          "pos": 0.146,
+          "compound": 0.4005
+        }
+      },
+      {
+        "text": "It used to be pretty good. It had a story to tell, although not exactly a good one, and the customization is pretty decent, especially the *physics*.\n\nNow the only good thing I can say about this is unga bunga boob go boing.\n3/10 would kill myself.",
+        "voted_up": false,
+        "timestamp": 1720769255,
+        "sentiment": {
+          "neg": 0.118,
+          "neu": 0.68,
+          "pos": 0.202,
+          "compound": 0.6242
+        }
+      },
+      {
+        "text": "Why this game is still there? It was fun at first, I loved to play PVP in this game then they ruined it by introducing Pay to win stuff. The whole is pile of garbage they should shutdown this game.",
+        "voted_up": false,
+        "timestamp": 1720437528,
+        "sentiment": {
+          "neg": 0.087,
+          "neu": 0.655,
+          "pos": 0.258,
+          "compound": 0.872
+        }
+      },
+      {
+        "text": "played it for the steam background 10/10",
+        "voted_up": true,
+        "timestamp": 1720230823,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.714,
+          "pos": 0.286,
+          "compound": 0.34
+        }
+      },
+      {
+        "text": "Fun game, just wish we had the old cutscenes and a little bit more incentive on gaining GP \r\nother than that it's still as fun as it was cus i like the PVP and nothing really is fun like Kurtzpel PVP lol \r\n\r\nit does need some fixes and a little more content but the game is good and new players should still try it, the queues aren't even as bad as it's been sometimes with a full lobby of people, at least there's instant queues when at least 5 people are queued. the game is really fun for new players too especially if they spend time in training grounds waiting for queues.",
+        "voted_up": true,
+        "timestamp": 1719916922,
+        "sentiment": {
+          "neg": 0.015,
+          "neu": 0.761,
+          "pos": 0.224,
+          "compound": 0.9726
+        }
+      },
+      {
+        "text": "Playerbase is practically dead, devs only updating to add cosmetics and make small balance changes, don't bother.",
+        "voted_up": false,
+        "timestamp": 1719545011,
+        "sentiment": {
+          "neg": 0.202,
+          "neu": 0.703,
+          "pos": 0.095,
+          "compound": -0.5047
+        }
+      },
+      {
+        "text": "Ta mt caro",
+        "voted_up": false,
+        "timestamp": 1719544253,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 1.0,
+          "pos": 0.0,
+          "compound": 0.0
+        }
+      },
+      {
+        "text": "the one and only good thing about this game: Eltheca / Lobby",
+        "voted_up": false,
+        "timestamp": 1718616029,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.714,
+          "pos": 0.286,
+          "compound": 0.4588
+        }
+      },
+      {
+        "text": "guys good gemee",
+        "voted_up": true,
+        "timestamp": 1717962039,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.408,
+          "pos": 0.592,
+          "compound": 0.4404
+        }
+      },
+      {
+        "text": "I use to LOVE this game back in 2019!\nI think it was in \"beta\" at the time, but it might just have been early excess (Its been 5 years btw).\nEverything was great and awesome, until it wasn't.\nOne day I was gonna log on to one of my favourite games when I was greeted to something entirely different.\nThis was around mid 2020.\nThe game is no longer in the same genre as it was when I fell in love with it, and I think that sucks.\n\nImma be so real tho for a sec. I've got 0 idea how the game is now. It was way to boring in 2020 to keep playing.\nThe reviews have stayed at mixed to mostly negative all these years, so I assume it's in a similar state.\nTell me if they change their mind and if the game ever returns to the greatness that it once was.",
+        "voted_up": false,
+        "timestamp": 1717946794,
+        "sentiment": {
+          "neg": 0.076,
+          "neu": 0.788,
+          "pos": 0.136,
+          "compound": 0.921
+        }
+      },
+      {
+        "text": "MAKE THIS GAME GOOD AGAIN PLEASE PLEASE PLEASE PLEAAAAASE",
+        "voted_up": false,
+        "timestamp": 1717694222,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.338,
+          "pos": 0.662,
+          "compound": 0.8316
+        }
+      },
+      {
+        "text": "i really want this game to be good but like, it just isn't.",
+        "voted_up": false,
+        "timestamp": 1717617076,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.606,
+          "pos": 0.394,
+          "compound": 0.6701
+        }
+      },
+      {
+        "text": "Unplayable, unless you're \"Elon Musk\" wealthy. Then you should be fine.",
+        "voted_up": false,
+        "timestamp": 1717480322,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.677,
+          "pos": 0.323,
+          "compound": 0.5106
+        }
+      },
+      {
+        "text": "For stinky losers in their mom's basement",
+        "voted_up": false,
+        "timestamp": 1717077784,
+        "sentiment": {
+          "neg": 0.541,
+          "neu": 0.459,
+          "pos": 0.0,
+          "compound": -0.7096
+        }
+      },
+      {
+        "text": "id play if it was in inglish",
+        "voted_up": true,
+        "timestamp": 1716550951,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.714,
+          "pos": 0.286,
+          "compound": 0.34
+        }
+      },
+      {
+        "text": "first year in this game is fun and new on that moment but now it's fk trash sad that new update keep destroy this one",
+        "voted_up": false,
+        "timestamp": 1715801233,
+        "sentiment": {
+          "neg": 0.269,
+          "neu": 0.666,
+          "pos": 0.065,
+          "compound": -0.8294
+        }
+      },
+      {
+        "text": "⠄⠄⣿⣿⣿⣿⠘⡿⢛⣿⣿⣿⣿⣿⣧⢻⣿⣿⠃⠸⣿⣿⣿⠄⠄⠄⠄⠄\n⠄⠄⣿⣿⣿⣿⢀⠼⣛⣛⣭⢭⣟⣛⣛⣛⠿⠿⢆⡠⢿⣿⣿⠄⠄⠄⠄⠄\n⠄⠄⠸⣿⣿⢣⢶⣟⣿⣖⣿⣷⣻⣮⡿⣽⣿⣻⣖⣶⣤⣭⡉⠄⠄⠄⠄⠄\n⠄⠄⠄⢹⠣⣛⣣⣭⣭⣭⣁⡛⠻⢽⣿⣿⣿⣿⢻⣿⣿⣿⣽⡧⡄⠄⠄⠄\n⠄⠄⠄⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣶⣌⡛⢿⣽⢘⣿⣷⣿⡻⠏⣛⣀⠄⠄\n⠄⠄⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠙⡅⣿⠚⣡⣴⣿⣿⣿⡆⠄\n⠄⠄⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠄⣱⣾⣿⣿⣿⣿⣿⣿⠄\n⠄⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢸⣿⣿⣿⣿⣿⣿⣿⣿⠄\n⠄⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠣⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄\n⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠑⣿⣮⣝⣛⠿⠿⣿⣿⣿⣿⠄\n⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⠄⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠄\nass > tits",
+        "voted_up": true,
+        "timestamp": 1715712695,
+        "sentiment": {
+          "neg": 0.31,
+          "neu": 0.69,
+          "pos": 0.0,
+          "compound": -0.6597
+        }
+      },
+      {
+        "text": "I personally wouldn't recommend this game today, in 2019 it was an amazing PVP MMO but now it just feels corprate. I miss the old version of this game",
+        "voted_up": false,
+        "timestamp": 1715644848,
+        "sentiment": {
+          "neg": 0.108,
+          "neu": 0.816,
+          "pos": 0.075,
+          "compound": -0.0142
+        }
+      },
+      {
+        "text": "not worth it",
+        "voted_up": false,
+        "timestamp": 1715627183,
+        "sentiment": {
+          "neg": 0.454,
+          "neu": 0.546,
+          "pos": 0.0,
+          "compound": -0.1695
+        }
+      },
+      {
+        "text": "AAA Cute Gamee",
+        "voted_up": true,
+        "timestamp": 1715601833,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.4,
+          "pos": 0.6,
+          "compound": 0.4588
+        }
+      },
+      {
+        "text": "Just...don't... It's dead",
+        "voted_up": false,
+        "timestamp": 1715283159,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.368,
+          "pos": 0.632,
+          "compound": 0.5334
+        }
+      },
+      {
+        "text": "why did i play this game again?",
+        "voted_up": false,
+        "timestamp": 1715008420,
+        "sentiment": {
+          "neg": 0.0,
+          "neu": 0.714,
+          "pos": 0.286,
+          "compound": 0.34
+        }
+      },
+      {
+        "text": "Not fun anymore",
+        "voted_up": false,
+        "timestamp": 1714966062,
+        "sentiment": {
+          "neg": 0.575,
+          "neu": 0.425,
+          "pos": 0.0,
+          "compound": -0.4023
+        }
+      }
+    ]
+  },
+  {
+    "source": "steam",
+    "app_id": "304390",
+    "name": "FOR HONOR",
+    "developer": "Ubisoft Montreal, Ubisoft Quebec, Ubisoft Toronto, Blue Byte",
+    "owners": "5,000,000 .. 10,000,000",
+    "tags": [
+      "Medieval",
+      "Swordplay",
+      "Action",
+      "Multiplayer",
+      "Fighting",
+      "PvP",
+      "Third Person",
+      "War",
+      "Gore",
+      "Co-op",
+      "Singleplayer",
+      "Online Co-Op"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "508440",
+    "name": "Totally Accurate Battle Simulator",
+    "developer": "Landfall",
+    "owners": "2,000,000 .. 5,000,000",
+    "tags": [
+      "Sandbox",
+      "Simulation",
+      "Funny",
+      "War",
+      "Physics",
+      "Strategy",
+      "Singleplayer",
+      "Realistic",
+      "Indie",
+      "Adventure",
+      "Colorful",
+      "Fantasy"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "504370",
+    "name": "Battlerite",
+    "developer": "Stunlock Studios",
+    "owners": "2,000,000 .. 5,000,000",
+    "tags": [
+      "PvP",
+      "Multiplayer",
+      "MOBA",
+      "Competitive",
+      "Action",
+      "Free to Play",
+      "Arena Shooter",
+      "Fast-Paced",
+      "Team-Based",
+      "Fighting",
+      "Top-Down",
+      "Early Access"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "1172380",
+    "name": "STAR WARS Jedi: Fallen Order",
+    "developer": "Respawn Entertainment",
+    "owners": "2,000,000 .. 5,000,000",
+    "tags": [
+      "Action-Adventure",
+      "Souls-like",
+      "Third Person",
+      "Open World",
+      "Story Rich",
+      "Swordplay",
+      "Exploration",
+      "Sci-fi",
+      "Action",
+      "Platformer",
+      "Space",
+      "RPG"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "1260320",
+    "name": "Party Animals",
+    "developer": "Recreate Games",
+    "owners": "2,000,000 .. 5,000,000",
+    "tags": [
+      "Multiplayer",
+      "Funny",
+      "Casual",
+      "Cute",
+      "Party Game",
+      "Co-op",
+      "Fighting",
+      "Action",
+      "PvP",
+      "Party",
+      "Online Co-Op",
+      "Family Friendly"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "1716740",
+    "name": "Starfield",
+    "developer": "Bethesda Game Studios",
+    "owners": "2,000,000 .. 5,000,000",
+    "tags": [
+      "Space",
+      "Singleplayer",
+      "Open World",
+      "RPG",
+      "Sci-fi",
+      "Exploration",
+      "First-Person",
+      "Character Customization",
+      "Story Rich",
+      "Action-Adventure",
+      "Third Person",
+      "Adventure"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "2358720",
+    "name": "Black Myth: Wukong",
+    "developer": "Game Science",
+    "owners": "50,000,000 .. 100,000,000",
+    "tags": [
+      "Mythology",
+      "Action RPG",
+      "Action",
+      "Souls-like",
+      "RPG",
+      "Combat",
+      "Story Rich",
+      "Singleplayer",
+      "Action-Adventure",
+      "Drama",
+      "Dark Fantasy",
+      "Atmospheric"
+    ],
+    "reviews": []
+  },
+  {
+    "source": "steam",
+    "app_id": "359550",
+    "name": "Tom Clancy's Rainbow Six Siege",
+    "developer": "Ubisoft Montreal",
+    "owners": "20,000,000 .. 50,000,000",
+    "tags": [
+      "FPS",
+      "PvP",
+      "Multiplayer",
+      "Tactical",
+      "e-sports",
+      "Shooter",
+      "Competitive",
+      "Online Co-Op",
+      "Action",
+      "Hero Shooter",
+      "Team-Based",
+      "Military"
+    ],
+    "reviews": []
+  }
+]
