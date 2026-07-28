@@ -1,7 +1,0 @@
-.env
-__pycache__/
-*.pyc
-.vercel
-.DS_Store
-# Note: data/ IS committed on purpose so the deployed app can read it.
-snapshots/

@@ -1,2 +1,0 @@
-# RedtailCombat
-Fighting game

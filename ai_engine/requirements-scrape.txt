@@ -1,8 +1,0 @@
-# Extra deps for local scraping only (NOT needed by the deployed app).
-# Install locally with:  pip install -r requirements-scrape.txt
--r requirements.txt
-google-play-scraper>=1.2.7
-vaderSentiment>=3.3.2
-beautifulsoup4>=4.12.0
-tqdm>=4.66.0
-pytrends>=4.9.2          # Google Trends (no key)
