@@ -13,6 +13,7 @@ import glob
 import json
 import os
 from datetime import datetime
+from itertools import count
 
 import llm
 from analysis import analyse
@@ -71,7 +72,7 @@ def _brief_prompt(game_text: str, year: int, analysis: dict, n: int) -> str:
 {game_text[:6000]}
 
 ## MARKET ANALYSIS — {year} (real scraped player data)
-{_year_block(year, analysis)}
+{_year_block(year, analysis, count(1), {})}
 
 ## YOUR TASK
 Pick the {n} strongest, most relevant findings. For each, propose ONE concrete feature/mode/mechanic/cosmetic change that responds to it, respecting the LOCKED constraints (2D rubber-hose art, portrait phone, ~30s duels, two-thumb controls, fixed camera, player-bottom/rival-top, cosmetic-only — no pay-to-win).

@@ -12,6 +12,13 @@ doubling requests per subreddit for "top" wasn't worth it: t=year means "top
 of the last 365 days", not "top of a given historical year", so it mostly
 duplicated "hot" for the current year anyway. Polite delays + 429 backoff
 keep Reddit happy.
+
+Consequence worth knowing: "hot" only reflects what's active right now, so
+scraping any year other than the current one (see NOW_YEAR below) reliably
+comes back with zero records — run()'s year filter has nothing years-old to
+keep, since "hot" almost never surfaces a post that old. There's no fix for
+this without a different endpoint (Reddit's RSS has no date-range query;
+only the OAuth search API does) — see SCRAPING_ARCHITECTURE.md §5.
 """
 import html
 import re
@@ -30,6 +37,7 @@ ATOM = "{http://www.w3.org/2005/Atom}"
 UA = REDDIT_USER_AGENT or "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/124 Safari/537.36"
 NOW_YEAR = datetime.now(timezone.utc).year
 _TAGS = re.compile(r"<[^>]+>")
+MAX_RATE_LIMIT_WAIT = 65  # cap a single 429 wait — Reddit's window is ~60s; guards against a bad/huge header
 
 
 def _clean(text: str) -> str:
@@ -38,29 +46,48 @@ def _clean(text: str) -> str:
     return re.sub(r"\s+", " ", _TAGS.sub(" ", html.unescape(text))).strip()
 
 
-def _fetch(url: str, params: dict, log, tries: int = 4) -> str | None:
+def _retry_wait(headers, default: float) -> float:
+    """How long to sleep before retrying a 429. Reddit tells us exactly when
+    quota refills (retry-after, or its own x-ratelimit-reset) — prefer that
+    over guessing with a fixed backoff, since a fixed schedule that's shorter
+    than the real reset window just burns all our tries on guaranteed 429s."""
+    for name in ("retry-after", "x-ratelimit-reset"):
+        raw = headers.get(name)
+        if raw is None:
+            continue
+        try:
+            return min(float(raw) + 1, MAX_RATE_LIMIT_WAIT)  # +1s buffer past the exact reset
+        except ValueError:
+            continue
+    return default
+
+
+def _fetch(url: str, params: dict, log, tries: int = 5) -> str | None:
     for i in range(tries):
         t0 = time.monotonic()
         try:
-            r = requests.get(url, headers={"User-Agent": UA}, params=params, timeout=15)
+            r = requests.get(url, headers={"User-Agent": UA}, params=params, timeout=50)
         except Exception as e:
             log(f"    [DIAG] {url} attempt {i+1}: request error after "
                 f"{time.monotonic()-t0:.1f}s: {e}")
-            time.sleep(2 * (i + 1))
+            time.sleep(4 * (i + 1))
             continue
         log(f"    [DIAG] {url} attempt {i+1}: status={r.status_code} "
             f"in {time.monotonic()-t0:.1f}s "
             f"retry-after={r.headers.get('retry-after')} "
             f"x-ratelimit-remaining={r.headers.get('x-ratelimit-remaining')} "
-            f"x-ratelimit-reset={r.headers.get('x-ratelimit-reset')}")
+            f"x-ratelimit-reset={r.headers.get('x-ratelimit-reset')}"
+            )
         if r.status_code == 200:
             return r.text
         if r.status_code == 429:
-            time.sleep(5 * (i + 1))  # rate-limited — back off
+            wait = _retry_wait(r.headers, default=5 * (i + 1))
+            log(f"    [DIAG] {url} attempt {i+1}: rate-limited, waiting {wait:.0f}s for quota to refill")
+            time.sleep(wait)
             continue
         if r.status_code in (403, 404):
             return None
-        time.sleep(2 * (i + 1))
+        time.sleep(4 * (i + 1))
     return None
 
 
@@ -129,6 +156,8 @@ def run(year: int | None = None, log=print) -> list:
         kept = 0
         for p in posts[:REDDIT_POST_LIMIT]:
             # Year filter only for past years (RSS is freshest-first; current year ok).
+            # For any year < NOW_YEAR this drops nearly everything, by design
+            # of what "hot" is — see the module docstring above.
             if year and year < NOW_YEAR and p["year"] and p["year"] != year:
                 continue
             text_low = f"{p['title']} {p['text']}".lower()

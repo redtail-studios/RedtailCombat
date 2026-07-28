@@ -9,10 +9,13 @@ dependency-light (no model calls here), so it runs fine on Vercel.
 """
 import json
 import os
-from collections import defaultdict
+from collections import defaultdict, deque
 
 from config import DEPLOYED, SIGNAL_KEYWORDS, COMPETITORS, PLATFORM_IDS, get_year_dir
 import storage
+import re
+from difflib import SequenceMatcher
+
 
 
 # ── Loading ──────────────────────────────────────────────────────────────────
@@ -59,14 +62,14 @@ def load_items(year: int, genre: str | None = None) -> list:
             if len(t) > 10:
                 items.append({"source": source, "text": t,
                               "sentiment": c.get("sentiment", {})})
-    return items
+    return dedupe_items(items)
 
 
 def top_quotes(year: int, n: int = 25, genre: str | None = None) -> list:
     """Return the n most signal-rich quotes (keyword hits + strong sentiment)."""
     all_kw = {k.lower() for kws in SIGNAL_KEYWORDS.values() for k in kws}
     cands = []
-    for _source, record in _iter_records(year, genre):
+    for source, record in _iter_records(year, genre):
         texts = []
         for rev in record.get("reviews", []):
             t = (rev.get("text") or rev.get("body") or "").strip()
@@ -85,16 +88,61 @@ def top_quotes(year: int, n: int = 25, genre: str | None = None) -> list:
             hits = sum(1 for kw in all_kw if kw in low)
             comp = abs(sent.get("compound", 0))
             if hits > 0 or comp > 0.4:
-                cands.append((hits * 2 + comp * 5, text[:220]))
+                cands.append((hits * 2 + comp * 5, text[:220], source))
     cands.sort(key=lambda x: -x[0])
+    # feed candidates through dedupe_items in score order (highest first) so
+    # near-duplicate/reworded quotes collapse to their best-scoring phrasing,
+    # then the exact-match set below is just a cheap final safety net
+    cand_items = [{"source": src, "text": text, "sentiment": {}} for _score, text, src in cands]
+    deduped = dedupe_items(cand_items)
     seen, out = set(), []
-    for _score, text in cands:
+    for item in deduped:
+        text = item["text"]
         if text not in seen:
             seen.add(text)
             out.append(text)
         if len(out) >= n:
             break
     return out
+
+
+def dedupe_items(items: list, sim_ratio: float = 0.85) -> list:
+    """
+    Removes duplicate items in terms of context
+    """
+    queue = deque(maxlen=50) # compare against a bounded window, not the full list pairwise — O(N) not O(N^2) once lore_data/ has thousands of items
+    keep = []
+    for item in items:
+        # normalize text
+        text = item["text"]
+        text = re.sub(r'[.,!?]', " ", text).lower() # lowercase everything and strip punctuation
+        text = re.sub(r'\s+', ' ', text).strip() # removes extraneous whitespace
+        # compare for duplicates
+        i = 0
+        duplicate = None
+        while i < len(queue):
+            ratio = SequenceMatcher(None, queue[i]["norm"], text).ratio()
+            if ratio > sim_ratio:
+                # found a duplicate
+                duplicate = queue[i]
+                break
+            i += 1
+        if duplicate is not None:
+            # found a duplicate, appending new sources
+            if item["source"] not in duplicate["sources"]:
+                duplicate["sources"].append(item["source"])
+        else:
+            # found something unique
+            elem = {**item, "norm" : text, "sources" : [item["source"]]}
+            keep.append(elem)
+            queue.append(elem)
+
+    for item in keep:
+        # remove norm from final result
+        del item["norm"]
+
+    return keep
+        
 
 
 # ── Scoring ──────────────────────────────────────────────────────────────────

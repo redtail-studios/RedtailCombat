@@ -92,6 +92,11 @@ def run(year: int | None = None, log=print) -> list:
                         "developer": d.get("developer", ""),
                         "owners": d.get("owners", ""),
                         "tags": list(d.get("tags", {}).keys())[:12],
+                        "positive": d.get("positive", 0), "negative": d.get("negative", 0),
+                        "avg_playtime_forever": d.get("average_forever", 0),
+                        "avg_playtime_2weeks": d.get("average_2weeks", 0),
+                        "median_playtime_forever": d.get("median_forever", 0),
+                        "median_playtime_2weeks": d.get("median_2weeks", 0),
                         "reviews": revs})
         time.sleep(1.0)
     return save(records, get_year_dir(year), "steam", log)

@@ -6,6 +6,9 @@ Supports two modes:
   • backtest  — analyse historical years as predictions, then score them against
                 later "validation" years (what actually happened)
 """
+import re
+from itertools import count
+
 import llm
 from analysis import analyse
 from config import GENRES, ACTIVE_GENRES
@@ -33,13 +36,28 @@ def _fmt_competitors(comps: list) -> str:
     return "\n".join(lines)
 
 
-def _fmt_quotes(quotes: list) -> str:
+def _fmt_quotes(quotes: list, ids, registry: dict, seen: set | None = None) -> str:
     if not quotes:
         return "  (no quotes)"
-    return "\n".join(f'  - "{q}"' for q in quotes[:20])
+    # seen is shared across genre sections for a year (see _year_block_multi) so
+    # a general-tagged quote that legitimately scores in every genre only gets
+    # printed once, instead of appearing verbatim under every genre heading.
+    # ids/registry are shared across the whole prompt (see build_prompt*) so
+    # every quote gets a globally-unique [Qn] id Claude can cite and we can
+    # later verify against.
+    seen = set() if seen is None else seen
+    lines = []
+    for q in quotes[:20]:
+        if q in seen:
+            continue
+        seen.add(q)
+        qid = f"Q{next(ids)}"
+        registry[qid] = q
+        lines.append(f'  - [{qid}] "{q}"')
+    return "\n".join(lines) if lines else "  (no new quotes — already shown above for this year)"
 
 
-def _year_block(year: int, a: dict) -> str:
+def _year_block(year: int, a: dict, ids, registry: dict) -> str:
     sc = a.get("scorecard", {})
     return f"""
 ### {year}
@@ -50,11 +68,11 @@ Demand signals (0-10, normalised within the year):
 Competitor mentions:
 {_fmt_competitors(a.get('competitors', []))}
 High-signal player quotes:
-{_fmt_quotes(a.get('quotes', []))}
+{_fmt_quotes(a.get('quotes', []), ids, registry)}
 """
 
 
-def _genre_block(genre: str, a: dict) -> str:
+def _genre_block(genre: str, a: dict, ids, registry: dict, seen: set) -> str:
     sc = a.get("scorecard", {})
     return f"""
 #### {GENRES[genre]['label']}
@@ -65,12 +83,13 @@ Demand signals (0-10, normalised within this genre's data):
 Competitor mentions:
 {_fmt_competitors(a.get('competitors', []))}
 High-signal player quotes:
-{_fmt_quotes(a.get('quotes', []))}
+{_fmt_quotes(a.get('quotes', []), ids, registry, seen)}
 """
 
 
-def _year_block_multi(year: int, per_genre: dict) -> str:
-    body = "".join(_genre_block(g, per_genre[g]) for g in per_genre)
+def _year_block_multi(year: int, per_genre: dict, ids, registry: dict) -> str:
+    seen = set()  # shared across every genre section for this year — see _fmt_quotes
+    body = "".join(_genre_block(g, per_genre[g], ids, registry, seen) for g in per_genre)
     return f"\n### {year}\n{body}"
 
 
@@ -98,7 +117,10 @@ Include a CSS-only bar chart for the signal scores and a styled table for compet
 
 
 def build_prompt(backtest_years: list, validation_years: list,
-                 analysis_by_year: dict, genre: str | None = None) -> str:
+                 analysis_by_year: dict, genre: str | None = None) -> tuple:
+    ids = count(1)
+    registry = {}
+
     bt  = ", ".join(str(y) for y in sorted(backtest_years))
     val = ", ".join(str(y) for y in sorted(validation_years))
     has_val = bool(validation_years)
@@ -106,13 +128,13 @@ def build_prompt(backtest_years: list, validation_years: list,
                   f"frame gaps and competitors within that genre, not mobile games broadly.\n"
                   if genre else "")
 
-    bt_data = "".join(_year_block(y, analysis_by_year[str(y)])
+    bt_data = "".join(_year_block(y, analysis_by_year[str(y)], ids, registry)
                       for y in sorted(backtest_years))
 
     val_data = ""
     if has_val:
         val_data = "\n## VALIDATION DATA — what actually happened (" + val + ")\n"
-        val_data += "".join(_year_block(y, analysis_by_year[str(y)])
+        val_data += "".join(_year_block(y, analysis_by_year[str(y)], ids, registry)
                             for y in sorted(validation_years))
 
     n = 5 if has_val else 4
@@ -122,7 +144,7 @@ def build_prompt(backtest_years: list, validation_years: list,
         f"those signals turned out to be.\n" if has_val else ""
     )
 
-    return f"""You are running in non-interactive report-generation mode. Output ONLY a complete, self-contained HTML document (<!DOCTYPE html> ... </html>). No tool calls, no markdown fences, no commentary — just the HTML.
+    prompt = f"""You are running in non-interactive report-generation mode. Output ONLY a complete, self-contained HTML document (<!DOCTYPE html> ... </html>). No tool calls, no markdown fences, no commentary — just the HTML.
 
 You are a senior market-intelligence analyst. From real scraped data across Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets (IGN/Polygon/Eurogamer/etc.), Steam's most-played trending list, and Wikipedia interest trends, find genuine GAPS in the market — unmet player needs that no current product serves well. Use the news/trending/Wikipedia signals for *what's rising*, and the reviews/discussion for *what players are frustrated by*.
 {scope_note}{backtest_note}
@@ -134,7 +156,7 @@ You are a senior market-intelligence analyst. From real scraped data across Redd
 Produce a premium HTML intelligence report with these sections:
 
 1. Executive Summary — the single biggest finding and the size of the opportunity, in 2-3 tight paragraphs.
-2. Market Gap Analysis — the top 3-5 unmet needs. For each: name the gap, cite the signal score + hit count, include at least one real player quote, and explain why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. Be honest if a "gap" is weak.
+2. Market Gap Analysis — the top 3-5 unmet needs. For each: name the gap, cite the signal score + hit count, include at least one real player quote, and explain why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. Be honest if a "gap" is weak. Every gap you name must include at least one quote ID in brackets, e.g. [Q7], pulled from the quotes list above. Do not invent quotes or IDs — if you don't have a real quote for a gap, say so instead of fabricating one.
 3. Year-over-Year Trends ({bt}) — how signals evolved. Use specific numbers, not vague narrative.
 4. Competitive Landscape — where the named competitors are failing their players, mapped to the gaps.
 {"5. Backtesting Accuracy — compare the " + bt + " signals against " + val + " reality. Which gaps were real? Score the predictive accuracy honestly." if has_val else ""}
@@ -146,26 +168,30 @@ Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding t
 ## DESIGN
 {DESIGN_SPEC}
 """
+    return prompt, registry
 
 
 def build_prompt_multi(backtest_years: list, validation_years: list,
-                       analysis_by_year_genre: dict, genres: list) -> str:
+                       analysis_by_year_genre: dict, genres: list) -> tuple:
     """Like build_prompt, but data is broken out per active genre instead of
     pooled — Claude sees each genre's signals/competitors/quotes as its own
     labeled section and is asked to compare across them, rather than getting
     one undifferentiated cross-genre blend."""
+    ids = count(1)
+    registry = {}
+
     bt  = ", ".join(str(y) for y in sorted(backtest_years))
     val = ", ".join(str(y) for y in sorted(validation_years))
     has_val = bool(validation_years)
     genre_list = ", ".join(GENRES[g]["label"] for g in genres)
 
-    bt_data = "".join(_year_block_multi(y, analysis_by_year_genre[str(y)])
+    bt_data = "".join(_year_block_multi(y, analysis_by_year_genre[str(y)], ids, registry)
                       for y in sorted(backtest_years))
 
     val_data = ""
     if has_val:
         val_data = "\n## VALIDATION DATA — what actually happened (" + val + ")\n"
-        val_data += "".join(_year_block_multi(y, analysis_by_year_genre[str(y)])
+        val_data += "".join(_year_block_multi(y, analysis_by_year_genre[str(y)], ids, registry)
                             for y in sorted(validation_years))
 
     n = 6 if has_val else 5
@@ -175,7 +201,7 @@ def build_prompt_multi(backtest_years: list, validation_years: list,
         f"those signals turned out to be.\n" if has_val else ""
     )
 
-    return f"""You are running in non-interactive report-generation mode. Output ONLY a complete, self-contained HTML document (<!DOCTYPE html> ... </html>). No tool calls, no markdown fences, no commentary — just the HTML.
+    prompt = f"""You are running in non-interactive report-generation mode. Output ONLY a complete, self-contained HTML document (<!DOCTYPE html> ... </html>). No tool calls, no markdown fences, no commentary — just the HTML.
 
 You are a senior market-intelligence analyst covering multiple mobile game genres: {genre_list}. From real scraped data across Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets (IGN/Polygon/Eurogamer/etc.), Steam's most-played trending list, and Wikipedia interest trends — broken out per genre below — find genuine GAPS in the market, both within each genre and by comparing across genres. Use the news/trending/Wikipedia signals for *what's rising*, and the reviews/discussion for *what players are frustrated by*.
 {backtest_note}
@@ -188,7 +214,7 @@ Produce a premium HTML intelligence report with these sections:
 
 1. Executive Summary — the single biggest finding across all genres and the size of the opportunity, in 2-3 tight paragraphs.
 2. Cross-Genre Comparison — rank the genres by opportunity (demand signal strength vs. how weakly current competitors serve it). Call out which genre has the most under-served demand and which is already crowded/well-served.
-3. Market Gap Analysis (per genre) — for each genre with meaningful data, the top 1-3 unmet needs: name the gap, cite the signal score + hit count, include at least one real player quote, and explain why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. Be honest if a genre's "gap" is weak or its sample is thin.
+3. Market Gap Analysis (per genre) — for each genre with meaningful data, the top 1-3 unmet needs: name the gap, cite the signal score + hit count, include at least one real player quote, and explain why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. Be honest if a genre's "gap" is weak or its sample is thin. Every gap you name must include at least one quote ID in brackets, e.g. [Q7], pulled from the quotes list above. Do not invent quotes or IDs — if you don't have a real quote for a gap, say so instead of fabricating one.
 4. Year-over-Year Trends ({bt}) — how signals evolved, per genre where the data supports it.
 5. Competitive Landscape — where named competitors are failing their players, per genre.
 {"6. Backtesting Accuracy — compare the " + bt + " signals against " + val + " reality, per genre. Which gaps were real? Score the predictive accuracy honestly." if has_val else ""}
@@ -200,6 +226,38 @@ Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding t
 ## DESIGN
 {DESIGN_SPEC}
 """
+    return prompt, registry
+
+
+_QUOTE_ID_RE = re.compile(r'\[Q(\d+)\]')
+
+
+def validate_citations(html: str, registry: dict) -> dict:
+    """Loose, heuristic check that Claude's HTML actually grounds its named
+    gaps in real quotes — not a real HTML parser (regex + a "did this gap
+    block cite anything" pass is enough for this).
+    """
+    cited_ids = {f"Q{n}" for n in _QUOTE_ID_RE.findall(html)}
+    hallucinated_ids = sorted(qid for qid in cited_ids if qid not in registry)
+
+    uncited_gaps = []
+    gap_section = re.search(
+        r'<h2[^>]*>\s*(?:\d+\.\s*)?Market Gap Analysis.*?</h2>(.*?)(?=<h2|\Z)',
+        html, re.IGNORECASE | re.DOTALL)
+    if gap_section:
+        # each gap is expected to render as its own <h3> block within the section
+        for block in re.split(r'(?=<h3[^>]*>)', gap_section.group(1)):
+            heading = re.search(r'<h3[^>]*>(.*?)</h3>', block, re.IGNORECASE | re.DOTALL)
+            if not heading:
+                continue
+            if not _QUOTE_ID_RE.search(block):
+                uncited_gaps.append(re.sub(r'<[^>]+>', '', heading.group(1)).strip())
+
+    return {
+        "valid": not hallucinated_ids and not uncited_gaps,
+        "hallucinated_ids": hallucinated_ids,
+        "uncited_gaps": uncited_gaps,
+    }
 
 
 def generate(backtest_years: list, validation_years: list | None = None,
@@ -215,10 +273,19 @@ def generate(backtest_years: list, validation_years: list | None = None,
 
     if genre:
         analysis_by_year = {str(y): analyse(y, genre) for y in years}
-        prompt = build_prompt(backtest_years, validation_years, analysis_by_year, genre)
+        prompt, registry = build_prompt(backtest_years, validation_years, analysis_by_year, genre)
     else:
         analysis_by_year_genre = {str(y): {g: analyse(y, g) for g in ACTIVE_GENRES}
                                   for y in years}
-        prompt = build_prompt_multi(backtest_years, validation_years,
+        prompt, registry = build_prompt_multi(backtest_years, validation_years,
                                     analysis_by_year_genre, ACTIVE_GENRES)
-    return llm.generate_html(prompt, max_tokens=32000)
+
+    html = llm.generate_html(prompt, max_tokens=32000)
+
+    result = validate_citations(html, registry)
+    if not result["valid"]:
+        print(f"[report.generate] citation validation failed — "
+              f"hallucinated_ids={result['hallucinated_ids']} "
+              f"uncited_gaps={result['uncited_gaps']}")
+
+    return html

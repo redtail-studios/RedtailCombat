@@ -170,6 +170,20 @@ re-deriving them from scratch:
   as a special case (e.g. scrape it locally from a residential IP and
   upload the result to S3 manually) rather than expecting it to work
   through the Lambda pipeline.
+- **Reddit data only exists for the current year — scraping a past year
+  reliably comes back empty.** `reddit.py` only ever fetches `/hot/.rss`
+  (see its module docstring for why `/top/.rss?t=year` was deliberately
+  skipped too); "hot" reflects what's active *right now*, not an archive, so
+  its posts are almost all from the current year regardless of what `year`
+  was requested. `run()`'s year filter (`reddit.py`'s `if year and year <
+  NOW_YEAR and ...`) is a no-op for the current year but, for any earlier
+  year, drops nearly every post it fetched — there's essentially nothing
+  left from years-old "hot" posts to keep. This is a data-source limitation,
+  not a bug: there's no fix without a different Reddit endpoint (Reddit's
+  RSS has no real date-range query; only the OAuth search API does, which is
+  the same OAuth migration already called out above for the rate-limit
+  issue). Until that migration happens, don't expect Reddit data for
+  `SUPPORTED_YEARS` entries other than the current one.
 
 ## 6. Runbook
 
