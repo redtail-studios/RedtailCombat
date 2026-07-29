@@ -33,7 +33,15 @@ def _fmt_competitors(comps: list) -> str:
     return "\n".join(lines)
 
 
-def _fmt_quotes(quotes: list) -> str:
+def _fmt_quotes(quotes: list, seen: set | None = None) -> str:
+    """seen, when passed, is a cross-genre-section dedup set (see
+    _year_block_multi) — general/untagged records count toward every genre's
+    analyse() call by design, so the same quote can otherwise repeat verbatim
+    in every genre's section of one multi-genre report."""
+    if seen is not None:
+        quotes = [q for q in quotes if q not in seen]
+        for q in quotes[:20]:
+            seen.add(q)
     if not quotes:
         return "  (no quotes)"
     return "\n".join(f'  - "{q}"' for q in quotes[:20])
@@ -54,7 +62,7 @@ High-signal player quotes:
 """
 
 
-def _genre_block(genre: str, a: dict) -> str:
+def _genre_block(genre: str, a: dict, seen: set) -> str:
     sc = a.get("scorecard", {})
     return f"""
 #### {GENRES[genre]['label']}
@@ -65,12 +73,16 @@ Demand signals (0-10, normalised within this genre's data):
 Competitor mentions:
 {_fmt_competitors(a.get('competitors', []))}
 High-signal player quotes:
-{_fmt_quotes(a.get('quotes', []))}
+{_fmt_quotes(a.get('quotes', []), seen)}
 """
 
 
 def _year_block_multi(year: int, per_genre: dict) -> str:
-    body = "".join(_genre_block(g, per_genre[g]) for g in per_genre)
+    # Fresh dedup set per year: a quote already shown under one genre this
+    # year is skipped in later genres' sections, but the same quote is fair
+    # game again for a different year.
+    seen: set = set()
+    body = "".join(_genre_block(g, per_genre[g], seen) for g in per_genre)
     return f"\n### {year}\n{body}"
 
 
@@ -184,18 +196,20 @@ You are a senior market-intelligence analyst covering multiple mobile game genre
 {val_data}
 
 ## REPORT REQUIREMENTS
-Produce a premium HTML intelligence report with these sections:
+Produce a premium HTML intelligence report with these sections. Keep every
+per-genre write-up tight — this covers {len(genres)} genres in one report, so
+verbosity per genre multiplies fast; be concise rather than exhaustive.
 
 1. Executive Summary — the single biggest finding across all genres and the size of the opportunity, in 2-3 tight paragraphs.
 2. Cross-Genre Comparison — rank the genres by opportunity (demand signal strength vs. how weakly current competitors serve it). Call out which genre has the most under-served demand and which is already crowded/well-served.
-3. Market Gap Analysis (per genre) — for each genre with meaningful data, the top 1-3 unmet needs: name the gap, cite the signal score + hit count, include at least one real player quote, and explain why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. Be honest if a genre's "gap" is weak or its sample is thin.
-4. Year-over-Year Trends ({bt}) — how signals evolved, per genre where the data supports it.
-5. Competitive Landscape — where named competitors are failing their players, per genre.
-{"6. Backtesting Accuracy — compare the " + bt + " signals against " + val + " reality, per genre. Which gaps were real? Score the predictive accuracy honestly." if has_val else ""}
+3. Market Gap Analysis (per genre) — for each genre with meaningful data, the top 1-2 unmet needs (not 3): name the gap, cite the signal score + hit count, include at least one real player quote, and explain in 1-2 sentences why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. If a genre's sample is thin or its "gap" is weak, say so in one line rather than padding it out.
+4. Year-over-Year Trends ({bt}) — 2-3 sentences per genre on how signals evolved, only where the data actually supports a trend claim.
+5. Competitive Landscape — 1-2 sentences per genre on where named competitors are failing their players.
+{"6. Backtesting Accuracy — compare the " + bt + " signals against " + val + " reality, per genre, briefly. Which gaps were real? Score the predictive accuracy honestly." if has_val else ""}
 {n+1}. Strategic Recommendations — top 3 product bets across all genres, top 2 things to avoid, and one contrarian insight.
-{n+2}. Data Quality — rate coverage per platform AND per genre (A-F) and state overall confidence. Flag where any genre's sample is thin.
+{n+2}. Data Quality — rate coverage per platform AND per genre (A-F) and state overall confidence, briefly. Flag where any genre's sample is thin.
 
-Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding team makes real decisions from this.
+Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding team makes real decisions from this. Concise beats exhaustive throughout.
 
 ## DESIGN
 {DESIGN_SPEC}
@@ -209,19 +223,28 @@ def generate(backtest_years: list, validation_years: list | None = None,
     genre=<key> scopes everything to one genre (unchanged single-genre path).
     genre=None (default) now runs analysis once per active genre per year and
     asks Claude to compare across genres, rather than pooling every genre's
-    data into one undifferentiated blend."""
+    data into one undifferentiated blend.
+
+    The multi-genre path uses a lower max_tokens than the single-genre path
+    (20000 vs 32000): asking Claude to write ~5 genres' worth of report in
+    one call is what was pushing wall-clock generation time past Vercel's
+    300s function timeout (intermittently, depending on generation speed).
+    Combined with the tighter per-genre wording in build_prompt_multi, this
+    keeps the requested content comfortably inside the smaller budget rather
+    than truncating what would otherwise be a longer, verbose report."""
     validation_years = validation_years or []
     years = set(backtest_years) | set(validation_years)
 
     if genre:
         analysis_by_year = {str(y): analyse(y, genre) for y in years}
         prompt = build_prompt(backtest_years, validation_years, analysis_by_year, genre)
+        return llm.generate_html(prompt, max_tokens=32000)
     else:
         analysis_by_year_genre = {str(y): {g: analyse(y, g) for g in ACTIVE_GENRES}
                                   for y in years}
         prompt = build_prompt_multi(backtest_years, validation_years,
                                     analysis_by_year_genre, ACTIVE_GENRES)
-    return llm.generate_html(prompt, max_tokens=32000)
+        return llm.generate_html(prompt, max_tokens=20000)
 
 
 def build_game_prompt(years: list, analysis_by_year: dict,
