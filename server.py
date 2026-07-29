@@ -26,6 +26,7 @@ import os
 import sys
 import threading
 from pathlib import Path
+from datetime import datetime, timezone
 
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE / "lore_engine"))   # engine modules import each other top-level
@@ -44,6 +45,11 @@ import manifest as manifest_mod  # noqa: E402
 import storage      # noqa: E402
 
 LORE_PASSWORD = os.getenv("LORE_PASSWORD", "redtaillore@2026")
+# Time-boxed guest login — expires on its own, no separate revoke step needed.
+# Username is checked client-side only (see lore.html doLogin); this password
+# check is the actual server-side gate every API call goes through.
+GUEST_PASSWORD = os.getenv("LORE_GUEST_PASSWORD", "loreguest@2026")
+GUEST_EXPIRES = datetime.fromisoformat(os.getenv("LORE_GUEST_EXPIRES", "2026-07-31T23:59:59+00:00"))
 
 # Vercel sets VERCEL=1 on deployed functions.
 DEPLOYED = config.DEPLOYED
@@ -54,7 +60,13 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"],
 
 
 def _ok(pw: str) -> bool:
-    return (pw or "") == LORE_PASSWORD
+    pw = pw or ""
+    if pw == LORE_PASSWORD:
+        return True
+    if pw == GUEST_PASSWORD:
+        return datetime.now(timezone.utc) < GUEST_EXPIRES
+    return False
+    
 
 
 class ReportReq(BaseModel):
@@ -163,14 +175,13 @@ def _start_scrape_deployed(year: int) -> dict:
     """Deployed mode has no writable filesystem and no thread that survives
     past the response, so scraping goes through S3 + SQS instead: skip
     platforms whose cache is still fresh, enqueue one message per platform
-    that needs work, and let the Lambda worker do the actual scraping."""
-    queued = []
-    for pid in config.PLATFORM_IDS:
-        if storage.is_cached_fresh(year, pid):
-            continue
-        storage.put_status(year, pid, "queued")
-        storage.enqueue_scrape(year, pid)
-        queued.append(pid)
+    that needs work, and let the Lambda worker do the actual scraping.
+
+    This is now the manual ops fallback (see lore.html's ?ops=1 gate) — the
+    weekly scrape itself is triggered independently by an EventBridge
+    Scheduler invoking lore_engine/scheduler.py, which calls the same
+    storage.enqueue_missing_platforms() with force=True."""
+    queued = storage.enqueue_missing_platforms(year, force=False)
     if not queued:
         return {"status": "done", "year": year, "note": "all platforms already fresh"}
     return {"status": "started", "year": year, "queued": queued}
@@ -195,6 +206,25 @@ def make_report(req: ReportReq):
                             status_code=400)
     try:
         return {"html": report.generate(req.backtest_years, req.validation_years, req.genre)}
+    except Exception as e:
+        return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
+
+@app.post("/api/lore/game-report")
+async def make_game_report(file: UploadFile = File(...), years: str = Form(...),
+                           password: str = Form("")):
+    if not _ok(password):
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    try:
+        yrs = [int(y) for y in years.split(",") if y.strip()]
+    except ValueError:
+        return JSONResponse({"error": "Invalid years"}, status_code=400)
+    if not yrs:
+        return JSONResponse({"error": "Select at least one year"}, status_code=400)
+    try:
+        data = await file.read()
+        path, gname = snapshot.prep_upload(data, file.filename)
+        game_text = snapshot.load_game_text(path)
+        return {"html": report.generate_game_report(yrs, game_text, gname), "game": gname}
     except Exception as e:
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
 

@@ -213,3 +213,19 @@ def enqueue_scrape(year: int, platform: str) -> None:
         QueueUrl=QUEUE_URL,
         MessageBody=json.dumps({"year": year, "platform": platform}),
     )
+
+
+def enqueue_missing_platforms(year: int, force: bool = False) -> list:
+    """Enqueue every platform that needs (re-)scraping for `year`. Shared by
+    the manual ops endpoint (server.py, force=False — skip platforms whose
+    cache is still fresh) and the weekly scheduler Lambda (scheduler.py,
+    force=True — the schedule itself is now the freshness mechanism, so every
+    platform gets re-enqueued regardless of the TTL)."""
+    queued = []
+    for pid in PLATFORM_IDS:
+        if not force and is_cached_fresh(year, pid):
+            continue
+        put_status(year, pid, "queued")
+        enqueue_scrape(year, pid)
+        queued.append(pid)
+    return queued

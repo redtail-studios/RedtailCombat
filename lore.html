@@ -981,41 +981,78 @@
                     <button class="btn small" id="scrapeBtn" onclick="startScrape()" disabled>⟳ Scrape now</button>
                 </div>
                 <div class="src-grid" id="scrapeGrid" style="margin-top:10px"></div>
-                
+
             </div>
         </div>
 
         <div class="card">
             <div class="section-label">Step 2 — Intelligence report (live)</div>
-            <h3>Analyse the market — one year, several, or backtest</h3>
-            <div class="desc">Claude reads the snapshot and writes a fresh market-gap report, live. Analyse one or more
-                years, or backtest historical years against later "what actually happened" data.</div>
-            <div class="mode2">
-                <button id="mAnalyse" class="on" onclick="setRMode('analyse')">Analyse years</button>
-                <button id="mBacktest" onclick="setRMode('backtest')">Backtest + validate</button>
+            <h3>Analyse the market, or analyse your own game</h3>
+            <div class="desc">Claude reads the snapshot and writes a fresh report, live — either a general
+                market-gap report, or your own game analysed against the same data.</div>
+            <div class="mode2" id="stepTabs">
+                <button id="tabMarketBtn" class="on" onclick="setStepTab('market')">Market report</button>
+                <button id="tabGameBtn" onclick="setStepTab('game')">Analyse your game</button>
             </div>
-            <div id="analyseUI">
+
+            <!-- ---- TAB: market report ---- -->
+            <div id="tabMarket">
+                <div class="mode2">
+                    <button id="mAnalyse" class="on" onclick="setRMode('analyse')">Analyse years</button>
+                    <button id="mBacktest" onclick="setRMode('backtest')">Backtest + validate</button>
+                </div>
+                <div id="analyseUI">
+                    <div class="chip-lbl">Years to analyse</div>
+                    <div class="checks" id="analyzeChecks"></div>
+                </div>
+                <div id="backtestUI" style="display:none">
+                    <div class="chip-lbl">Backtest period <span class="tagm">historical signals</span></div>
+                    <div class="checks" id="backChecks"></div>
+                    <div class="chip-lbl">Validation period <span class="tagm">what actually happened</span></div>
+                    <div class="checks" id="valChecks"></div>
+                </div>
+                <div class="row" style="margin-top:12px">
+                    <div class="scraped" id="repMeta">Select years above</div>
+                    <button class="btn small" id="repBtn" onclick="genReport()" disabled>✦ Generate report</button>
+                </div>
+                <div class="empty" id="repEmpty">
+                    <div class="ic">✦</div>
+                    <div class="t">No report yet</div>
+                    <div class="s">Runs live via Claude — ~3–5 min</div>
+                </div>
+                <div class="frame-wrap" id="repFrameWrap"><iframe class="frame" id="repFrame" title="Report"></iframe>
+                </div>
+                <div class="row" id="toRedesignRow" style="display:none;margin-top:18px;justify-content:flex-end">
+                    <button class="btn small" onclick="showView('redesign')">Continue to redesign ▸</button>
+                </div>
+            </div>
+
+            <!-- ---- TAB: analyse your game ---- -->
+            <div id="tabGame" style="display:none">
+                <div class="desc">Upload your game's design doc (PDF) and pick which years of market data to analyse
+                    it against.</div>
+                <div class="drop">
+                    <div class="file" id="gameFileLabel">No file selected — pick a game design PDF</div>
+                    <label class="filebtn" for="gameFile">Choose PDF</label>
+                    <input type="file" id="gameFile" accept="application/pdf" onchange="onGameFile()">
+                </div>
                 <div class="chip-lbl">Years to analyse</div>
-                <div class="checks" id="analyzeChecks"></div>
-            </div>
-            <div id="backtestUI" style="display:none">
-                <div class="chip-lbl">Backtest period <span class="tagm">historical signals</span></div>
-                <div class="checks" id="backChecks"></div>
-                <div class="chip-lbl">Validation period <span class="tagm">what actually happened</span></div>
-                <div class="checks" id="valChecks"></div>
-            </div>
-            <div class="row" style="margin-top:12px">
-                <div class="scraped" id="repMeta">Select years above</div>
-                <button class="btn small" id="repBtn" onclick="genReport()" disabled>✦ Generate report</button>
-            </div>
-            <div class="empty" id="repEmpty">
-                <div class="ic">✦</div>
-                <div class="t">No report yet</div>
-                <div class="s">Runs live via Claude — ~3–5 min</div>
-            </div>
-            <div class="frame-wrap" id="repFrameWrap"><iframe class="frame" id="repFrame" title="Report"></iframe></div>
-            <div class="row" id="toRedesignRow" style="display:none;margin-top:18px;justify-content:flex-end">
-                <button class="btn small" onclick="showView('redesign')">Continue to redesign ▸</button>
+                <div class="checks" id="gameChecks"></div>
+                <div class="row" style="margin-top:12px">
+                    <div class="scraped" id="gameRepMeta">Upload a PDF and select years</div>
+                    <button class="btn small" id="gameRepBtn" onclick="genGameReport()" disabled>✦ Analyse my
+                        game</button>
+                </div>
+                <div class="empty" id="gameRepEmpty">
+                    <div class="ic">🎮</div>
+                    <div class="t">No report yet</div>
+                    <div class="s">Runs live via Claude — ~3–5 min</div>
+                </div>
+                <div class="frame-wrap" id="gameRepFrameWrap"><iframe class="frame" id="gameRepFrame"
+                        title="Game report"></iframe></div>
+                <div class="row" id="gameToRedesignRow" style="display:none;margin-top:18px;justify-content:flex-end">
+                    <button class="btn small" onclick="goRedesignFromGame()">Continue to redesign ▸</button>
+                </div>
             </div>
         </div>
     </main>
@@ -1051,6 +1088,7 @@
     <script>
         let PASS = "", AVAIL = [], RMODE = "analyse", RDYEAR = 2026;
         let PLATFORMS = [], SCRAPE_YEARS = [2022, 2023, 2024, 2025, 2026], SCRAPE_YEAR = 2026, scrapePollTimer = null;
+        let GAMEREPFILE = null, GAMEFILE = null;
         if (new URLSearchParams(location.search).has("embed")) document.body.classList.add("embed");
         function esc(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") }
         function showView(v) { ["intro", "console", "redesign"].forEach(id => document.getElementById(id).classList.toggle("hidden", id !== v)); window.scrollTo(0, 0); }
@@ -1058,10 +1096,13 @@
         function closeSignin() { document.getElementById("signin").classList.remove("open"); }
         document.addEventListener("keydown", e => { if (e.key === "Escape") closeSignin(); });
 
+        const GUEST_EXPIRES = new Date("2026-07-31T23:59:59Z").getTime();
         async function doLogin(e) {
             e.preventDefault();
             const u = document.getElementById("user").value.trim(), p = document.getElementById("pass").value;
-            if (u === "lore" && p === "redtaillore@2026") {
+            const isOwner = u === "lore" && p === "redtaillore@2026";
+            const isGuest = u === "guest" && p === "loreguest@2026" && Date.now() < GUEST_EXPIRES;
+            if (isOwner || isGuest) {
                 PASS = p;
                 document.getElementById("signin").classList.remove("open");
                 showView("console"); loadStatus(); initScrape();
@@ -1094,12 +1135,18 @@
             }
         }
         function buildChecks() {
-            ["analyzeChecks", "backChecks", "valChecks"].forEach(gid => {
+            ["analyzeChecks", "backChecks", "valChecks", "gameChecks"].forEach(gid => {
                 const el = document.getElementById(gid); if (!el) return;
                 const prev = [...el.querySelectorAll(".chk.sel")].map(e => +e.dataset.y);
                 el.innerHTML = AVAIL.map(y => `<div class="chk ${prev.includes(y) ? 'sel' : ''}" data-y="${y}" onclick="togChk(this,'${gid}')">${y}</div>`).join("");
             });
-            updateRepBtn();
+            updateRepBtn(); updateGameRepBtn();
+        }
+        function setStepTab(t) {
+            document.getElementById("tabMarketBtn").classList.toggle("on", t === 'market');
+            document.getElementById("tabGameBtn").classList.toggle("on", t === 'game');
+            document.getElementById("tabMarket").style.display = t === 'market' ? "" : "none";
+            document.getElementById("tabGame").style.display = t === 'game' ? "" : "none";
         }
 
         // ---- Step 1: scrape (writes lore_data/ locally, or S3 via SQS+worker when deployed) ----
@@ -1107,10 +1154,15 @@
             try {
                 const d = await (await fetch("/api/lore/env")).json();
                 PLATFORMS = d.platforms || [];
-                document.getElementById("scrapeCtl").style.display = "block";
+                // Scraping now runs on its own weekly, via an EventBridge-scheduled
+                // Lambda — the manual control here is an ops-only fallback, hidden
+                // from regular signed-in users unless they append ?ops=1.
+                const isOps = new URLSearchParams(location.search).get("ops") === "1";
+                document.getElementById("scrapeCtl").style.display = isOps ? "block" : "none";
+                loadStatus();  // "Last scraped" / years line — visible to every signed-in user
+                if (!isOps) return;
                 document.getElementById("scrapeYearChecks").innerHTML = SCRAPE_YEARS.map(y =>
                     `<div class="chk ${y === SCRAPE_YEAR ? 'sel' : ''}" data-y="${y}" onclick="pickScrapeYear(${y})">${y}</div>`).join("");
-                loadStatus();
                 renderScrapeGrid();
                 pollScrape();
             } catch (e) { }
@@ -1186,7 +1238,7 @@
                 const o = document.querySelector(`#${other} [data-y="${el.dataset.y}"]`);
                 if (o && o.classList.contains("sel") && !el.classList.contains("sel")) return; // years can't be in both
             }
-            el.classList.toggle("sel"); updateRepBtn();
+            el.classList.toggle("sel"); updateRepBtn(); updateGameRepBtn();
         }
         function selYears(gid) { return [...document.querySelectorAll(`#${gid} .chk.sel`)].map(e => +e.dataset.y).sort(); }
         function updateRepBtn() {
@@ -1221,6 +1273,56 @@
                 else { empty.style.display = "none"; document.getElementById("repFrameWrap").classList.add("on"); document.getElementById("repFrame").srcdoc = d.html; redesign.classList.remove("hidden"); redesign.style.display = "flex"; }
             } catch (e) { clearInterval(tick); empty.className = "empty err"; empty.innerHTML = '<div class="ic">⚠</div><div class="t">Report failed</div><div class="s">' + esc(e.message) + '</div>'; }
             b.disabled = false; b.innerHTML = "✦ Generate report";
+        }
+
+        // ---- Step 2 (tab 2): analyse your own game ----
+        function onGameFile() {
+            const f = document.getElementById("gameFile").files[0];
+            GAMEREPFILE = f || null;
+            document.getElementById("gameFileLabel").innerHTML = f ? ("Selected: <b>" + esc(f.name) + "</b>") : "No file selected — pick a game design PDF";
+            updateGameRepBtn();
+        }
+        function updateGameRepBtn() {
+            const btn = document.getElementById("gameRepBtn"); if (!btn) return;
+            const yrs = selYears("gameChecks");
+            document.getElementById("gameRepMeta").textContent = !GAMEREPFILE ? "Upload a PDF"
+                : (yrs.length ? "Analysing your game against " + yrs.join(", ") : "Select at least one year");
+            btn.disabled = !GAMEREPFILE || yrs.length === 0;
+        }
+        async function genGameReport() {
+            const yrs = selYears("gameChecks");
+            if (!GAMEREPFILE || !yrs.length) return;
+            RDYEAR = yrs[yrs.length - 1]; const rd = document.getElementById("rdYear"); if (rd) rd.textContent = RDYEAR;
+            const b = document.getElementById("gameRepBtn"); b.disabled = true; b.innerHTML = '<div class="spin"></div> Analysing…';
+            const empty = document.getElementById("gameRepEmpty");
+            document.getElementById("gameRepFrameWrap").classList.remove("on");
+            document.getElementById("gameToRedesignRow").style.display = "none";
+            empty.style.display = "block"; empty.className = "empty";
+            empty.innerHTML = '<div class="ic blink">🎮</div><div class="t">Lore is analysing your game against ' + esc(yrs.join(", ")) + '…</div><div class="s" id="gameRepEl">this runs live — 1–3 min</div>';
+            let t0 = Date.now(); const tick = setInterval(() => { const e = document.getElementById("gameRepEl"); if (e) e.textContent = Math.round((Date.now() - t0) / 1000) + "s elapsed…"; }, 1000);
+            try {
+                const fd = new FormData(); fd.append("file", GAMEREPFILE); fd.append("years", yrs.join(",")); fd.append("password", PASS);
+                const r = await fetch("/api/lore/game-report", { method: "POST", body: fd });
+                const d = await r.json(); clearInterval(tick);
+                if (!r.ok || d.error) { empty.className = "empty err"; empty.innerHTML = '<div class="ic">⚠</div><div class="t">Report failed</div><div class="s">' + esc(d.error || "error") + '</div>'; }
+                else {
+                    empty.style.display = "none"; document.getElementById("gameRepFrameWrap").classList.add("on");
+                    document.getElementById("gameRepFrame").srcdoc = d.html;
+                    document.getElementById("gameToRedesignRow").style.display = "flex";
+                    GAMEFILE = GAMEREPFILE;
+                }
+            } catch (e) { clearInterval(tick); empty.className = "empty err"; empty.innerHTML = '<div class="ic">⚠</div><div class="t">Report failed</div><div class="s">' + esc(e.message) + '</div>'; }
+            b.disabled = false; b.innerHTML = "✦ Analyse my game";
+        }
+        function goRedesignFromGame() {
+            if (GAMEFILE) {
+                try {
+                    const dt = new DataTransfer(); dt.items.add(GAMEFILE);
+                    document.getElementById("pdf").files = dt.files;
+                    onFile();
+                } catch (e) { }
+            }
+            showView("redesign");
         }
 
         // ---- Step 3: redesign from uploaded PDF ----
