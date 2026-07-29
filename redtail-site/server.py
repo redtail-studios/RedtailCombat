@@ -26,6 +26,7 @@ import json
 import os
 import sys
 import threading
+from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).parent
@@ -46,6 +47,13 @@ import storage      # noqa: E402
 
 LORE_PASSWORD = os.getenv("LORE_PASSWORD", "redtaillore@2026")
 
+# Time-boxed guest login — expires on its own, no separate revoke step needed.
+# Username is checked client-side only (see lore.html doLogin); this password
+# check is the actual server-side gate every API call goes through.
+GUEST_PASSWORD = os.getenv("LORE_GUEST_PASSWORD", "loreguest@2026")
+GUEST_EXPIRES = datetime.fromisoformat(
+    os.getenv("LORE_GUEST_EXPIRES", "2026-07-31T23:59:59+00:00"))
+
 # Vercel sets VERCEL=1 on deployed functions.
 DEPLOYED = config.DEPLOYED
 
@@ -55,7 +63,12 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"],
 
 
 def _ok(pw: str) -> bool:
-    return (pw or "") == LORE_PASSWORD
+    pw = pw or ""
+    if pw == LORE_PASSWORD:
+        return True
+    if pw == GUEST_PASSWORD:
+        return datetime.now(timezone.utc) < GUEST_EXPIRES
+    return False
 
 
 class ReportReq(BaseModel):

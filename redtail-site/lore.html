@@ -1124,10 +1124,13 @@
         function closeSignin() { document.getElementById("signin").classList.remove("open"); }
         document.addEventListener("keydown", e => { if (e.key === "Escape") closeSignin(); });
 
+        const GUEST_EXPIRES = new Date("2026-07-31T23:59:59Z").getTime();
         async function doLogin(e) {
             e.preventDefault();
             const u = document.getElementById("user").value.trim(), p = document.getElementById("pass").value;
-            if (u === "lore" && p === "redtaillore@2026") {
+            const isOwner = u === "lore" && p === "redtaillore@2026";
+            const isGuest = u === "guest" && p === "loreguest@2026" && Date.now() < GUEST_EXPIRES;
+            if (isOwner || isGuest) {
                 PASS = p;
                 document.getElementById("signin").classList.remove("open");
                 showView("console"); loadStatus(); initScrape();
