@@ -1022,6 +1022,7 @@
                 </div>
                 <div class="frame-wrap" id="repFrameWrap"><iframe class="frame" id="repFrame" title="Report"></iframe></div>
                 <div class="row" id="toRedesignRow" style="display:none;margin-top:18px;justify-content:flex-end">
+                    <button class="btn small" onclick="downloadReport(LAST_REPORT_HTML, 'lore-market-report-' + slug(RDYEAR) + '.html')">⬇ Download report</button>
                     <button class="btn small" onclick="showView('redesign')">Continue to redesign ▸</button>
                 </div>
             </div>
@@ -1048,6 +1049,7 @@
                 </div>
                 <div class="frame-wrap" id="gameRepFrameWrap"><iframe class="frame" id="gameRepFrame" title="Game report"></iframe></div>
                 <div class="row" id="gameToRedesignRow" style="display:none;margin-top:18px;justify-content:flex-end">
+                    <button class="btn small" onclick="downloadReport(LAST_GAME_REPORT_HTML, 'lore-game-report-' + slug(LAST_GAME_NAME) + '.html')">⬇ Download report</button>
                     <button class="btn small" onclick="goRedesignFromGame()">Continue to redesign ▸</button>
                 </div>
             </div>
@@ -1078,6 +1080,9 @@
             <div id="rdOut" style="display:none">
                 <div class="headline" id="rdHeadline"></div>
                 <div class="feat-grid" id="rdFeatures"></div>
+                <div class="row" style="margin-top:18px;justify-content:flex-end">
+                    <button class="btn small" onclick="downloadRedesign()">⬇ Download report</button>
+                </div>
             </div>
         </div>
     </main>
@@ -1086,8 +1091,34 @@
         let PASS = "", AVAIL = [], RMODE = "analyse", RDYEAR = 2026;
         let PLATFORMS = [], SCRAPE_YEARS = [2022, 2023, 2024, 2025, 2026], SCRAPE_YEAR = 2026, scrapePollTimer = null;
         let GAMEREPFILE = null, GAMEFILE = null;
+        let LAST_REPORT_HTML = null, LAST_GAME_REPORT_HTML = null, LAST_GAME_NAME = null, LAST_REDESIGN = null;
         if (new URLSearchParams(location.search).has("embed")) document.body.classList.add("embed");
         function esc(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") }
+        function slug(s) { return String(s || "report").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "report" }
+        function downloadReport(html, filename) {
+            if (!html) return;
+            const blob = new Blob([html], { type: "text/html" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a"); a.href = url; a.download = filename;
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+        function downloadRedesign() {
+            if (!LAST_REDESIGN) return;
+            const d = LAST_REDESIGN;
+            const feats = (d.modifications || []).map((m, i) => `
+      <div class="feat">
+        ${m.image_b64 ? `<img src="data:image/png;base64,${m.image_b64}" style="max-width:100%;border-radius:8px;display:block;margin-bottom:12px">` : ""}
+        <h3 style="color:#ff6b2b;margin:0 0 8px">${i + 1}. ${esc(m.change || "")}</h3>
+        <p><b>Signal:</b> ${esc(m.finding || "")}</p>
+        <p>${esc(m.why || "")}</p>
+      </div>`).join("");
+            const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(d.headline || "Lore Redesign")}</title>
+    <style>body{background:#0a0a0a;color:#e8e8e8;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;line-height:1.6;max-width:900px;margin:0 auto;padding:40px 24px}
+    h1{color:#ff6b2b} .feat{background:#141414;border:1px solid #222;border-radius:12px;padding:20px;margin:16px 0}</style></head>
+    <body><h1>${esc(d.headline || "")}</h1>${feats}</body></html>`;
+            downloadReport(html, `lore-redesign-${slug(d.headline || RDYEAR)}.html`);
+        }
         function showView(v) { ["intro", "console", "redesign"].forEach(id => document.getElementById(id).classList.toggle("hidden", id !== v)); window.scrollTo(0, 0); }
         function openSignin() { document.getElementById("signin").classList.add("open"); document.getElementById("loginErr").textContent = ""; document.getElementById("user").focus(); }
         function closeSignin() { document.getElementById("signin").classList.remove("open"); }
@@ -1259,7 +1290,7 @@
                 const r = await fetch("/api/lore/report", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ backtest_years: bt, validation_years: val, password: PASS }) });
                 const d = await r.json(); clearInterval(tick);
                 if (!r.ok || d.error) { empty.className = "empty err"; empty.innerHTML = '<div class="ic">⚠</div><div class="t">Report failed</div><div class="s">' + esc(d.error || "error") + '</div>'; }
-                else { empty.style.display = "none"; document.getElementById("repFrameWrap").classList.add("on"); document.getElementById("repFrame").srcdoc = d.html; redesign.classList.remove("hidden"); redesign.style.display = "flex"; }
+                else { empty.style.display = "none"; document.getElementById("repFrameWrap").classList.add("on"); document.getElementById("repFrame").srcdoc = d.html; LAST_REPORT_HTML = d.html; redesign.classList.remove("hidden"); redesign.style.display = "flex"; }
             } catch (e) { clearInterval(tick); empty.className = "empty err"; empty.innerHTML = '<div class="ic">⚠</div><div class="t">Report failed</div><div class="s">' + esc(e.message) + '</div>'; }
             b.disabled = false; b.innerHTML = "✦ Generate report";
         }
@@ -1297,6 +1328,7 @@
                 else {
                     empty.style.display = "none"; document.getElementById("gameRepFrameWrap").classList.add("on");
                     document.getElementById("gameRepFrame").srcdoc = d.html;
+                    LAST_GAME_REPORT_HTML = d.html; LAST_GAME_NAME = d.game;
                     document.getElementById("gameToRedesignRow").style.display = "flex";
                     GAMEFILE = GAMEREPFILE;
                 }
@@ -1334,6 +1366,7 @@
                 if (!r.ok || d.error) { empty.className = "empty err"; empty.innerHTML = '<div class="ic">⚠</div><div class="t">Redesign failed</div><div class="s">' + esc(d.error || "error") + '</div>'; }
                 else {
                     empty.style.display = "none"; document.getElementById("rdOut").style.display = "block";
+                    LAST_REDESIGN = d;
                     document.getElementById("rdHeadline").textContent = d.headline || "";
                     document.getElementById("rdFeatures").innerHTML = (d.modifications || []).map((m, i) => `
         <div class="feat">
