@@ -35,15 +35,28 @@ pipeline:
 Walking through one full cycle, in order:
 
 1. Either the EventBridge schedule fires `scheduler.handler()` (weekly, no
-   input needed — it always targets `storage.current_year()`), or someone
-   hits `POST /api/lore/scrape` with a year via the ops UI.
-2. Both paths call `storage.enqueue_missing_platforms(year, force=...)`. The
-   scheduler passes `force=True` — the weekly cadence *is* the freshness
-   mechanism now, so every platform gets re-enqueued regardless of TTL. The
-   ops path passes `force=False`, preserving the original behavior: for each
-   of the 18 platforms in `config.PLATFORM_IDS`, `storage.is_cached_fresh(year,
-   platform)` (a cheap S3 `head_object`) decides whether that platform
-   already has fresh data for that year (see §"Freshness / TTL" below).
+   input needed), or someone hits `POST /api/lore/scrape` with a year via
+   the ops UI.
+2. Both paths call `storage.enqueue_missing_platforms(year, force=...)`, but
+   the scheduler now calls it for **every** year in `config.SUPPORTED_YEARS`,
+   not just the current one:
+   - **Current year** (`storage.current_year()`) → `force=True`. The weekly
+     cadence *is* the freshness mechanism for this one, so every platform
+     gets re-enqueued regardless of the TTL.
+   - **Every past year** → `force=False` — a backfill, not a re-scrape. Past
+     years are frozen annual snapshots (see §"Freshness / TTL"): once a
+     platform has *any* data for a past year, `is_cached_fresh()` treats it
+     as fresh forever, so `force=False` only enqueues platforms that are
+     genuinely missing — one that errored out every time (e.g.
+     `appcharts`/`igdb`/`gdelt` before a worker packaging bug was fixed) or
+     one added after that year was last scraped. Once nothing is missing for
+     a past year, this step enqueues nothing for it — cheap to run every
+     week.
+   - The ops UI's manual path always passes `force=False`, for whatever
+     single year the user picks.
+   For each of the 18 platforms in `config.PLATFORM_IDS`,
+   `storage.is_cached_fresh(year, platform)` (a cheap S3 `head_object`)
+   decides whether that platform already has fresh data for that year.
    Platforms that are already fresh are skipped — nothing gets re-scraped or
    re-enqueued for them.
 3. For every platform that's enqueued, `enqueue_missing_platforms()` writes a
@@ -117,17 +130,34 @@ completely independent credential paths that all need to work:
   can't assume an IAM role the way Lambda can.
 - **The Lambda worker** authenticates via its own execution role
   (`redtail-scraper-role-nqxjyv05` in the current test setup), which needs:
-  - `s3:PutObject`, `s3:GetObject`, `s3:HeadObject`, `s3:ListBucket` on the
-    bucket — critically, on the **object-level ARN** (`arn:...:bucket/*`),
-    not just the bucket-level ARN. A policy with only the bucket ARN grants
-    `ListBucket`/`GetBucketVersioning` but silently rejects `PutObject`.
+  - `s3:PutObject`, `s3:GetObject` on the **object-level ARN**
+    (`arn:...:bucket/*`) — note there's no `s3:HeadObject` IAM action; the
+    `HeadObject` *API operation* authorizes against the `s3:GetObject`
+    *permission*, same as `GetObject` itself.
+  - `s3:ListBucket` on the **bucket-level ARN** (`arn:...:bucket`, no `/*`)
+    — this one's easy to skip since nothing obviously needs it, but without
+    it S3 masks a missing key as `403 Forbidden` instead of `404 Not Found`
+    on `HeadObject`/`GetObject` (deliberate: it stops callers from probing
+    which keys exist). A policy with only the object-level ARN grants
+    `GetObject`/`PutObject` but silently breaks any "does this exist yet"
+    check.
   - `sqs:ReceiveMessage`, `sqs:DeleteMessage`, `sqs:GetQueueAttributes` on
     the queue.
   - `AWSLambdaBasicExecutionRole` for CloudWatch logs.
 - **The scheduler Lambda** (`redtail-scrape-scheduler-role`) is narrower —
-  it never reads scrape results or dequeues, so it only needs:
-  - `s3:HeadObject`, `s3:PutObject` on the bucket's object ARN (freshness
-    checks + status markers).
+  it never downloads object bodies or dequeues, so it only needs:
+  - `s3:GetObject`, `s3:PutObject` on the bucket's **object-level** ARN
+    (freshness checks + status markers).
+  - `s3:ListBucket` on the bucket's **bucket-level** ARN. **This is
+    load-bearing, not optional, for the past-year backfill specifically**:
+    `force=False` calls `is_cached_fresh()` → `head_object()` for every one
+    of the 18 platforms across every past year, on every weekly run — and
+    for a genuinely missing platform (the exact case backfill exists to
+    catch), S3 returns `403` instead of `404` without `ListBucket`, which
+    `storage._not_found()` doesn't recognize as a cache miss, so it
+    re-raises instead of enqueueing. Confirmed by testing: the role had
+    `GetObject`+`PutObject` but no `ListBucket`, and every backfill call
+    failed with `403` until `ListBucket` was added.
   - `sqs:SendMessage` on the queue.
   - `AWSLambdaBasicExecutionRole` for CloudWatch logs.
   - Separately, the **EventBridge Scheduler schedule** itself needs its own
@@ -142,7 +172,7 @@ completely independent credential paths that all need to work:
 |---|---|---|
 | `GET /api/lore/status` | Reads `lore_data/manifest.json` off disk | `storage.compute_manifest()` — live S3 listing |
 | `POST /api/lore/scrape` | Spawns a background thread, scrapes all 18 platforms sequentially in-process | `_start_scrape_deployed()` → `storage.enqueue_missing_platforms(year, force=False)` — the ops-only fallback, hidden behind `lore.html?ops=1` |
-| *(weekly, automatic)* | — n/a — | EventBridge Scheduler → `scheduler.handler()` → `storage.enqueue_missing_platforms(year, force=True)`, no HTTP involved at all |
+| *(weekly, automatic)* | — n/a — | EventBridge Scheduler → `scheduler.handler()` → `force=True` enqueue for the current year **and** a `force=False` backfill enqueue for every other year in `config.SUPPORTED_YEARS`, no HTTP involved at all |
 | `GET /api/lore/scrape/status` | Reads the in-memory `_scrape` dict | `storage.scrape_status_snapshot()` — reads S3 status markers |
 | `POST /api/lore/report` | `analysis.py` reads `lore_data/<year>/<platform>_data.json` off disk | `analysis.py` reads via `storage.get_cached_records()` |
 | Scraper modules (`scrapers/*.py`) | Unchanged either way — `run()` doesn't know or care who's calling it | Unchanged either way |
@@ -238,6 +268,7 @@ re-deriving them from scratch:
 | scheduler's execution role | `redtail-scrape-scheduler-role` |
 | EventBridge Scheduler's invoke role | `redtail-scrape-scheduler-invoke-policy` — also misnamed (ends in `-policy`, not `-role`), just be aware when looking it up in IAM |
 | EventBridge schedule name | `redtail-weekly-scrape` |
+| scheduler's inline S3/SQS policy | `redtail-scheduler-bucket` on `redtail-scrape-scheduler-role` — as of the historical-year backfill, this **must** include `s3:GetObject` (not `HeadObject` — that's not a real IAM action) **and** `s3:ListBucket` on the bare bucket ARN (not just `bucket/*`). Originally had only `PutObject`+`SendMessage`, which fails the backfill with `403` on any genuinely-missing platform — see §2. |
 
 **Rebuild and redeploy the worker after a code change:**
 ```bash
@@ -276,7 +307,7 @@ This package is small (no scrapers, no pandas/numpy) — it'll never hit the
 entirely, useful for testing the scheduler Lambda itself):
 ```bash
 aws lambda invoke --function-name <scheduler-fn> --payload '{}' /tmp/result.json
-cat /tmp/result.json   # {"year": 2026, "queued": [...]}
+cat /tmp/result.json   # {"queued_by_year": {"2026": [...force=True...], "2022": [...gaps only...], ...}}
 curl -s "https://<host>/api/lore/scrape/status?year=2026" | python3 -m json.tool
 aws logs tail /aws/lambda/<worker-fn> --since 5m
 ```
