@@ -1124,7 +1124,7 @@
         function closeSignin() { document.getElementById("signin").classList.remove("open"); }
         document.addEventListener("keydown", e => { if (e.key === "Escape") closeSignin(); });
 
-        const GUEST_EXPIRES = new Date("2026-07-31T23:59:59Z").getTime();
+        const GUEST_EXPIRES = new Date("2026-08-07T23:59:59Z").getTime();
         async function doLogin(e) {
             e.preventDefault();
             const u = document.getElementById("user").value.trim(), p = document.getElementById("pass").value;
