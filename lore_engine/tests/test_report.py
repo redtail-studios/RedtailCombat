@@ -4,7 +4,9 @@ from itertools import count
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from report import build_prompt_multi, _fmt_quotes, validate_citations
+import report
+from report import (build_prompt, build_prompt_multi, _fmt_quotes, _fmt_signals,
+                    _fmt_competitors, validate_citations)
 
 
 def _analyse_stub(quotes):
@@ -115,3 +117,136 @@ def test_validate_citations_flags_uncited_gap():
     assert result["valid"] is False
     assert result["hallucinated_ids"] == []
     assert result["uncited_gaps"] == ["No Cosmetic Variety"]
+
+
+# ---------------------------------------------------------------------------
+# _fmt_signals / _fmt_competitors
+# ---------------------------------------------------------------------------
+
+def test_fmt_signals_sorted_by_score_descending():
+    sigs = {
+        "SignalA": {"score": 3.0, "hits": 2, "pct": 10.0},
+        "SignalB": {"score": 8.0, "hits": 5, "pct": 40.0},
+    }
+    out = _fmt_signals(sigs)
+
+    assert out.index("SignalB") < out.index("SignalA")
+
+
+def test_fmt_competitors_includes_example_quote():
+    comps = [{"name": "CompA", "mentions": 5, "positive_pct": 60, "negative_pct": 20,
+             "quote": "great game overall"}]
+
+    out = _fmt_competitors(comps)
+
+    assert "CompA: 5 mentions (60% pos / 20% neg)" in out
+    assert 'e.g. "great game overall"' in out
+
+
+def test_fmt_competitors_without_quote_omits_example_line():
+    comps = [{"name": "CompA", "mentions": 5, "positive_pct": 60, "negative_pct": 20, "quote": ""}]
+
+    out = _fmt_competitors(comps)
+
+    assert "e.g." not in out
+
+
+# ---------------------------------------------------------------------------
+# build_prompt (single-genre) / build_prompt_multi with validation years
+# ---------------------------------------------------------------------------
+
+def test_build_prompt_single_genre_no_validation(monkeypatch):
+    monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"}})
+    analysis_by_year = {"2024": _analyse_stub(["A fighting-specific quote here."])}
+
+    prompt, registry = build_prompt([2024], [], analysis_by_year, genre="fighting")
+
+    assert "the Fighting genre" in prompt
+    assert "VALIDATION DATA" not in prompt
+    assert "MARKET BACKTEST" not in prompt
+    assert "A fighting-specific quote here." in prompt
+
+
+def test_build_prompt_single_genre_with_validation_years(monkeypatch):
+    monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"}})
+    analysis_by_year = {
+        "2023": _analyse_stub(["A backtest-year quote."]),
+        "2024": _analyse_stub(["A validation-year quote."]),
+    }
+
+    prompt, registry = build_prompt([2023], [2024], analysis_by_year, genre="fighting")
+
+    assert "VALIDATION DATA" in prompt
+    assert "MARKET BACKTEST" in prompt
+    assert "A validation-year quote." in prompt
+
+
+def test_build_prompt_no_scope_note_when_genre_is_none():
+    prompt, _registry = build_prompt([2024], [], {"2024": _analyse_stub([])}, genre=None)
+
+    assert "Scope: this data covers only" not in prompt
+
+
+def test_build_prompt_multi_with_validation_years(monkeypatch):
+    monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"},
+                                            "puzzle": {"label": "Puzzle"}})
+    analysis_by_year_genre = {
+        "2023": {"fighting": _analyse_stub(["bt fighting quote"]),
+                 "puzzle": _analyse_stub(["bt puzzle quote"])},
+        "2024": {"fighting": _analyse_stub(["val fighting quote"]),
+                 "puzzle": _analyse_stub(["val puzzle quote"])},
+    }
+
+    prompt, registry = build_prompt_multi([2023], [2024], analysis_by_year_genre,
+                                          ["fighting", "puzzle"])
+
+    assert "VALIDATION DATA" in prompt
+    assert "val fighting quote" in prompt
+    assert "val puzzle quote" in prompt
+
+
+# ---------------------------------------------------------------------------
+# generate()
+# ---------------------------------------------------------------------------
+
+def test_generate_single_genre_path(monkeypatch):
+    monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"}})
+    monkeypatch.setattr(report, "analyse", lambda year, genre=None: _analyse_stub(["a quote"]))
+    captured = {}
+
+    def fake_generate_html(prompt, max_tokens=32000):
+        captured["prompt"] = prompt
+        return "<html>report</html>"
+    monkeypatch.setattr(report.llm, "generate_html", fake_generate_html)
+
+    html = report.generate([2024], genre="fighting")
+
+    assert html == "<html>report</html>"
+    assert "Fighting" in captured["prompt"]
+
+
+def test_generate_multi_genre_default_path(monkeypatch):
+    monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"},
+                                            "puzzle": {"label": "Puzzle"}})
+    monkeypatch.setattr(report, "ACTIVE_GENRES", ["fighting", "puzzle"])
+    monkeypatch.setattr(report, "analyse",
+                        lambda year, genre=None: _analyse_stub([f"{genre} quote"]))
+    monkeypatch.setattr(report.llm, "generate_html",
+                        lambda prompt, max_tokens=32000: "<html>multi</html>")
+
+    html = report.generate([2024])
+
+    assert html == "<html>multi</html>"
+
+
+def test_generate_prints_warning_when_citations_invalid(monkeypatch, capsys):
+    monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"}})
+    monkeypatch.setattr(report, "analyse", lambda year, genre=None: _analyse_stub(["a quote"]))
+    # References a quote id that will never exist in the registry.
+    monkeypatch.setattr(report.llm, "generate_html", lambda prompt, max_tokens=32000:
+                        "<h2>2. Market Gap Analysis</h2><h3>Gap</h3><p>[Q99]</p>")
+
+    report.generate([2024], genre="fighting")
+
+    out = capsys.readouterr().out
+    assert "citation validation failed" in out
