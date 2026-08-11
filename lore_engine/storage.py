@@ -106,6 +106,76 @@ def put_records(year: int, platform: str, records: list) -> None:
     )
 
 
+# ── Incremental-scrape support (a handful of platforms only — see worker.py's
+#    INCREMENTAL_MERGE_KEYS) ──────────────────────────────────────────────────
+def get_last_scraped(year: int, platform: str):
+    """Returns the existing data object's LastModified, or None if it doesn't
+    exist yet. Used as the 'since' cursor a scraper fetches forward from —
+    None means "no prior data, fetch the full year" (first run behavior,
+    unchanged)."""
+    try:
+        resp = _s3_client().head_object(Bucket=BUCKET, Key=_data_key(year, platform))
+    except ClientError as e:
+        if _not_found(e):
+            return None
+        raise
+    return resp["LastModified"]
+
+
+def get_raw_records(year: int, platform: str):
+    """Like get_cached_records(), but skips the freshness/TTL check — the
+    incremental-merge path needs to see existing data even when it's
+    technically 'stale' by the current-year TTL, since that staleness is
+    exactly why a re-scrape was triggered. Returns None only on a genuine
+    cache miss."""
+    try:
+        resp = _s3_client().get_object(Bucket=BUCKET, Key=_data_key(year, platform))
+    except ClientError as e:
+        if _not_found(e):
+            return None
+        raise
+    return json.loads(resp["Body"].read())
+
+
+def merge_by_key(existing: list, new: list, key: str) -> list:
+    """Append-only merge for platforms whose records are immutable once
+    captured (news articles, forum stories) — a key collision means we
+    already have this item, so existing wins and duplicates are dropped;
+    genuinely new keys get appended. Not a fit for platforms whose records
+    carry live metrics that change after capture (review/owner counts,
+    hype scores) — those stay on the full-overwrite path."""
+    seen = {r[key] for r in existing if r.get(key) is not None}
+    merged = list(existing)
+    for r in new:
+        k = r.get(key)
+        if k is not None and k not in seen:
+            merged.append(r)
+            seen.add(k)
+    return merged
+
+
+def merge_nested_by_key(existing: list, new: list, record_key: str,
+                         nested_field: str, nested_key: str) -> list:
+    """For platforms whose top-level records mix live metrics (review/owner
+    counts, install counts) with an append-only nested list (reviews):
+    matches records by `record_key` (e.g. app_id), takes the NEW run's
+    top-level fields as-is (they're the fresh live metrics), but merges the
+    `nested_field` list (e.g. "reviews") by `nested_key` via merge_by_key()
+    instead of replacing it. A record that existed before but is absent from
+    `new` (e.g. an app that dropped out of this week's top-10-by-tag) keeps
+    its accumulated history rather than vanishing."""
+    by_key = {r[record_key]: r for r in existing if r.get(record_key) is not None}
+    merged = []
+    for rec in new:
+        old = by_key.pop(rec.get(record_key), None)
+        if old is not None:
+            rec[nested_field] = merge_by_key(
+                old.get(nested_field, []), rec.get(nested_field, []), nested_key)
+        merged.append(rec)
+    merged.extend(by_key.values())  # untouched-this-run records, kept as-is
+    return merged
+
+
 # ── Status markers ───────────────────────────────────────────────────────────
 def put_status(year: int, platform: str, status: str, error: str = None) -> None:
     doc = {"status": status, "updated_at": datetime.now(timezone.utc).isoformat()}

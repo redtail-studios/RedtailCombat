@@ -20,19 +20,27 @@ def _year_bounds(year: int | None):
     return start, end
 
 
-def run(year: int | None = None, log=print) -> list:
+def run(year: int | None = None, log=print, since=None) -> list:
     # (query, genre tag) pairs — common queries tag "general", each active
     # genre additionally contributes its own query tagged with that genre.
     queries = [(q, "general") for q in HN_QUERIES_COMMON]
     queries += [(GENRES[g]["hn_query"], g) for g in ACTIVE_GENRES]
 
-    log(f"[hackernews] scraping {len(queries)} queries (year={year})")
+    log(f"[hackernews] scraping {len(queries)} queries (year={year}, since={since})")
     start, end = _year_bounds(year)
+    if since is not None:
+        # Algolia's numericFilters already does the real filtering server-side —
+        # tighten the lower bound instead of always re-fetching the whole year.
+        since_ts = int(since.timestamp())
+        start = max(start, since_ts) if start else since_ts
     records, seen = [], set()
     for q, genre in queries:
         params = {"query": q, "tags": "story", "hitsPerPage": HN_HITS_PER_Q}
         if start:
-            params["numericFilters"] = f"created_at_i>={start},created_at_i<{end}"
+            filters = [f"created_at_i>={start}"]
+            if end:
+                filters.append(f"created_at_i<{end}")
+            params["numericFilters"] = ",".join(filters)
         try:
             hits = requests.get(SEARCH, params=params, timeout=15).json().get("hits", [])
         except Exception as e:

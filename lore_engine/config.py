@@ -69,6 +69,29 @@ PLATFORMS = [
 ]
 PLATFORM_IDS = [p["id"] for p in PLATFORMS]
 
+# Add a source weight dictionary to adjust which platforms weigh more
+# during report generation. We could have them sum up to 1.0. 
+SOURCE_WEIGHTS = {
+    "reddit"            : 1.0,
+    "steam"             : 1.0,
+    "googleplay"        : 1.0,
+    "appstore"          : 1.0,
+    "hackernews"        : 1.0,
+    "gamenews"          : 1.0,
+    "googletrends"      : 1.0,
+    "wikipedia"         : 1.0,
+    "steamtrending"     : 1.0,
+    "steamcharts"       : 1.0,
+    "github"            : 1.0,
+    "itch"              : 1.0,
+    "appcharts"         : 1.0,
+    "rawg"              : 1.0,
+    "youtube"           : 1.0,
+    "twitch"            : 1.0,
+    "igdb"              : 1.0,
+    "gdelt"             : 1.0
+}
+
 
 def get_year_dir(year: int | None) -> str:
     """Return (and create) the data directory for a year, or the base dir.

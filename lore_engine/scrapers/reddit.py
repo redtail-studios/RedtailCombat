@@ -38,6 +38,10 @@ UA = REDDIT_USER_AGENT or "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrom
 NOW_YEAR = datetime.now(timezone.utc).year
 _TAGS = re.compile(r"<[^>]+>")
 MAX_RATE_LIMIT_WAIT = 65  # cap a single 429 wait — Reddit's window is ~60s; guards against a bad/huge header
+TIME_BUDGET_SECONDS = 720  # stop starting new subreddits past this; the worker Lambda's
+                            # hard timeout is 900s and a killed invocation returns nothing
+                            # and never gets deleted off SQS, so leaving no margin here is
+                            # what caused it to retry forever (see SCRAPING_ARCHITECTURE.md §5)
 
 
 def _clean(text: str) -> str:
@@ -134,8 +138,14 @@ def run(year: int | None = None, log=print) -> list:
     log(f"[reddit] scraping {len(all_subs)} subreddits via public RSS feeds "
         f"(no key) (year={year}, genres={ACTIVE_GENRES})")
     records, blocked = [], 0
+    start = time.monotonic()
 
     for sub in all_subs:
+        if time.monotonic() - start > TIME_BUDGET_SECONDS:
+            log(f"  [reddit] time budget ({TIME_BUDGET_SECONDS}s) reached — "
+                f"returning {len(records)} records collected so far instead of "
+                f"risking the Lambda timeout")
+            break
         posts, seen = [], set()
         # Only "hot" — "top" doubled every subreddit's request count for
         # marginal gain (t=year means "top of the last 365 days", not "top of

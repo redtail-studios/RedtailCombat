@@ -11,7 +11,7 @@ import json
 import os
 from collections import defaultdict, deque
 
-from config import DEPLOYED, SIGNAL_KEYWORDS, COMPETITORS, PLATFORM_IDS, get_year_dir
+from config import DEPLOYED, SIGNAL_KEYWORDS, COMPETITORS, PLATFORM_IDS, SOURCE_WEIGHTS, get_year_dir
 import storage
 import re
 from difflib import SequenceMatcher
@@ -150,12 +150,13 @@ def signal_scores(items: list) -> dict:
     total = len(items)
     if not total:
         return {}
-    counts = defaultdict(int)
+    counts = defaultdict(float)
     for it in items:
+        source = it["source"]
         low = it["text"].lower()
         for signal, kws in SIGNAL_KEYWORDS.items():
             if any(kw.lower() in low for kw in kws):
-                counts[signal] += 1
+                counts[signal] += SOURCE_WEIGHTS.get(source, 1.0)
     max_pct = max((counts[s] / total for s in counts), default=0.01)
     out = {}
     for signal in SIGNAL_KEYWORDS:
@@ -170,8 +171,18 @@ def scorecard(items: list, sigs: dict) -> dict:
     total = len(items)
     if not total:
         return {}
-    pos = sum(1 for i in items if i["sentiment"].get("compound", 0) > 0.05)
-    neg = sum(1 for i in items if i["sentiment"].get("compound", 0) < -0.05)
+    #pos = sum(1 for i in items if i["sentiment"].get("compound", 0) > 0.05)
+    #neg = sum(1 for i in items if i["sentiment"].get("compound", 0) < -0.05)
+
+    pos = 0
+    neg = 0
+    for i in items:
+        source = i["source"]
+        if i["sentiment"].get("compound", 0) > 0.05:
+            pos += SOURCE_WEIGHTS.get(source, 1.0)
+        elif i["sentiment"].get("compound", 0) < -0.05:
+            neg += SOURCE_WEIGHTS.get(source, 1.0)
+    
     return {
         "total_items":  total,
         "positive_pct": round(pos / total * 100, 1),
@@ -184,15 +195,16 @@ def scorecard(items: list, sigs: dict) -> dict:
 def competitors(items: list) -> list:
     agg = defaultdict(lambda: {"mentions": 0, "pos": 0, "neg": 0, "quote": ""})
     for it in items:
+        source = it["source"]
         low = it["text"].lower()
         for name, subs in COMPETITORS.items():
             if any(s in low for s in subs):
                 s = it["sentiment"].get("compound", 0)
-                agg[name]["mentions"] += 1
+                agg[name]["mentions"] += SOURCE_WEIGHTS.get(source, 1.0)
                 if s > 0.05:
-                    agg[name]["pos"] += 1
+                    agg[name]["pos"] += SOURCE_WEIGHTS.get(source, 1.0)
                 elif s < -0.05:
-                    agg[name]["neg"] += 1
+                    agg[name]["neg"] += SOURCE_WEIGHTS.get(source, 1.0)
                 if not agg[name]["quote"]:
                     agg[name]["quote"] = it["text"][:160]
     out = []

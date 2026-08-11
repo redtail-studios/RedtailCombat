@@ -10,6 +10,7 @@ skip-and-log case, not a crash. Expect some queries in a run to come back
 empty on a bad day; that's this API being flaky, not a bug here.
 """
 import time
+from datetime import datetime, timezone
 
 import requests
 
@@ -19,23 +20,30 @@ from scrapers import score, save
 URL = "https://api.gdeltproject.org/api/v2/doc/doc"
 
 
-def _year_of(seendate: str) -> int | None:
-    try:
-        return int(seendate[:4])  # GDELT seendate is "YYYYMMDDTHHMMSSZ"
+def _parse_seendate(seendate: str):
+    try:  # GDELT seendate is "YYYYMMDDTHHMMSSZ"
+        return datetime.strptime(seendate, "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc)
     except Exception:
         return None
 
 
-def _search(query: str, log) -> list:
+def _year_of(seendate: str) -> int | None:
+    dt = _parse_seendate(seendate)
+    return dt.year if dt else None
+
+
+def _search(query: str, log, startdatetime: str | None = None) -> list:
     # Unquoted multi-word queries match each word independently (verified
     # live — "mobile game" pulled in unrelated "game conference" and
     # "mobile phone" articles) rather than the phrase; quote it for an exact
     # phrase match, GDELT's documented convention for multi-word terms.
     gdelt_query = f'"{query}"' if " " in query else query
+    params = {"query": gdelt_query, "mode": "artlist", "format": "json",
+              "maxrecords": GDELT_HITS_PER_Q, "sort": "datedesc"}
+    if startdatetime:
+        params["startdatetime"] = startdatetime  # real server-side filtering, format YYYYMMDDHHMMSS
     try:
-        r = requests.get(URL, timeout=50, params={
-            "query": gdelt_query, "mode": "artlist", "format": "json",
-            "maxrecords": GDELT_HITS_PER_Q, "sort": "datedesc"})
+        r = requests.get(URL, timeout=50, params=params)
         r.raise_for_status()
         return r.json().get("articles", [])
     except ValueError:
@@ -48,18 +56,23 @@ def _search(query: str, log) -> list:
         return []
 
 
-def run(year: int | None = None, log=print) -> list:
+def run(year: int | None = None, log=print, since=None) -> list:
     queries = [(q, "general") for q in GDELT_QUERIES_COMMON]
     queries += [(GENRES[g]["hn_query"], g) for g in ACTIVE_GENRES]
 
-    log(f"[gdelt] scraping {len(queries)} queries (year={year})")
+    startdatetime = since.strftime("%Y%m%d%H%M%S") if since else None
+    log(f"[gdelt] scraping {len(queries)} queries (year={year}, since={since})")
     records = []
     for q, genre in queries:
-        articles = _search(q, log)
+        articles = _search(q, log, startdatetime=startdatetime)
         kept = 0
         for a in articles:
             if year and (_year_of(a.get("seendate", "")) != year):
                 continue
+            if since is not None:
+                dt = _parse_seendate(a.get("seendate", ""))
+                if dt is not None and dt <= since:
+                    continue  # defensive — startdatetime should've already excluded this
             title = (a.get("title") or "").strip()
             if len(title) < 5:
                 continue

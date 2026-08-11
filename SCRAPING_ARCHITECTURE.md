@@ -111,6 +111,62 @@ no S3 bucket lifecycle policy involved; nothing physically deletes old
 objects, they just get treated as a cache miss and overwritten on the next
 scrape.
 
+### Incremental scraping (current year only)
+
+Most platforms fully overwrite their data on every scrape — correct, because
+most of what they capture is a **live metric that changes for records
+already seen** (review/owner counts, chart rank, hype score). Re-fetching
+the current state is the only way to keep those accurate. Two shapes of
+exception exist, both driven by the same `since` cursor: before calling the
+scraper, the worker reads the existing data's `LastModified` via
+`storage.get_last_scraped()` and passes it as `since` to `run()`.
+First-ever scrape for a `(year, platform)` → no existing object →
+`since=None` → every scraper falls back to today's full-year fetch,
+unchanged.
+
+**Flat list, immutable records** — `hackernews`, `gamenews`, `gdelt`
+(`worker.py`'s `INCREMENTAL_MERGE_KEYS`). A news article or forum story
+doesn't change once captured, each has a stable unique key (`id` or `url`),
+and re-fetching the full year every week was mostly re-downloading content
+already stored. Each scraper narrows its own query by `since` where the
+source supports it server-side (Algolia's `numericFilters` for hackernews,
+GDELT's `startdatetime`) — a real reduction in what gets fetched, not just
+what gets kept. `gamenews`'s RSS feeds have no date-range query at all, so
+`since` there only trims what gets kept client-side. After the scraper
+returns, the worker merges via `storage.merge_by_key()` — existing entries
+win on a key collision, genuinely new keys get appended.
+
+**Per-app records with a live-metric/append-only split** — `steam`,
+`appstore`, `googleplay` (`worker.py`'s `INCREMENTAL_NESTED_MERGE_KEYS`).
+These records mix live app-level metrics (owners, installs, positive/negative
+counts) with a nested `reviews` list that's append-only once a review
+exists. A flat merge doesn't fit — `storage.merge_nested_by_key()` matches
+records by `app_id`, always takes the *new* fetch's top-level fields (fresh
+metrics), and only merges the nested list by a review-level key:
+- `steam`: reviews already carry `timestamp_created`; `_reviews()`'s
+  existing "stop once a page predates `year`" early-exit was extended to
+  also stop once a page predates `since` — real fewer requests, not just
+  fewer kept. Reviews didn't previously carry a stable id at all
+  (`recommendationid` exists in Steam's API but wasn't captured) — added,
+  since merge-by-key needs one.
+- `googleplay`: reviews are already fetched `Sort.NEWEST`; same early-exit
+  pattern once a review's `at` predates `since`. Watch for the naive/aware
+  datetime mismatch — `google-play-scraper` returns naive datetimes, while
+  `since` (from S3's `LastModified`) is UTC-aware; compare after stripping
+  tzinfo from `since` rather than assuming both sides match.
+- `appstore`: no date field exists on iTunes RSS reviews at all (documented
+  in the code already) — `since` is accepted for interface consistency but
+  can't shrink the fetch; same request cost as before every time. Only wins
+  the "no duplicate accumulation" part, via the RSS entry's own `id`.
+
+`wikipedia` was considered and rejected: its "current month" pageview
+bucket is itself a live number that grows until the month ends — summing
+"new months since last scrape" into a running total would double-count the
+in-progress month every week until it rolls over. Fixing that correctly
+needs to track which months are "finalized" vs. still in-progress, for a
+scraper that already only takes ~5-8 seconds to run in full. Not worth it
+for what it'd save.
+
 ## 2. What each AWS service is for
 
 | Service | Used for | Written by | Read by |
@@ -254,6 +310,31 @@ re-deriving them from scratch:
   the same OAuth migration already called out above for the rate-limit
   issue). Until that migration happens, don't expect Reddit data for
   `SUPPORTED_YEARS` entries other than the current one.
+- **A stuck job with no redrive policy retries forever, silently.** On
+  2026-08-03, `redtail-lore-queue` had no `RedrivePolicy` at all — a DLQ
+  (`redtail-dlq`) existed but was never wired up. Meanwhile `reddit.py` had
+  no internal time limit, so under sustained rate-limiting it would run past
+  the worker's 900s Lambda timeout and get hard-killed mid-scrape. A
+  timed-out invocation never deletes its SQS message, so once the queue's
+  1800s `VisibilityTimeout` elapsed the same job was redelivered and timed
+  out again — forever, ~900 GB-seconds per ~30-minute cycle, with nothing
+  in the logs looking like an error (`Task timed out` doesn't even show up
+  as a log *message* — check the `REPORT` line's `Status: timeout` field
+  instead). This ran for hours before an AWS Free Tier usage alert (85% of
+  the account's monthly Lambda-GB-second allowance) surfaced it. Two fixes,
+  both needed:
+  - `reddit.py` now tracks wall-clock time against `TIME_BUDGET_SECONDS`
+    (720s) and returns whatever it's collected so far instead of running
+    until killed — the same pattern any slow/rate-limited scraper should
+    follow, since a killed invocation is strictly worse than a partial
+    result (no data *and* it keeps retrying).
+  - `redtail-lore-queue` now has a real `RedrivePolicy`
+    (`maxReceiveCount: 3` → `redtail-dlq`), so even a scraper that somehow
+    still hangs is bounded at ~2,700 GB-seconds instead of running forever.
+  - If you see a platform stuck on `"running"` for an implausibly long time,
+    check `ApproximateNumberOfMessagesNotVisible` on the queue and the
+    worker's `REPORT` log lines for `Status: timeout` before assuming it's
+    just slow.
 
 ## 6. Runbook
 
@@ -350,7 +431,11 @@ test deployment's `LORE_SCRAPE_QUEUE_URL` at the production queue.
 This document orients; the code is authoritative. Start here:
 - `lore_engine/storage.py` — all S3/SQS access, including
   `enqueue_missing_platforms()` (shared by the ops endpoint and the scheduler)
-- `lore_engine/worker.py` — the SQS-triggered Lambda that does the actual scraping
+  and `get_last_scraped()`/`get_raw_records()`/`merge_by_key()`/
+  `merge_nested_by_key()` (incremental scraping support)
+- `lore_engine/worker.py` — the SQS-triggered Lambda that does the actual
+  scraping; `INCREMENTAL_MERGE_KEYS` / `INCREMENTAL_NESTED_MERGE_KEYS` list
+  which platforms get the `since` cursor + merge instead of a full overwrite
 - `lore_engine/scheduler.py` — the EventBridge-triggered Lambda that fans out
   the weekly job
 - `server.py` — the `DEPLOYED` branches in `status()`, `start_scrape()`,
