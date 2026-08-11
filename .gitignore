@@ -7,3 +7,4 @@ lore_snapshots/
 .git
 .claude
 tasks.md
+.coverage
