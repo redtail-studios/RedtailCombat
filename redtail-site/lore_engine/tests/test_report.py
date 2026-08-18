@@ -5,7 +5,7 @@ from itertools import count
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import report
-from report import (build_prompt, build_prompt_multi, _fmt_quotes, _fmt_signals,
+from report import (build_prompt, _fmt_quotes, _fmt_signals,
                     _fmt_competitors, validate_citations)
 
 
@@ -42,7 +42,7 @@ def test_fmt_quotes_assigns_sequential_ids_across_shared_counter():
     assert registry == {"Q1": "Alpha quote.", "Q2": "Beta quote.", "Q3": "Gamma quote."}
 
 
-def test_build_prompt_multi_general_quote_shown_once_across_genres():
+def test_prep_multi_genre_blocks_general_quote_shown_once_across_genres():
     shared_quote = "Everyone is talking about the new engine update."
     analysis_by_year_genre = {
         "2025": {
@@ -50,18 +50,20 @@ def test_build_prompt_multi_general_quote_shown_once_across_genres():
             "puzzle":   _analyse_stub([shared_quote, "Puzzle specific quote."]),
         }
     }
-    prompt, registry = build_prompt_multi([2025], [], analysis_by_year_genre, ["fighting", "puzzle"])
+    blocks, registry = report._prep_multi_genre_blocks(
+        [2025], [], analysis_by_year_genre, ["fighting", "puzzle"])
+    combined = blocks["fighting"][2025] + blocks["puzzle"][2025]
 
-    assert prompt.count(shared_quote) == 1
-    assert prompt.count("Fighting specific quote.") == 1
-    assert prompt.count("Puzzle specific quote.") == 1
+    assert combined.count(shared_quote) == 1
+    assert combined.count("Fighting specific quote.") == 1
+    assert combined.count("Puzzle specific quote.") == 1
     # ids stay unique across genre sections in the same report
     assert sorted(registry.values()) == sorted(
         [shared_quote, "Fighting specific quote.", "Puzzle specific quote."])
     assert len(set(registry.keys())) == len(registry)
 
 
-def test_build_prompt_multi_numeric_outputs_unaffected_by_quote_dedup():
+def test_prep_multi_genre_blocks_numeric_outputs_unaffected_by_quote_dedup():
     analysis_by_year_genre = {
         "2025": {
             "fighting": {"total_items": 42, "signals": {}, "scorecard": {},
@@ -70,12 +72,13 @@ def test_build_prompt_multi_numeric_outputs_unaffected_by_quote_dedup():
                          "competitors": [], "quotes": ["shared quote", "puzzle quote"]},
         }
     }
-    prompt, _registry = build_prompt_multi([2025], [], analysis_by_year_genre, ["fighting", "puzzle"])
+    blocks, _registry = report._prep_multi_genre_blocks(
+        [2025], [], analysis_by_year_genre, ["fighting", "puzzle"])
 
     # Task 1b only changes quote rendering — total_items must still reflect
     # the real per-genre count, unaffected by cross-genre quote deduplication.
-    assert "Data points: 42" in prompt
-    assert "Data points: 17" in prompt
+    assert "Data points: 42" in blocks["fighting"][2025]
+    assert "Data points: 17" in blocks["puzzle"][2025]
 
 
 def test_validate_citations_valid_citation_passes():
@@ -117,6 +120,30 @@ def test_validate_citations_flags_uncited_gap():
     assert result["valid"] is False
     assert result["hallucinated_ids"] == []
     assert result["uncited_gaps"] == ["No Cosmetic Variety"]
+
+
+def test_validate_citations_multi_genre_shape_valid_citation_passes():
+    registry = {"Q1": "some quote"}
+    html = """
+    <div class="card"><h3>Fighting</h3>
+    <h4>Market Gap</h4><p>Players want more depth [Q1].</p></div>
+    """
+    result = validate_citations(html, registry)
+    assert result["valid"] is True
+    assert result["uncited_gaps"] == []
+
+
+def test_validate_citations_multi_genre_shape_flags_uncited_gap():
+    registry = {"Q1": "some quote"}
+    html = """
+    <div class="card"><h3>Fighting</h3>
+    <h4>Market Gap</h4><p>Players want more depth [Q1].</p></div>
+    <div class="card"><h3>Puzzle</h3>
+    <h4>Market Gap</h4><p>No citation in this one.</p></div>
+    """
+    result = validate_citations(html, registry)
+    assert result["valid"] is False
+    assert result["uncited_gaps"] == ["Puzzle — Market Gap"]
 
 
 # ---------------------------------------------------------------------------
@@ -187,7 +214,7 @@ def test_build_prompt_no_scope_note_when_genre_is_none():
     assert "Scope: this data covers only" not in prompt
 
 
-def test_build_prompt_multi_with_validation_years(monkeypatch):
+def test_prep_multi_genre_blocks_with_validation_years(monkeypatch):
     monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"},
                                             "puzzle": {"label": "Puzzle"}})
     analysis_by_year_genre = {
@@ -197,12 +224,52 @@ def test_build_prompt_multi_with_validation_years(monkeypatch):
                  "puzzle": _analyse_stub(["val puzzle quote"])},
     }
 
-    prompt, registry = build_prompt_multi([2023], [2024], analysis_by_year_genre,
-                                          ["fighting", "puzzle"])
+    blocks, registry = report._prep_multi_genre_blocks(
+        [2023], [2024], analysis_by_year_genre, ["fighting", "puzzle"])
 
+    assert "val fighting quote" in blocks["fighting"][2024]
+    assert "val puzzle quote" in blocks["puzzle"][2024]
+    assert "bt fighting quote" in blocks["fighting"][2023]
+
+
+# ---------------------------------------------------------------------------
+# _genre_section_prompt / _synthesis_prompt
+# ---------------------------------------------------------------------------
+
+def test_genre_section_prompt_basic(monkeypatch):
+    monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"}})
+    blocks_for_genre = {2024: "### 2024\nData points: 5"}
+
+    prompt = report._genre_section_prompt("fighting", blocks_for_genre, [2024], [], False)
+
+    assert "one genre's section of a larger multi-genre report: Fighting." in prompt
+    assert "Data points: 5" in prompt
+    assert "===DIGEST-END===" in prompt
+    assert "MARKET BACKTEST" not in prompt
+    assert "VALIDATION DATA" not in prompt
+
+
+def test_genre_section_prompt_includes_backtest_note_when_has_val(monkeypatch):
+    monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"}})
+    blocks_for_genre = {2023: "bt block", 2024: "val block"}
+
+    prompt = report._genre_section_prompt("fighting", blocks_for_genre, [2023], [2024], True)
+
+    assert "MARKET BACKTEST" in prompt
     assert "VALIDATION DATA" in prompt
-    assert "val fighting quote" in prompt
-    assert "val puzzle quote" in prompt
+    assert "val block" in prompt
+
+
+def test_synthesis_prompt_includes_digests_and_separator(monkeypatch):
+    monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"},
+                                            "puzzle": {"label": "Puzzle"}})
+    digests = {"fighting": "Fighting is under-served.", "puzzle": "Puzzle is saturated."}
+
+    prompt = report._synthesis_prompt(digests, ["fighting", "puzzle"], [2024], [], False)
+
+    assert "Fighting is under-served." in prompt
+    assert "Puzzle is saturated." in prompt
+    assert "===MID-END===" in prompt
 
 
 # ---------------------------------------------------------------------------
@@ -231,12 +298,53 @@ def test_generate_multi_genre_default_path(monkeypatch):
     monkeypatch.setattr(report, "ACTIVE_GENRES", ["fighting", "puzzle"])
     monkeypatch.setattr(report, "analyse",
                         lambda year, genre=None: _analyse_stub([f"{genre} quote"]))
-    monkeypatch.setattr(report.llm, "generate_html",
-                        lambda prompt, max_tokens=32000: "<html>multi</html>")
+
+    def fake_generate_html(prompt, max_tokens=32000):
+        if "multi-genre report: Fighting." in prompt:
+            return 'Fighting is under-served.===DIGEST-END===<div class="card"><h3>Fighting</h3></div>'
+        if "multi-genre report: Puzzle." in prompt:
+            return 'Puzzle is saturated.===DIGEST-END===<div class="card"><h3>Puzzle</h3></div>'
+        # synthesis call — only one left once both genre calls are accounted for
+        assert "Fighting is under-served." in prompt
+        assert "Puzzle is saturated." in prompt
+        return ('<h1>Report</h1>===MID-END==='
+               '<div class="card"><h2>Strategic Recommendations</h2></div>')
+
+    monkeypatch.setattr(report.llm, "generate_html", fake_generate_html)
 
     html = report.generate([2024])
 
-    assert html == "<html>multi</html>"
+    # both genre sections and the synthesis wrapper made it into the final document
+    assert "<h3>Fighting</h3>" in html
+    assert "<h3>Puzzle</h3>" in html
+    assert "<h1>Report</h1>" in html
+    assert "<h2>Strategic Recommendations</h2>" in html
+    assert html.startswith("<!DOCTYPE html>")
+
+
+def test_generate_multi_genre_runs_genre_calls_concurrently(monkeypatch):
+    """Each genre call should run in its own thread (not blocked on the
+    others) — the whole point of the parallel-calls redesign."""
+    import threading
+    monkeypatch.setattr(report, "GENRES", {"fighting": {"label": "Fighting"},
+                                            "puzzle": {"label": "Puzzle"}})
+    monkeypatch.setattr(report, "ACTIVE_GENRES", ["fighting", "puzzle"])
+    monkeypatch.setattr(report, "analyse",
+                        lambda year, genre=None: _analyse_stub([f"{genre} quote"]))
+
+    seen_threads = set()
+
+    def fake_generate_html(prompt, max_tokens=32000):
+        if "one genre's section" in prompt:
+            seen_threads.add(threading.get_ident())
+            return 'digest===DIGEST-END===<div class="card"></div>'
+        return '<h1>Report</h1>===MID-END===<div class="card"></div>'
+
+    monkeypatch.setattr(report.llm, "generate_html", fake_generate_html)
+    report.generate([2024])
+
+    # genre calls ran via the ThreadPoolExecutor, not on the main thread
+    assert threading.get_ident() not in seen_threads
 
 
 def test_generate_prints_warning_when_citations_invalid(monkeypatch, capsys):

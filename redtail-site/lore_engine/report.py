@@ -7,6 +7,7 @@ Supports two modes:
                 later "validation" years (what actually happened)
 """
 import re
+from concurrent.futures import ThreadPoolExecutor
 from itertools import count
 
 import llm
@@ -87,10 +88,108 @@ High-signal player quotes:
 """
 
 
-def _year_block_multi(year: int, per_genre: dict, ids, registry: dict) -> str:
-    seen = set()  # shared across every genre section for this year — see _fmt_quotes
-    body = "".join(_genre_block(g, per_genre[g], ids, registry, seen) for g in per_genre)
-    return f"\n### {year}\n{body}"
+def _prep_multi_genre_blocks(backtest_years: list, validation_years: list,
+                             analysis_by_year_genre: dict, genres: list) -> tuple:
+    """Pre-formats every genre's per-year data block once, up front — assigning
+    globally-unique quote IDs and deduping general-tagged quotes across
+    genres within a year, exactly as the old single-call build_prompt_multi
+    did. Doing this synchronously before any LLM call means the actual
+    per-genre report calls (see _genre_section_prompt) can run concurrently
+    without needing to coordinate with each other over IDs or dedup state.
+
+    Returns (blocks, registry) where blocks[genre][year] is a formatted str.
+    """
+    ids = count(1)
+    registry = {}
+    years = sorted(set(backtest_years) | set(validation_years))
+    blocks = {g: {} for g in genres}
+    for y in years:
+        seen: set = set()  # shared across genres for this year only, same as before
+        for g in genres:
+            blocks[g][y] = _genre_block(g, analysis_by_year_genre[str(y)][g], ids, registry, seen)
+    return blocks, registry
+
+
+def _genre_section_prompt(genre: str, blocks_for_genre: dict,
+                          backtest_years: list, validation_years: list, has_val: bool) -> str:
+    """One genre's slice of the multi-genre report, as its own small prompt —
+    small enough that running one of these per genre, concurrently, is much
+    faster wall-clock than one prompt asking Claude to write all genres at
+    once (which is what pushed generation time to Vercel's 300s ceiling on
+    data-heavy years). Each call gets a real per-genre token budget rather
+    than a shared one split five ways, so depth doesn't have to be sacrificed
+    for speed — the speedup comes from parallelism, not from asking for less."""
+    label = GENRES[genre]["label"]
+    bt = ", ".join(str(y) for y in sorted(backtest_years))
+    val = ", ".join(str(y) for y in sorted(validation_years))
+
+    bt_data = "".join(f"\n### {y}\n{blocks_for_genre[y]}" for y in sorted(backtest_years))
+    val_data = ""
+    if has_val:
+        val_data = "\n## VALIDATION DATA — what actually happened (" + val + ")\n"
+        val_data += "".join(f"\n### {y}\n{blocks_for_genre[y]}" for y in sorted(validation_years))
+    backtest_note = (
+        f"\nYou are running a MARKET BACKTEST: analyse {bt} as if predicting at "
+        f"that time, then use the {val} validation data to score how accurate "
+        f"those signals turned out to be.\n" if has_val else ""
+    )
+
+    return f"""You are running in non-interactive report-generation mode. Output ONLY the two parts described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary.
+
+You are a senior market-intelligence analyst writing one genre's section of a larger multi-genre report: {label}. Find genuine GAPS in the market for this genre specifically — unmet player needs that no current product serves well.
+{backtest_note}
+## DATA — {label} ({bt})
+{bt_data}
+{val_data}
+
+## OUTPUT
+Output exactly two parts, separated by a line containing only: ===DIGEST-END===
+
+PART 1 (before the separator): a plain-text digest, 2-3 sentences, of this genre's single biggest opportunity and how under-served it is — no HTML. This feeds a cross-genre executive summary, so make it a strong, specific standalone claim.
+
+PART 2 (after the separator): the HTML section for this genre, in this structure:
+<div class="card">
+<h3>{label}</h3>
+<p>[2-3 sentences: demand signal strength and sentiment split, with real numbers]</p>
+<h4>Market Gap</h4>
+<p>[the top 1-2 unmet needs: name each gap, cite the signal score + hit count, include at least one real player quote with its ID in brackets e.g. [Q7], and explain why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. Be honest if the sample is thin or the gap is weak. Do not invent quotes or IDs.]</p>
+<h4>Trends &amp; Competitors</h4>
+<p>[how signals evolved across {bt}{" (and how the " + bt + " signals held up against " + val + " reality)" if has_val else ""}, and where named competitors are failing players in this genre]</p>
+</div>
+
+Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding team makes real decisions from this."""
+
+
+def _synthesis_prompt(digests: dict, genres: list, backtest_years: list,
+                      validation_years: list, has_val: bool) -> str:
+    """The cross-genre wrapper sections (exec summary, ranking, recs, data
+    quality) need to see all genres at once, but only need each genre's short
+    digest to do that — not the raw scraped data — so this call stays small
+    and fast even though it runs after (and depends on) every genre call."""
+    bt = ", ".join(str(y) for y in sorted(backtest_years))
+    genre_list = ", ".join(GENRES[g]["label"] for g in genres)
+    digest_text = "\n".join(f"- {GENRES[g]['label']}: {digests[g]}" for g in genres)
+
+    return f"""You are running in non-interactive report-generation mode. Output ONLY the two parts described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary.
+
+You are a senior market-intelligence analyst synthesizing a multi-genre report covering: {genre_list}. Each genre's detailed section has already been written by a separate analyst; you are writing only the parts that need a view across all of them.
+
+## PER-GENRE DIGESTS ({bt})
+{digest_text}
+
+## OUTPUT
+Output exactly two parts, separated by a line containing only: ===MID-END===
+
+PART 1 — the report opening, as HTML:
+<h1>Mobile Gaming Market Gaps Intelligence Report</h1>
+<div class="card"><h2>Executive Summary</h2><p>[2-3 tight paragraphs: the single biggest finding across all genres and the size of the opportunity]</p></div>
+<div class="card"><h2>Cross-Genre Comparison</h2><p>[rank the genres by opportunity — demand signal strength vs. how weakly current competitors serve it. Call out which genre has the most under-served demand and which is already crowded/well-served.]</p></div>
+
+PART 2 — the report closing, as HTML:
+<div class="card"><h2>Strategic Recommendations</h2><p>[top 3 product bets across all genres, top 2 things to avoid, and one contrarian insight]</p></div>
+<div class="card"><h2>Data Quality</h2><p>[state overall confidence across genres and flag any genre whose sample is notably thin, in 2-3 sentences]</p></div>
+
+Be specific. No platitudes — a founding team makes real decisions from this."""
 
 
 DESIGN_SPEC = """
@@ -171,79 +270,22 @@ Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding t
     return prompt, registry
 
 
-def build_prompt_multi(backtest_years: list, validation_years: list,
-                       analysis_by_year_genre: dict, genres: list) -> tuple:
-    """Like build_prompt, but data is broken out per active genre instead of
-    pooled — Claude sees each genre's signals/competitors/quotes as its own
-    labeled section and is asked to compare across them, rather than getting
-    one undifferentiated cross-genre blend."""
-    ids = count(1)
-    registry = {}
-
-    bt  = ", ".join(str(y) for y in sorted(backtest_years))
-    val = ", ".join(str(y) for y in sorted(validation_years))
-    has_val = bool(validation_years)
-    genre_list = ", ".join(GENRES[g]["label"] for g in genres)
-
-    bt_data = "".join(_year_block_multi(y, analysis_by_year_genre[str(y)], ids, registry)
-                      for y in sorted(backtest_years))
-
-    val_data = ""
-    if has_val:
-        val_data = "\n## VALIDATION DATA — what actually happened (" + val + ")\n"
-        val_data += "".join(_year_block_multi(y, analysis_by_year_genre[str(y)], ids, registry)
-                            for y in sorted(validation_years))
-
-    n = 6 if has_val else 5
-    backtest_note = (
-        f"\nYou are running a MARKET BACKTEST: analyse {bt} as if predicting at "
-        f"that time, then use the {val} validation data to score how accurate "
-        f"those signals turned out to be.\n" if has_val else ""
-    )
-
-    prompt = f"""You are running in non-interactive report-generation mode. Output ONLY a complete, self-contained HTML document (<!DOCTYPE html> ... </html>). No tool calls, no markdown fences, no commentary — just the HTML.
-
-You are a senior market-intelligence analyst covering multiple mobile game genres: {genre_list}. From real scraped data across Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets (IGN/Polygon/Eurogamer/etc.), Steam's most-played trending list, and Wikipedia interest trends — broken out per genre below — find genuine GAPS in the market, both within each genre and by comparing across genres. Use the news/trending/Wikipedia signals for *what's rising*, and the reviews/discussion for *what players are frustrated by*.
-{backtest_note}
-## DATA BY YEAR, THEN GENRE ({bt})
-{bt_data}
-{val_data}
-
-## REPORT REQUIREMENTS
-Produce a premium HTML intelligence report with these sections. This covers
-{len(genres)} genres in one report — verbosity per genre multiplies fast, so
-every per-genre item below is capped at one sentence. Do not exceed the caps;
-a short, complete report beats a longer one that gets cut off.
-
-1. Executive Summary — the single biggest finding across all genres and the size of the opportunity, in 2 tight sentences.
-2. Cross-Genre Comparison — rank the genres by opportunity (demand signal strength vs. how weakly current competitors serve it), in 1 sentence per genre.
-3. Market Gap Analysis (per genre) — for each genre with meaningful data, the single top unmet need: name the gap, cite the signal score + hit count, include one real player quote, and explain in 1 sentence why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. If a genre's sample is thin or its "gap" is weak, say so in one line rather than padding it out. The gap you name must include a quote ID in brackets, e.g. [Q7], pulled from the quotes list above. Do not invent quotes or IDs — if you don't have a real quote for a gap, say so instead of fabricating one.
-4. Year-over-Year Trends ({bt}) — 1 sentence per genre on how signals evolved, only where the data actually supports a trend claim.
-5. Competitive Landscape — 1 sentence per genre on where named competitors are failing their players.
-{"6. Backtesting Accuracy — compare the " + bt + " signals against " + val + " reality, 1 sentence per genre on whether the gap was real." if has_val else ""}
-{n+1}. Strategic Recommendations — top 3 product bets across all genres, top 2 things to avoid, and one contrarian insight, each in 1 sentence.
-{n+2}. Data Quality — rate coverage per platform AND per genre (A-F) in a compact table, one line of overall confidence. Flag where any genre's sample is thin.
-
-Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding team makes real decisions from this. One sentence per item, everywhere, no exceptions.
-
-## DESIGN
-{DESIGN_SPEC}
-"""
-    return prompt, registry
-
-
 _QUOTE_ID_RE = re.compile(r'\[Q(\d+)\]')
 
 
 def validate_citations(html: str, registry: dict) -> dict:
     """Loose, heuristic check that Claude's HTML actually grounds its named
     gaps in real quotes — not a real HTML parser (regex + a "did this gap
-    block cite anything" pass is enough for this).
+    block cite anything" pass is enough for this). Handles two shapes:
+    the single-genre report's one <h2>Market Gap Analysis</h2> section with
+    a <h3> per gap, and the multi-genre report's one <h4>Market Gap</h4>
+    block per per-genre <div class="card">.
     """
     cited_ids = {f"Q{n}" for n in _QUOTE_ID_RE.findall(html)}
     hallucinated_ids = sorted(qid for qid in cited_ids if qid not in registry)
 
     uncited_gaps = []
+
     gap_section = re.search(
         r'<h2[^>]*>\s*(?:\d+\.\s*)?Market Gap Analysis.*?</h2>(.*?)(?=<h2|\Z)',
         html, re.IGNORECASE | re.DOTALL)
@@ -256,6 +298,14 @@ def validate_citations(html: str, registry: dict) -> dict:
             if not _QUOTE_ID_RE.search(block):
                 uncited_gaps.append(re.sub(r'<[^>]+>', '', heading.group(1)).strip())
 
+    for m in re.finditer(r'<h4[^>]*>\s*Market Gap\s*</h4>(.*?)(?=<h4|</div>|\Z)',
+                        html, re.IGNORECASE | re.DOTALL):
+        if not _QUOTE_ID_RE.search(m.group(0)):
+            preceding_h3s = re.findall(r'<h3[^>]*>(.*?)</h3>', html[:m.start()],
+                                       re.IGNORECASE | re.DOTALL)
+            label = re.sub(r'<[^>]+>', '', preceding_h3s[-1]).strip() if preceding_h3s else "unknown genre"
+            uncited_gaps.append(f"{label} — Market Gap")
+
     return {
         "valid": not hallucinated_ids and not uncited_gaps,
         "hallucinated_ids": hallucinated_ids,
@@ -263,38 +313,83 @@ def validate_citations(html: str, registry: dict) -> dict:
     }
 
 
+def _run_multi_genre(backtest_years: list, validation_years: list, has_val: bool,
+                     analysis_by_year_genre: dict, genres: list) -> tuple:
+    """Runs one Claude call per genre, concurrently, then a final small
+    synthesis call for the cross-genre wrapper sections — instead of the one
+    giant call across all genres that used to push generation time past
+    Vercel's 300s ceiling on data-heavy years. Wall-clock time is roughly
+    one genre call's duration (they run in parallel, not len(genres) times
+    that) plus one synthesis call, instead of len(genres) calls' worth of
+    content squeezed into a single sequential call.
+
+    Returns (html, registry) — registry merges every genre's quote IDs plus
+    the synthesis call doesn't mint any new ones, so validate_citations still
+    works the same way against the final assembled document."""
+    blocks, registry = _prep_multi_genre_blocks(
+        backtest_years, validation_years, analysis_by_year_genre, genres)
+
+    def _run_genre(g):
+        prompt = _genre_section_prompt(g, blocks[g], backtest_years, validation_years, has_val)
+        raw = llm.generate_html(prompt, max_tokens=2500)
+        digest, _, section_html = raw.partition("===DIGEST-END===")
+        return g, digest.strip(), section_html.strip()
+
+    with ThreadPoolExecutor(max_workers=len(genres)) as ex:
+        results = list(ex.map(_run_genre, genres))
+
+    digests = {g: d for g, d, _ in results}
+    sections_html = "\n".join(s for _, _, s in results if s)
+
+    synth_prompt = _synthesis_prompt(digests, genres, backtest_years, validation_years, has_val)
+    synth_raw = llm.generate_html(synth_prompt, max_tokens=2000)
+    opening_html, _, closing_html = synth_raw.partition("===MID-END===")
+
+    html = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+{DESIGN_SPEC}
+</style>
+</head>
+<body>
+{opening_html.strip()}
+{sections_html}
+{closing_html.strip()}
+</body>
+</html>"""
+    return html, registry
+
+
 def generate(backtest_years: list, validation_years: list | None = None,
              genre: str | None = None) -> str:
     """Run analysis for the needed years, then ask Claude to write the report.
 
-    genre=<key> scopes everything to one genre (unchanged single-genre path).
-    genre=None (default) now runs analysis once per active genre per year and
-    asks Claude to compare across genres, rather than pooling every genre's
-    data into one undifferentiated blend.
+    genre=<key> scopes everything to one genre (unchanged single-genre path,
+    one call, max_tokens=32000).
 
-    The multi-genre path uses a lower max_tokens than the single-genre path
-    (12000 vs 32000). This was originally 20000, but data-heavy years (e.g.
-    2022 after a full re-scrape, ~1,265 items — the same scale as 2026)
-    still landed right at Vercel's 300s function timeout even after the
-    connection-pool fix (storage.py) removed the S3-side latency, meaning
-    generation time itself was still the bottleneck. Combined with the
-    one-sentence-per-item caps in build_prompt_multi's REPORT REQUIREMENTS,
-    this aims for real headroom under 300s instead of hovering at the edge."""
+    genre=None (default) runs analysis once per active genre per year, then
+    generates the report as one smaller Claude call per genre (run
+    concurrently via _run_multi_genre) plus a final small synthesis call for
+    the cross-genre sections — replacing the single mega-call across all
+    genres that used to push generation time past Vercel's 300s ceiling on
+    data-heavy years (e.g. 2022 after a full re-scrape, ~1,265 items — the
+    same scale as 2026's original bloat). This buys speed through
+    parallelism rather than through asking for a thinner report."""
     validation_years = validation_years or []
     years = set(backtest_years) | set(validation_years)
+    has_val = bool(validation_years)
 
     if genre:
         analysis_by_year = {str(y): analyse(y, genre) for y in years}
         prompt, registry = build_prompt(backtest_years, validation_years, analysis_by_year, genre)
-        max_tokens = 32000
+        html = llm.generate_html(prompt, max_tokens=32000)
     else:
         analysis_by_year_genre = {str(y): {g: analyse(y, g) for g in ACTIVE_GENRES}
                                   for y in years}
-        prompt, registry = build_prompt_multi(backtest_years, validation_years,
-                                    analysis_by_year_genre, ACTIVE_GENRES)
-        max_tokens = 12000
-
-    html = llm.generate_html(prompt, max_tokens=max_tokens)
+        html, registry = _run_multi_genre(backtest_years, validation_years, has_val,
+                                          analysis_by_year_genre, ACTIVE_GENRES)
 
     result = validate_citations(html, registry)
     if not result["valid"]:
