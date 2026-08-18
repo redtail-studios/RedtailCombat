@@ -210,20 +210,21 @@ You are a senior market-intelligence analyst covering multiple mobile game genre
 {val_data}
 
 ## REPORT REQUIREMENTS
-Produce a premium HTML intelligence report with these sections. Keep every
-per-genre write-up tight — this covers {len(genres)} genres in one report, so
-verbosity per genre multiplies fast; be concise rather than exhaustive.
+Produce a premium HTML intelligence report with these sections. This covers
+{len(genres)} genres in one report — verbosity per genre multiplies fast, so
+every per-genre item below is capped at one sentence. Do not exceed the caps;
+a short, complete report beats a longer one that gets cut off.
 
-1. Executive Summary — the single biggest finding across all genres and the size of the opportunity, in 2-3 tight paragraphs.
-2. Cross-Genre Comparison — rank the genres by opportunity (demand signal strength vs. how weakly current competitors serve it). Call out which genre has the most under-served demand and which is already crowded/well-served.
-3. Market Gap Analysis (per genre) — for each genre with meaningful data, the top 1-2 unmet needs (not 3): name the gap, cite the signal score + hit count, include at least one real player quote, and explain in 1-2 sentences why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. If a genre's sample is thin or its "gap" is weak, say so in one line rather than padding it out. Every gap you name must include at least one quote ID in brackets, e.g. [Q7], pulled from the quotes list above. Do not invent quotes or IDs — if you don't have a real quote for a gap, say so instead of fabricating one.
-4. Year-over-Year Trends ({bt}) — 2-3 sentences per genre on how signals evolved, only where the data actually supports a trend claim.
-5. Competitive Landscape — 1-2 sentences per genre on where named competitors are failing their players.
-{"6. Backtesting Accuracy — compare the " + bt + " signals against " + val + " reality, per genre, briefly. Which gaps were real? Score the predictive accuracy honestly." if has_val else ""}
-{n+1}. Strategic Recommendations — top 3 product bets across all genres, top 2 things to avoid, and one contrarian insight.
-{n+2}. Data Quality — rate coverage per platform AND per genre (A-F) and state overall confidence, briefly. Flag where any genre's sample is thin.
+1. Executive Summary — the single biggest finding across all genres and the size of the opportunity, in 2 tight sentences.
+2. Cross-Genre Comparison — rank the genres by opportunity (demand signal strength vs. how weakly current competitors serve it), in 1 sentence per genre.
+3. Market Gap Analysis (per genre) — for each genre with meaningful data, the single top unmet need: name the gap, cite the signal score + hit count, include one real player quote, and explain in 1 sentence why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. If a genre's sample is thin or its "gap" is weak, say so in one line rather than padding it out. The gap you name must include a quote ID in brackets, e.g. [Q7], pulled from the quotes list above. Do not invent quotes or IDs — if you don't have a real quote for a gap, say so instead of fabricating one.
+4. Year-over-Year Trends ({bt}) — 1 sentence per genre on how signals evolved, only where the data actually supports a trend claim.
+5. Competitive Landscape — 1 sentence per genre on where named competitors are failing their players.
+{"6. Backtesting Accuracy — compare the " + bt + " signals against " + val + " reality, 1 sentence per genre on whether the gap was real." if has_val else ""}
+{n+1}. Strategic Recommendations — top 3 product bets across all genres, top 2 things to avoid, and one contrarian insight, each in 1 sentence.
+{n+2}. Data Quality — rate coverage per platform AND per genre (A-F) in a compact table, one line of overall confidence. Flag where any genre's sample is thin.
 
-Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding team makes real decisions from this. Concise beats exhaustive throughout.
+Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding team makes real decisions from this. One sentence per item, everywhere, no exceptions.
 
 ## DESIGN
 {DESIGN_SPEC}
@@ -272,12 +273,13 @@ def generate(backtest_years: list, validation_years: list | None = None,
     data into one undifferentiated blend.
 
     The multi-genre path uses a lower max_tokens than the single-genre path
-    (20000 vs 32000): asking Claude to write ~5 genres' worth of report in
-    one call is what was pushing wall-clock generation time past Vercel's
-    300s function timeout (intermittently, depending on generation speed).
-    Combined with the tighter per-genre wording in build_prompt_multi, this
-    keeps the requested content comfortably inside the smaller budget rather
-    than truncating what would otherwise be a longer, verbose report."""
+    (12000 vs 32000). This was originally 20000, but data-heavy years (e.g.
+    2022 after a full re-scrape, ~1,265 items — the same scale as 2026)
+    still landed right at Vercel's 300s function timeout even after the
+    connection-pool fix (storage.py) removed the S3-side latency, meaning
+    generation time itself was still the bottleneck. Combined with the
+    one-sentence-per-item caps in build_prompt_multi's REPORT REQUIREMENTS,
+    this aims for real headroom under 300s instead of hovering at the edge."""
     validation_years = validation_years or []
     years = set(backtest_years) | set(validation_years)
 
@@ -290,7 +292,7 @@ def generate(backtest_years: list, validation_years: list | None = None,
                                   for y in years}
         prompt, registry = build_prompt_multi(backtest_years, validation_years,
                                     analysis_by_year_genre, ACTIVE_GENRES)
-        max_tokens = 20000
+        max_tokens = 12000
 
     html = llm.generate_html(prompt, max_tokens=max_tokens)
 
