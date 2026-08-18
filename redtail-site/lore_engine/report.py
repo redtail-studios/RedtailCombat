@@ -152,7 +152,7 @@ Data Coverage: <A-F, your judgment of how thin or solid this genre's sample is, 
 Digest: <2-3 sentences on this genre's single biggest opportunity and how under-served it is>
 This feeds a cross-genre ranking table and a data-quality table, so the three data lines above must be real values from the DATA section, and the Digest must be a strong, specific standalone claim.
 
-PART 2 (after the separator): the HTML section for this genre. This fragment gets embedded into a page that is ALREADY dark-themed (background #0a0a0a, cards #141414, body text #e8e8e8, headings/accents #ff6b2b) via a stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag. The only inline styles you should use are the layout ones shown in the bar-chart example below (width/flex/gap/margin). Follow this structure and markup exactly — this is a visual intelligence report, not a text summary, so signal scores render as bar charts and competitors render as a table, never as prose describing the numbers:
+PART 2 (after the separator): the HTML section for this genre. This fragment gets embedded into a page with its own stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag. The only inline styles you should use are the layout ones shown in the bar-chart example below (width/flex/gap/margin). Follow this structure and markup exactly — this is a visual intelligence report, not a text summary, so signal scores render as bar charts and competitors render as a table, never as prose describing the numbers:
 <div class="card">
 <h3>{label}</h3>
 <p>[2-3 sentences: demand signal strength and sentiment split, with real numbers]</p>
@@ -201,7 +201,7 @@ You are a senior market-intelligence analyst synthesizing a multi-genre report c
 ## OUTPUT
 Output exactly two parts, separated by a line containing only: ===MID-END===
 
-These fragments get embedded into a page that is ALREADY dark-themed (background #0a0a0a, cards #141414, body text #e8e8e8, headings/accents #ff6b2b) via a stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag.
+These fragments get embedded into a page with its own stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag.
 
 PART 1 — the report opening, as HTML:
 <h1>Mobile Gaming Market Gaps Intelligence Report</h1>
@@ -226,27 +226,27 @@ Be specific. No platitudes — a founding team makes real decisions from this. E
 
 
 DESIGN_SPEC = """
-Use this exact dark, premium design system:
+Use this exact clean, light design system:
 
-body { background:#0a0a0a; color:#e8e8e8; font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif; line-height:1.6; max-width:1000px; margin:0 auto; padding:40px 24px; }
+body { background:#ffffff; color:#1a1a1a; font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif; line-height:1.6; max-width:1000px; margin:0 auto; padding:40px 24px; }
 h1 { color:#ff6b2b; font-size:34px; letter-spacing:-0.02em; }
-h2 { color:#e8e8e8; border-bottom:2px solid #ff6b2b; padding-bottom:8px; margin-top:40px; }
+h2 { color:#1a1a1a; border-bottom:2px solid #ff6b2b; padding-bottom:8px; margin-top:40px; }
 h3 { color:#ff6b2b; }
-.card { background:#141414; border:1px solid #222; border-radius:12px; padding:24px; margin:16px 0; }
-.bar-track { background:#222; border-radius:4px; height:18px; overflow:hidden; }
+.card { background:#f7f7f7; border:1px solid #e5e5e5; border-radius:12px; padding:24px; margin:16px 0; }
+.bar-track { background:#e5e5e5; border-radius:4px; height:18px; overflow:hidden; }
 .bar-fill { background:#ff6b2b; height:100%; border-radius:4px; }
 table { width:100%; border-collapse:collapse; }
-th,td { text-align:left; padding:8px 10px; border-bottom:1px solid #222; }
+th,td { text-align:left; padding:8px 10px; border-bottom:1px solid #e5e5e5; }
 th { color:#ff6b2b; font-size:13px; text-transform:uppercase; letter-spacing:0.05em; }
-blockquote { border-left:3px solid #ff6b2b; padding-left:16px; color:#ccc; font-style:italic; margin:12px 0; }
+blockquote { border-left:3px solid #ff6b2b; padding-left:16px; color:#444; font-style:italic; margin:12px 0; }
 /* safety net: this report is assembled from several separately-generated
-   fragments, and a fragment that forgets the dark theme and adds its own
-   text color would otherwise go invisible against the dark cards. */
-p, li, td { color:#e8e8e8 !important; }
+   fragments; forcing dark text here means even a fragment that adds its
+   own stray color still reads fine against the white page. */
+p, li, td { color:#1a1a1a !important; }
 .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
-.badge-high { background:rgba(74,222,128,0.15); color:#4ade80; }
-.badge-med  { background:rgba(251,191,36,0.15); color:#fbbf24; }
-.badge-low  { background:rgba(248,113,113,0.15); color:#f87171; }
+.badge-high { background:rgba(34,153,84,0.12); color:#1a7a42; }
+.badge-med  { background:rgba(217,164,6,0.12); color:#9c6b05; }
+.badge-low  { background:rgba(220,38,38,0.12); color:#b91c1c; }
 
 Include a CSS-only bar chart for the signal scores and a styled table for competitors.
 """
