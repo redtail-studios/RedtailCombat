@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
 import boto3
+from botocore.config import Config
 from botocore.exceptions import ClientError
 
 from config import PLATFORM_IDS, SUPPORTED_YEARS
@@ -24,6 +25,17 @@ _ROOT_PREFIX = os.getenv("LORE_S3_PREFIX", "lore")  # override in test deploymen
 DATA_PREFIX = f"{_ROOT_PREFIX}/data"      # <prefix>/data/<year>/<platform>.json   -> records list
 STATUS_PREFIX = f"{_ROOT_PREFIX}/status"  # <prefix>/status/<year>/<platform>.json -> status marker
 
+# boto3's default urllib3 pool is 10 connections. A single report request can
+# now make up to len(PLATFORM_IDS) * len(ACTIVE_GENRES) sequential S3 reads
+# (18 platforms x 5 genres = 90), and compute_manifest()/get_all_statuses()
+# fan out up to 16 concurrent HEAD/GET calls via ThreadPoolExecutor on top of
+# that — comfortably exceeding a pool of 10, which forced boto3 to keep
+# discarding and reopening connections ("Connection pool is full, discarding
+# connection") and pushed a chunk of every request into raw TCP/TLS handshake
+# time instead of reusing a warm connection. 50 gives real headroom over the
+# largest concurrent burst (16 threads) without being wastefully large.
+_S3_CONFIG = Config(max_pool_connections=50)
+
 _s3 = None
 _sqs = None
 
@@ -31,7 +43,7 @@ _sqs = None
 def _s3_client():
     global _s3
     if _s3 is None:
-        _s3 = boto3.client("s3", region_name=REGION)
+        _s3 = boto3.client("s3", region_name=REGION, config=_S3_CONFIG)
     return _s3
 
 
