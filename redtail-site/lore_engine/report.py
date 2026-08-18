@@ -152,7 +152,7 @@ Data Coverage: <A-F, your judgment of how thin or solid this genre's sample is, 
 Digest: <2-3 sentences on this genre's single biggest opportunity and how under-served it is>
 This feeds a cross-genre ranking table and a data-quality table, so the three data lines above must be real values from the DATA section, and the Digest must be a strong, specific standalone claim.
 
-PART 2 (after the separator): the HTML section for this genre. Follow this structure and markup exactly — this is a visual intelligence report, not a text summary, so signal scores render as bar charts and competitors render as a table, never as prose describing the numbers:
+PART 2 (after the separator): the HTML section for this genre. This fragment gets embedded into a page that is ALREADY dark-themed (background #0a0a0a, cards #141414, body text #e8e8e8, headings/accents #ff6b2b) via a stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag. The only inline styles you should use are the layout ones shown in the bar-chart example below (width/flex/gap/margin). Follow this structure and markup exactly — this is a visual intelligence report, not a text summary, so signal scores render as bar charts and competitors render as a table, never as prose describing the numbers:
 <div class="card">
 <h3>{label}</h3>
 <p>[2-3 sentences: demand signal strength and sentiment split, with real numbers]</p>
@@ -201,6 +201,8 @@ You are a senior market-intelligence analyst synthesizing a multi-genre report c
 ## OUTPUT
 Output exactly two parts, separated by a line containing only: ===MID-END===
 
+These fragments get embedded into a page that is ALREADY dark-themed (background #0a0a0a, cards #141414, body text #e8e8e8, headings/accents #ff6b2b) via a stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag.
+
 PART 1 — the report opening, as HTML:
 <h1>Mobile Gaming Market Gaps Intelligence Report</h1>
 <div class="card"><h2>Executive Summary</h2><p>[2-3 tight paragraphs: the single biggest finding across all genres and the size of the opportunity]</p></div>
@@ -237,6 +239,10 @@ table { width:100%; border-collapse:collapse; }
 th,td { text-align:left; padding:8px 10px; border-bottom:1px solid #222; }
 th { color:#ff6b2b; font-size:13px; text-transform:uppercase; letter-spacing:0.05em; }
 blockquote { border-left:3px solid #ff6b2b; padding-left:16px; color:#ccc; font-style:italic; margin:12px 0; }
+/* safety net: this report is assembled from several separately-generated
+   fragments, and a fragment that forgets the dark theme and adds its own
+   text color would otherwise go invisible against the dark cards. */
+p, li, td { color:#e8e8e8 !important; }
 .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
 .badge-high { background:rgba(74,222,128,0.15); color:#4ade80; }
 .badge-med  { background:rgba(251,191,36,0.15); color:#fbbf24; }
