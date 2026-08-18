@@ -145,19 +145,36 @@ You are a senior market-intelligence analyst writing one genre's section of a la
 ## OUTPUT
 Output exactly two parts, separated by a line containing only: ===DIGEST-END===
 
-PART 1 (before the separator): a plain-text digest, 2-3 sentences, of this genre's single biggest opportunity and how under-served it is — no HTML. This feeds a cross-genre executive summary, so make it a strong, specific standalone claim.
+PART 1 (before the separator): plain text, no HTML, in exactly this format — real numbers pulled from the DATA above, not invented:
+Top Signal: <the highest-scoring demand signal name>, <its score>/10
+Sentiment: <positive>% positive / <negative>% negative
+Data Coverage: <A-F, your judgment of how thin or solid this genre's sample is, one letter only>
+Digest: <2-3 sentences on this genre's single biggest opportunity and how under-served it is>
+This feeds a cross-genre ranking table and a data-quality table, so the three data lines above must be real values from the DATA section, and the Digest must be a strong, specific standalone claim.
 
-PART 2 (after the separator): the HTML section for this genre, in this structure:
+PART 2 (after the separator): the HTML section for this genre. Follow this structure and markup exactly — this is a visual intelligence report, not a text summary, so signal scores render as bar charts and competitors render as a table, never as prose describing the numbers:
 <div class="card">
 <h3>{label}</h3>
 <p>[2-3 sentences: demand signal strength and sentiment split, with real numbers]</p>
+<h4>Demand Signals</h4>
+[one row per signal from the data above, strongest first, using this exact pattern with the REAL score for each — e.g. for a signal scoring 8.5/10:]
+<div style="display:flex;align-items:center;gap:10px;margin:6px 0"><span style="width:160px">Signal Name</span><div class="bar-track" style="flex:1"><div class="bar-fill" style="width:85%"></div></div><span>8.5/10</span></div>
+[repeat for every signal in the data above — do not skip any, do not invent scores]
 <h4>Market Gap</h4>
-<p>[the top 1-2 unmet needs: name each gap, cite the signal score + hit count, include at least one real player quote with its ID in brackets e.g. [Q7], and explain why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. Be honest if the sample is thin or the gap is weak. Do not invent quotes or IDs.]</p>
-<h4>Trends &amp; Competitors</h4>
-<p>[how signals evolved across {bt}{" (and how the " + bt + " signals held up against " + val + " reality)" if has_val else ""}, and where named competitors are failing players in this genre]</p>
+<p>[the top 1-2 unmet needs: name each gap, cite the signal score + hit count, and explain why no current competitor fills it. A real gap = high demand AND low satisfaction with what exists. Be honest if the sample is thin or the gap is weak.]</p>
+[for each gap, one real player quote as a blockquote, e.g.:]
+<blockquote>"the actual quote text" [Q7]</blockquote>
+[Do not invent quotes or IDs — every blockquote must be a real quote from the data above with its real [Qn] id.]
+<h4>Competitors</h4>
+[a table of every named competitor from the data above — do not skip any, do not invent competitors:]
+<table><tr><th>Competitor</th><th>Mentions</th><th>Sentiment</th></tr>
+<tr><td>Name</td><td>N mentions</td><td>X% pos / Y% neg</td></tr>
+[one row per competitor]</table>
+<h4>Trends</h4>
+<p>[how signals evolved across {bt}{" (and how the " + bt + " signals held up against " + val + " reality)" if has_val else ""}]</p>
 </div>
 
-Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding team makes real decisions from this."""
+Be specific. Cite exact numbers. Use real quotes. No platitudes — a founding team makes real decisions from this. Every number in your HTML must come from the DATA section above — never invent a score, a mention count, or a percentage."""
 
 
 def _synthesis_prompt(digests: dict, genres: list, backtest_years: list,
@@ -165,14 +182,18 @@ def _synthesis_prompt(digests: dict, genres: list, backtest_years: list,
     """The cross-genre wrapper sections (exec summary, ranking, recs, data
     quality) need to see all genres at once, but only need each genre's short
     digest to do that — not the raw scraped data — so this call stays small
-    and fast even though it runs after (and depends on) every genre call."""
+    and fast even though it runs after (and depends on) every genre call.
+    Each digest now carries a Top Signal score, sentiment split, and a data
+    coverage letter grade (see _genre_section_prompt's PART 1 format) so this
+    call has real numbers to rank and grade with, not just prose to guess a
+    ranking from."""
     bt = ", ".join(str(y) for y in sorted(backtest_years))
     genre_list = ", ".join(GENRES[g]["label"] for g in genres)
-    digest_text = "\n".join(f"- {GENRES[g]['label']}: {digests[g]}" for g in genres)
+    digest_text = "\n\n".join(f"### {GENRES[g]['label']}\n{digests[g]}" for g in genres)
 
     return f"""You are running in non-interactive report-generation mode. Output ONLY the two parts described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary.
 
-You are a senior market-intelligence analyst synthesizing a multi-genre report covering: {genre_list}. Each genre's detailed section has already been written by a separate analyst; you are writing only the parts that need a view across all of them.
+You are a senior market-intelligence analyst synthesizing a multi-genre report covering: {genre_list}. Each genre's detailed section has already been written by a separate analyst; you are writing only the parts that need a view across all of them. This is a visual intelligence report — the comparison and data-quality sections render as tables, never as prose describing the same numbers.
 
 ## PER-GENRE DIGESTS ({bt})
 {digest_text}
@@ -183,15 +204,23 @@ Output exactly two parts, separated by a line containing only: ===MID-END===
 PART 1 — the report opening, as HTML:
 <h1>Mobile Gaming Market Gaps Intelligence Report</h1>
 <div class="card"><h2>Executive Summary</h2><p>[2-3 tight paragraphs: the single biggest finding across all genres and the size of the opportunity]</p></div>
-<div class="card"><h2>Cross-Genre Comparison</h2><p>[rank the genres by opportunity — demand signal strength vs. how weakly current competitors serve it. Call out which genre has the most under-served demand and which is already crowded/well-served.]</p></div>
+<div class="card"><h2>Cross-Genre Comparison</h2>
+<table><tr><th>Rank</th><th>Genre</th><th>Top Signal</th><th>Score</th><th>Sentiment</th><th>Opportunity</th></tr>
+[one row per genre, ranked 1 = most under-served opportunity first, using each genre's real Top Signal/Score/Sentiment from the digests above. Opportunity column: one short phrase, e.g. "high demand, weak supply" or "crowded, low differentiation".]
+</table>
+<p>[1-2 sentences calling out the single most under-served genre and the most crowded one]</p></div>
 
 PART 2 — the report closing, as HTML:
 <div class="card"><h2>Strategic Recommendations</h2><p>[top 3 product bets across all genres, top 2 things to avoid, and one contrarian insight — 2-3 sentences each, not a full paragraph per item]</p></div>
-<div class="card"><h2>Data Quality</h2><p>[state overall confidence across genres and flag any genre whose sample is notably thin, in 2-3 sentences]</p></div>
+<div class="card"><h2>Data Quality</h2>
+<table><tr><th>Genre</th><th>Coverage</th></tr>
+[one row per genre: <td>Genre name</td><td><span class="badge badge-{{high|med|low}}">A-F grade</span></td> — use each genre's real Data Coverage letter from the digests above; badge-high for A/B, badge-med for C, badge-low for D/F]
+</table>
+<p>[1-2 sentences on overall confidence and any genre whose sample is notably thin]</p></div>
 
 The Data Quality section is required — do not run out of room before writing it.
 
-Be specific. No platitudes — a founding team makes real decisions from this."""
+Be specific. No platitudes — a founding team makes real decisions from this. Every score, percentage, and grade must be one already given in the digests above — never invent one."""
 
 
 DESIGN_SPEC = """
