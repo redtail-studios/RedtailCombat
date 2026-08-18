@@ -186,8 +186,10 @@ PART 1 — the report opening, as HTML:
 <div class="card"><h2>Cross-Genre Comparison</h2><p>[rank the genres by opportunity — demand signal strength vs. how weakly current competitors serve it. Call out which genre has the most under-served demand and which is already crowded/well-served.]</p></div>
 
 PART 2 — the report closing, as HTML:
-<div class="card"><h2>Strategic Recommendations</h2><p>[top 3 product bets across all genres, top 2 things to avoid, and one contrarian insight]</p></div>
+<div class="card"><h2>Strategic Recommendations</h2><p>[top 3 product bets across all genres, top 2 things to avoid, and one contrarian insight — 2-3 sentences each, not a full paragraph per item]</p></div>
 <div class="card"><h2>Data Quality</h2><p>[state overall confidence across genres and flag any genre whose sample is notably thin, in 2-3 sentences]</p></div>
+
+The Data Quality section is required — do not run out of room before writing it.
 
 Be specific. No platitudes — a founding team makes real decisions from this."""
 
@@ -342,7 +344,7 @@ def _run_multi_genre(backtest_years: list, validation_years: list, has_val: bool
     sections_html = "\n".join(s for _, _, s in results if s)
 
     synth_prompt = _synthesis_prompt(digests, genres, backtest_years, validation_years, has_val)
-    synth_raw = llm.generate_html(synth_prompt, max_tokens=2000)
+    synth_raw = llm.generate_html(synth_prompt, max_tokens=3500)
     opening_html, _, closing_html = synth_raw.partition("===MID-END===")
 
     html = f"""<!DOCTYPE html>

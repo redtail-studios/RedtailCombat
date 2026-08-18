@@ -211,13 +211,34 @@ def get_status(year: int, platform: str) -> dict:
 
 def get_all_statuses(year: int) -> dict:
     """{platform_id: status_str} for every known platform, fanned out in
-    parallel (15 small GETs) so a status poll every 1.5s stays fast."""
+    parallel (15 small GETs) so a status poll every 1.5s stays fast.
+
+    For past years (never expiring — see _is_fresh), a platform reported
+    "idle" here just means no scrape *job* was ever run through this app's
+    status-marker system, not that the platform's data is missing — a lot
+    of historical data was backfilled directly into S3 without going
+    through a job. So for past years only, "idle" gets upgraded to "done"
+    when real cached data actually exists, instead of misleadingly showing
+    the Step 1 grid as "needs scraping" for years that are already loaded.
+    The current year is left exactly as before: real job status, since
+    that's what "does this actually need a re-scrape" depends on there."""
     with ThreadPoolExecutor(max_workers=8) as ex:
         pairs = list(ex.map(
             lambda pid: (pid, get_status(year, pid).get("status", "idle")),
             PLATFORM_IDS,
         ))
-    return dict(pairs)
+    statuses = dict(pairs)
+
+    if year != current_year():
+        idle_pids = [pid for pid, s in statuses.items() if s == "idle"]
+        if idle_pids:
+            with ThreadPoolExecutor(max_workers=8) as ex:
+                present = list(ex.map(lambda pid: (pid, is_cached_fresh(year, pid)), idle_pids))
+            for pid, has_data in present:
+                if has_data:
+                    statuses[pid] = "done"
+
+    return statuses
 
 
 # ── Live manifest (replaces lore_data/manifest.json when DEPLOYED) ──────────
