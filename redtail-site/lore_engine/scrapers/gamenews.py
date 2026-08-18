@@ -20,15 +20,20 @@ def _clean(t: str) -> str:
     return re.sub(r"\s+", " ", _TAGS.sub(" ", html.unescape(t or ""))).strip()
 
 
-def _year_of(s: str) -> int | None:
+def _parse_date(s: str):
     if not s:
         return None
-    try:  # Atom ISO
-        if "T" in s and s[:4].isdigit():
-            return int(s[:4])
-        return parsedate_to_datetime(s).year  # RSS RFC822
+    try:
+        if "T" in s and s[:4].isdigit():  # Atom ISO
+            return datetime.fromisoformat(s.replace("Z", "+00:00"))
+        return parsedate_to_datetime(s)  # RSS RFC822
     except Exception:
         return None
+
+
+def _year_of(s: str) -> int | None:
+    dt = _parse_date(s)
+    return dt.year if dt else None
 
 
 def _items(xml_text: str) -> list:
@@ -57,8 +62,12 @@ def _items(xml_text: str) -> list:
     return out
 
 
-def run(year: int | None = None, log=print) -> list:
-    log(f"[gamenews] scraping {len(GAMENEWS_FEEDS)} news feeds (year={year})")
+def run(year: int | None = None, log=print, since=None) -> list:
+    # Feeds themselves have no date-range query — they're always a full pull
+    # of their latest N items — so `since` only trims what gets kept, not the
+    # request itself. That's still worth it: fewer records built + logged,
+    # and worker.py's merge-by-url dedupes the rest regardless.
+    log(f"[gamenews] scraping {len(GAMENEWS_FEEDS)} news feeds (year={year}, since={since})")
     records = []
     for name, url in GAMENEWS_FEEDS:
         try:
@@ -72,8 +81,15 @@ def run(year: int | None = None, log=print) -> list:
             continue
         kept = 0
         for it in items:
-            if year and (_year_of(it["date"]) not in (None, year)):
+            dt = _parse_date(it["date"])
+            if year and (dt.year if dt else None) not in (None, year):
                 continue
+            if since is not None and dt is not None:
+                try:
+                    if dt <= since:
+                        continue
+                except TypeError:
+                    pass  # naive/aware mismatch — keep the item rather than guess
             title = it["title"].strip()
             if len(title) < 5:
                 continue

@@ -62,8 +62,35 @@ PLATFORMS = [
      "desc": "Game video comments (needs free API key)"},
     {"id": "twitch",      "name": "Twitch",       "icon": "🟣", "free": False,
      "desc": "Top games by viewers (needs free app key)"},
+    {"id": "igdb",        "name": "IGDB",         "icon": "🕹️", "free": False,
+     "desc": "Pre-release hype/buzz — upcoming games (needs free Twitch app key)"},
+    {"id": "gdelt",       "name": "GDELT News",   "icon": "🌐", "free": True,
+     "desc": "Global news search, 100+ languages (GDELT DOC 2.0, no key)"},
 ]
 PLATFORM_IDS = [p["id"] for p in PLATFORMS]
+
+# Add a source weight dictionary to adjust which platforms weigh more
+# during report generation. We could have them sum up to 1.0. 
+SOURCE_WEIGHTS = {
+    "reddit"            : 1.0,
+    "steam"             : 1.0,
+    "googleplay"        : 1.0,
+    "appstore"          : 1.0,
+    "hackernews"        : 1.0,
+    "gamenews"          : 1.0,
+    "googletrends"      : 1.0,
+    "wikipedia"         : 1.0,
+    "steamtrending"     : 1.0,
+    "steamcharts"       : 1.0,
+    "github"            : 1.0,
+    "itch"              : 1.0,
+    "appcharts"         : 1.0,
+    "rawg"              : 1.0,
+    "youtube"           : 1.0,
+    "twitch"            : 1.0,
+    "igdb"              : 1.0,
+    "gdelt"             : 1.0
+}
 
 
 def get_year_dir(year: int | None) -> str:
@@ -158,6 +185,7 @@ GENRES = {
         "wiki_article":     "Fighting_game",
         "yt_query":         "mobile fighting game",
         "rawg_genre":       "fighting",
+        "igdb_genre":       4,  # IGDB "Fighting" — verified live via /genres (id 4)
         "apple_chart_genre": "6014",  # no dedicated Fighting genre ID on the App Store — overall Games
         "competitors": {
             "Brawlhalla":     ["brawlhalla"],
@@ -187,6 +215,7 @@ GENRES = {
         "wiki_article":     "Puzzle_video_game",
         "yt_query":         "best mobile puzzle game",
         "rawg_genre":       "puzzle",
+        "igdb_genre":       9,  # IGDB "Puzzle" — verified live via /genres (id 9)
         "apple_chart_genre": "7012",  # Puzzle — verified live against the iTunes charts RSS
         "competitors": {
             "Royal Match":   ["royal match"],
@@ -211,6 +240,11 @@ GENRES = {
         "wiki_article":     "Gacha_game",
         "yt_query":         "gacha game review",
         "rawg_genre":       "role-playing-games-rpg",
+        # IGDB has no dedicated Gacha genre either — verified live via /genres
+        # (23 genres total, none named anything gacha-like); "Role-playing
+        # (RPG)" (id 12) is the same proxy already used for rawg_genre/
+        # apple_chart_genre above.
+        "igdb_genre":       12,
         "apple_chart_genre": "7014",  # Role Playing — closest App Store proxy for gacha
         "competitors": {
             "Genshin Impact":       ["genshin"],
@@ -236,6 +270,11 @@ GENRES = {
         "wiki_article":     "Incremental_game",
         "yt_query":         "best idle mobile game",
         "rawg_genre":       "casual",  # RAWG has no dedicated "idle" genre; casual is the closest bucket
+        # IGDB has no "Casual" or "Idle" bucket at all (verified live via
+        # /genres) — unlike RAWG/Apple, there's no reasonable proxy either,
+        # so this genre is skipped entirely in igdb.py, same pattern as
+        # steam_tag: None above.
+        "igdb_genre":       None,
         "apple_chart_genre": "7015",  # Simulation — closest App Store proxy (no dedicated Idle genre)
         "competitors": {
             "AFK Arena":     ["afk arena"],
@@ -263,6 +302,7 @@ GENRES = {
         "wiki_article":     "Hyper-casual_game",
         "yt_query":         "hyper casual game",
         "rawg_genre":       "casual",
+        "igdb_genre":       None,  # same "no Casual/Idle bucket on IGDB" reasoning as idle above
         "apple_chart_genre": "7003",  # Casual — closest App Store proxy for hybrid/hyper-casual
         "competitors": {
             "Join Clash":     ["join clash"],
@@ -350,6 +390,16 @@ YT_COMMENTS_PER   = 30
 TWITCH_CLIENT_ID     = os.getenv("TWITCH_CLIENT_ID", "")
 TWITCH_CLIENT_SECRET = os.getenv("TWITCH_CLIENT_SECRET", "")
 TWITCH_TOP_GAMES     = 60
+
+# ── IGDB (Twitch-owned game DB; reuses TWITCH_CLIENT_ID/SECRET above — no
+# separate key). Pre-release hype/buzz signal: how much attention upcoming
+# titles are getting right now, per active genre. ────────────────────────────
+IGDB_TOP_N = 50   # top N games by hype, per active genre
+
+# ── GDELT DOC 2.0 (no key) — global news search across 100+ languages,
+# complements the curated English-outlet GAMENEWS_FEEDS above. ───────────────
+GDELT_QUERIES_COMMON = HN_QUERIES_COMMON  # same plain-keyword queries work as-is (verified live)
+GDELT_HITS_PER_Q = 50
 
 # ── Signal taxonomy (keyword → demand signal) ────────────────────────────────
 # Used for cheap pre-aggregation before Claude does the deep analysis.

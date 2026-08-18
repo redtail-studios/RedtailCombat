@@ -29,9 +29,10 @@ def _details(app_id: str) -> dict:
         return {}
 
 
-def _reviews(app_id: str, count: int, year: int | None) -> list:
+def _reviews(app_id: str, count: int, year: int | None, since=None) -> list:
     cursor, out, pages = "*", [], 0
     want = count * 3 if year else count
+    since_ts = since.timestamp() if since else None
     while pages < 10 and len(out) < want:
         try:
             r = requests.get(f"{REVIEWS}/{app_id}", timeout=15, params={
@@ -48,20 +49,26 @@ def _reviews(app_id: str, count: int, year: int | None) -> list:
             pages += 1
             if not cursor:
                 break
-            if year:
-                oldest = min(rv.get("timestamp_created", 9e9) for rv in batch)
-                if datetime.fromtimestamp(oldest, timezone.utc).year < year:
-                    break
+            oldest = min(rv.get("timestamp_created", 9e9) for rv in batch)
+            if year and datetime.fromtimestamp(oldest, timezone.utc).year < year:
+                break
+            # "filter": "recent" means each page is strictly older than the
+            # last, so once a whole page predates `since` there's nothing
+            # newer left to find on later pages either.
+            if since_ts is not None and oldest <= since_ts:
+                break
             time.sleep(0.4)
         except Exception:
             break
     if year:
         out = [rv for rv in out
                if datetime.fromtimestamp(rv.get("timestamp_created", 0), timezone.utc).year == year]
+    if since_ts is not None:
+        out = [rv for rv in out if rv.get("timestamp_created", 0) > since_ts]
     return out[:count]
 
 
-def run(year: int | None = None, log=print) -> list:
+def run(year: int | None = None, log=print, since=None) -> list:
     # Not every genre has a meaningful Steam/PC analog (e.g. gacha,
     # hybrid-casual are mobile-only monetization models) — those set
     # steam_tag=None and are skipped here, same as twitch.py/youtube.py skip
@@ -74,17 +81,19 @@ def run(year: int | None = None, log=print) -> list:
         ids = list(_top_games(cfg["steam_tag"])) + cfg["steam_app_ids"]
         for app_id in dict.fromkeys(ids):
             app_genre.setdefault(app_id, g)
-    log(f"[steam] scraping {len(app_genre)} apps across genres={ACTIVE_GENRES} (year={year})")
+    log(f"[steam] scraping {len(app_genre)} apps across genres={ACTIVE_GENRES} "
+        f"(year={year}, since={since})")
 
     records = []
     for app_id, genre in app_genre.items():
         d = _details(app_id)
         revs = []
-        for rv in _reviews(app_id, STEAM_REVIEWS_PER_APP, year):
+        for rv in _reviews(app_id, STEAM_REVIEWS_PER_APP, year, since=since):
             text = (rv.get("review") or "")[:800]
             if len(text) < 10:
                 continue
-            revs.append({"text": text, "voted_up": rv.get("voted_up", False),
+            revs.append({"id": rv.get("recommendationid"), "text": text,
+                         "voted_up": rv.get("voted_up", False),
                          "timestamp": rv.get("timestamp_created", 0),
                          "sentiment": score(text)})
         records.append({"source": "steam", "app_id": app_id, "genre": genre,
@@ -92,6 +101,11 @@ def run(year: int | None = None, log=print) -> list:
                         "developer": d.get("developer", ""),
                         "owners": d.get("owners", ""),
                         "tags": list(d.get("tags", {}).keys())[:12],
+                        "positive": d.get("positive", 0), "negative": d.get("negative", 0),
+                        "avg_playtime_forever": d.get("average_forever", 0),
+                        "avg_playtime_2weeks": d.get("average_2weeks", 0),
+                        "median_playtime_forever": d.get("median_forever", 0),
+                        "median_playtime_2weeks": d.get("median_2weeks", 0),
                         "reviews": revs})
         time.sleep(1.0)
     return save(records, get_year_dir(year), "steam", log)

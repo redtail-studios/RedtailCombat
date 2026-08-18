@@ -6,7 +6,7 @@ from config import GENRES, ACTIVE_GENRES, GOOGLE_PLAY_N_APPS, GOOGLE_PLAY_REVIEW
 from scrapers import score, save
 
 
-def _scrape_query(query: str, genre_tag: str, year, log) -> list:
+def _scrape_query(query: str, genre_tag: str, year, log, since=None) -> list:
     from google_play_scraper import search, app, reviews, Sort
     try:
         hits = search(query, n_hits=GOOGLE_PLAY_N_APPS, lang="en", country="us")
@@ -25,25 +25,32 @@ def _scrape_query(query: str, genre_tag: str, year, log) -> list:
         except Exception:
             d = h
         try:
+            # Already sorted newest-first, so a `since` cutoff can stop
+            # paginating early instead of always fetching the full count.
             revs_raw, _ = reviews(app_id, lang="en", country="us",
                                   sort=Sort.NEWEST, count=fetch)
         except Exception:
             revs_raw = []
         revs = []
         for r in revs_raw:
+            at = r.get("at")
+            ry = at.year if isinstance(at, datetime) else None
             if year:
-                at = r.get("at")
-                ry = at.year if isinstance(at, datetime) else None
                 if ry is None:
                     continue
                 if ry < year:
                     break
                 if ry != year:
                     continue
+            if since is not None and isinstance(at, datetime):
+                cmp_since = since if at.tzinfo else since.replace(tzinfo=None)
+                if at <= cmp_since:
+                    break  # newest-first — nothing after this is newer either
             text = (r.get("content") or "").strip()[:600]
             if len(text) < 10:
                 continue
-            revs.append({"text": text, "score": r.get("score", 0),
+            revs.append({"review_id": r.get("reviewId"), "text": text,
+                         "score": r.get("score", 0),
                          "date": str(r.get("at", "")), "sentiment": score(text)})
             if len(revs) >= GOOGLE_PLAY_REVIEWS:
                 break
@@ -57,13 +64,13 @@ def _scrape_query(query: str, genre_tag: str, year, log) -> list:
     return records
 
 
-def run(year: int | None = None, log=print) -> list:
-    log(f"[googleplay] searching {len(ACTIVE_GENRES)} genre queries (year={year})")
+def run(year: int | None = None, log=print, since=None) -> list:
+    log(f"[googleplay] searching {len(ACTIVE_GENRES)} genre queries (year={year}, since={since})")
     records = []
     for g in ACTIVE_GENRES:
         query = GENRES[g]["google_play_query"]
         log(f"  [googleplay] genre={g} query='{query}'")
-        records.extend(_scrape_query(query, g, year, log))
+        records.extend(_scrape_query(query, g, year, log, since=since))
     return save(records, get_year_dir(year), "googleplay", log)
 
 

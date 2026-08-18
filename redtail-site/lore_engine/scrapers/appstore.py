@@ -30,6 +30,11 @@ def _reviews(app_id: str, want: int) -> list:
             if len(text) < 10:
                 continue
             out.append({
+                # iTunes RSS carries no review date, so there's no "since" fetch
+                # optimization possible here (see run()) — but the feed entry's
+                # own id still lets accumulation dedupe instead of piling up
+                # literal repeats every time the same "most recent" page is refetched.
+                "id": e.get("id", {}).get("label", ""),
                 "text": text,
                 "title": e.get("title", {}).get("label", ""),
                 "rating": int(e.get("im:rating", {}).get("label", 0) or 0),
@@ -40,11 +45,14 @@ def _reviews(app_id: str, want: int) -> list:
     return out[:want]
 
 
-def run(year: int | None = None, log=print) -> list:
+def run(year: int | None = None, log=print, since=None) -> list:
     apps = [(ap, g) for g in ACTIVE_GENRES for ap in GENRES[g]["app_store_apps"]]
     log(f"[appstore] scraping {len(apps)} apps across genres={ACTIVE_GENRES} (year={year})")
-    # iTunes RSS carries no review date, so year filtering isn't possible here;
-    # reviews are 'most recent'. They land in whichever year dir you run for.
+    # iTunes RSS carries no review date, so year filtering — and the `since`
+    # cursor other incremental platforms use to shrink their fetch — isn't
+    # possible here; reviews are always 'most recent'. `since` is accepted
+    # for interface consistency with worker.py but otherwise unused: the id
+    # captured above is what makes accumulation safe, not a smaller fetch.
     records = []
     for ap, genre in apps:
         revs = _reviews(ap["app_id"], APP_STORE_REVIEWS)
