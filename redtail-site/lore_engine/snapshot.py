@@ -13,6 +13,7 @@ import glob
 import json
 import os
 from datetime import datetime
+from itertools import count
 
 import llm
 from analysis import analyse
@@ -56,17 +57,6 @@ def game_name(path: str) -> str:
     return os.path.splitext(os.path.basename(path))[0]
 
 
-def prep_upload(upload_bytes: bytes, upload_name: str | None) -> tuple[str, str]:
-    """Write an uploaded game file to a temp path; return (path, game_name)."""
-    import tempfile
-    ext = os.path.splitext(upload_name or "game.pdf")[1].lower() or ".pdf"
-    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=ext)
-    tmp.write(upload_bytes)
-    tmp.close()
-    gname = os.path.splitext(os.path.basename(upload_name or "uploaded-game"))[0]
-    return tmp.name, gname
-
-
 # ── Claude: derive modifications + image prompt ──────────────────────────────
 ART_STYLE = (
     "2D hand-drawn rubber-hose cartoon style, thick black ink outlines, flat "
@@ -82,7 +72,7 @@ def _brief_prompt(game_text: str, year: int, analysis: dict, n: int) -> str:
 {game_text[:6000]}
 
 ## MARKET ANALYSIS — {year} (real scraped player data)
-{_year_block(year, analysis)}
+{_year_block(year, analysis, count(1), {})}
 
 ## YOUR TASK
 Pick the {n} strongest, most relevant findings. For each, propose ONE concrete feature/mode/mechanic/cosmetic change that responds to it, respecting the LOCKED constraints (2D rubber-hose art, portrait phone, ~30s duels, two-thumb controls, fixed camera, player-bottom/rival-top, cosmetic-only — no pay-to-win).
@@ -141,6 +131,18 @@ def _render_safe(prompt: str):
         return _render_image(prompt), None
     except Exception as e:
         return None, f"{type(e).__name__}: {e}"
+
+
+def prep_upload(upload_bytes: bytes, upload_name: str | None) -> tuple[str, str]:
+    """Write an uploaded game file to a temp path; return (path, game_name).
+    Used directly by server.py's /api/lore/game-report endpoint."""
+    import tempfile
+    ext = os.path.splitext(upload_name or "game.pdf")[1].lower() or ".pdf"
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=ext)
+    tmp.write(upload_bytes)
+    tmp.close()
+    gname = os.path.splitext(os.path.basename(upload_name or "uploaded-game"))[0]
+    return tmp.name, gname
 
 
 def generate_snapshot(year: int, game_path: str | None = None,

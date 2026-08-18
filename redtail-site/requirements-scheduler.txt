@@ -1,0 +1,6 @@
+# Deps for the EventBridge-triggered scheduler Lambda (lore_engine/scheduler.py)
+# ONLY. It only imports config.py + storage.py — no scrapers, no fastapi/
+# anthropic/openai/pypdf. boto3/botocore excluded on purpose, same reasoning
+# as requirements-worker.txt: every standard Lambda Python runtime already
+# ships them.
+python-dotenv>=1.0.0
