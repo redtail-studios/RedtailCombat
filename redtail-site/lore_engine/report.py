@@ -335,7 +335,7 @@ def validate_citations(html: str, registry: dict) -> dict:
             if not _QUOTE_ID_RE.search(block):
                 uncited_gaps.append(re.sub(r'<[^>]+>', '', heading.group(1)).strip())
 
-    for m in re.finditer(r'<h4[^>]*>\s*Market Gap\s*</h4>(.*?)(?=<h4|</div>|\Z)',
+    for m in re.finditer(r'<h4[^>]*>\s*(?:Market Gap|Exposed Gaps)\s*</h4>(.*?)(?=<h4|</div>|\Z)',
                         html, re.IGNORECASE | re.DOTALL):
         if not _QUOTE_ID_RE.search(m.group(0)):
             preceding_h3s = re.findall(r'<h3[^>]*>(.*?)</h3>', html[:m.start()],
@@ -437,48 +437,155 @@ def generate(backtest_years: list, validation_years: list | None = None,
     return html
 
 
-def build_game_prompt(years: list, analysis_by_year: dict,
-                      game_text: str, game_label: str) -> tuple:
+def _prep_game_year_blocks(years: list, analysis_by_year: dict) -> tuple:
+    """Pre-formats each year's data block once, up front, assigning globally
+    unique quote IDs — same reasoning as _prep_multi_genre_blocks: doing this
+    synchronously before any LLM call means the per-year game calls (see
+    _game_year_prompt) can run concurrently without coordinating over IDs.
+
+    Returns (blocks, registry) where blocks[year] is a formatted str."""
     ids = count(1)
     registry = {}
-    yrs = ", ".join(str(y) for y in sorted(years))
-    data = "".join(_year_block(y, analysis_by_year[str(y)], ids, registry)
-                   for y in sorted(years))
+    blocks = {y: _year_block(y, analysis_by_year[str(y)], ids, registry)
+              for y in sorted(years)}
+    return blocks, registry
 
-    prompt = f"""You are running in non-interactive report-generation mode. Output ONLY a complete, self-contained HTML document (<!DOCTYPE html> ... </html>). No tool calls, no markdown fences, no commentary — just the HTML.
 
-You are a senior market-intelligence analyst. A studio has uploaded their own game's design document and wants to know how it stacks up against real scraped player-market data (Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets, Steam trending, Wikipedia interest) from {yrs}.
+def _game_year_prompt(year: int, block: str, game_text: str, game_label: str) -> str:
+    """One year's slice of the game-fit report, as its own small prompt — this
+    is what used to be folded into one mega-call across every selected year
+    (up to 5), which is exactly the pattern that pushed the market report past
+    Vercel's 300s ceiling before it was split by genre. Splitting the game
+    report by year the same way buys the same speedup."""
+    return f"""You are running in non-interactive report-generation mode. Output ONLY the two parts described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary.
+
+You are a senior market-intelligence analyst comparing a studio's uploaded game design against real scraped player-market data (Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets, Steam trending, Wikipedia interest) for {year} only.
 
 ## THE GAME — "{game_label}"
 {game_text[:6000]}
 
-## MARKET DATA ({yrs})
-{data}
+## MARKET DATA ({year})
+{block}
 
-## REPORT REQUIREMENTS
-Produce a premium HTML intelligence report analysing THIS SPECIFIC GAME against the market data, with these sections:
+## OUTPUT
+Output exactly two parts, separated by a line containing only: ===DIGEST-END===
 
-1. Executive Summary — how well this game's current design lines up with what the market data shows players want, in 2-3 tight paragraphs.
-2. Market Fit — which real market gaps/demand signals this game ALREADY serves well, citing signal scores + hit counts + real player quotes.
-3. Exposed Gaps — which unmet player needs from the data this game currently does NOT address, and how big a miss that is.
-4. Competitive Position — how this game compares to the named competitors given what's failing them with players.
-5. Strategic Recommendations — top 3 concrete changes this specific game should make, grounded in the data, plus one contrarian insight.
-6. Data Quality — rate coverage per platform (A-F) and state overall confidence. Flag where the sample is thin.
+PART 1 (before the separator): plain text, no HTML, in exactly this format — real values pulled from the DATA above, not invented:
+Market Fit: <one sentence — the strongest way this game already matches {year} demand, citing a real signal score + hit count>
+Biggest Gap: <one sentence — the single unmet {year} player need this game does NOT currently address, citing a real signal score + hit count>
+Data Coverage: <A-F, your judgment of how thin or solid this year's sample is, one letter only>
+This feeds a final executive summary and a data-quality table, so all three lines must be real values from the DATA section above.
 
-Be specific. Cite exact numbers and real quotes. No platitudes — this feeds a real product decision for this exact game.
+PART 2 (after the separator): the HTML section for this year. This fragment gets embedded into a page with its own stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag.
+<div class="card">
+<h3>{year}</h3>
+<h4>Market Fit</h4>
+<p>[2-3 sentences: which real demand signals this game already serves well, citing scores + hit counts]</p>
+<h4>Exposed Gaps</h4>
+<p>[the biggest unmet need this game does NOT address, citing the signal score + hit count and why it matters]</p>
+<blockquote>"[a real player quote backing this gap]" [Qn]</blockquote>
+[Do not invent the quote or its ID — it must be a real [Qn] from the data above.]
+<h4>Competitive Position</h4>
+<p>[how this game compares to the named competitors given what's failing them with players in {year}]</p>
+</div>
 
-## DESIGN
+Be specific. Cite exact numbers. Use real quotes. No platitudes — this feeds a real product decision for this exact game. Every number must come from the DATA section above — never invent a score, a mention count, or a percentage."""
+
+
+def _game_synthesis_prompt(digests: dict, years: list, game_text: str, game_label: str) -> str:
+    """The cross-year wrapper sections (exec summary, recommendations, data
+    quality) only need each year's short digest, not the raw scraped data, so
+    this call stays small and fast even though it runs after every per-year
+    call. Keeps a short slice of the game text too, since recommendations
+    need to be grounded in the actual design, not just the digests."""
+    yrs = ", ".join(str(y) for y in sorted(years))
+    digest_text = "\n\n".join(f"### {y}\n{digests[y]}" for y in sorted(years))
+
+    return f"""You are running in non-interactive report-generation mode. Output ONLY the two parts described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary.
+
+You are a senior market-intelligence analyst writing the opening and closing sections of a market-fit report for "{game_label}". Each year's detailed section has already been written by a separate analyst; you are writing only the parts that need a view across all of them.
+
+## THE GAME — "{game_label}"
+{game_text[:3000]}
+
+## PER-YEAR DIGESTS ({yrs})
+{digest_text}
+
+## OUTPUT
+Output exactly two parts, separated by a line containing only: ===MID-END===
+
+These fragments get embedded into a page with its own stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag.
+
+PART 1 — the report opening, as HTML:
+<h1>{game_label} — Market Fit Report</h1>
+<div class="card"><h2>Executive Summary</h2><p>[2-3 tight paragraphs: how well this game's current design lines up with what the market data shows players want across {yrs}, using real numbers from the digests above]</p></div>
+
+PART 2 — the report closing, as HTML:
+<div class="card"><h2>Strategic Recommendations</h2>
+<h3>Recommendation 1</h3><p>[a concrete change grounded in the digests above]</p>
+<h3>Recommendation 2</h3><p>[a concrete change grounded in the digests above]</p>
+<h3>Recommendation 3</h3><p>[a concrete change grounded in the digests above]</p>
+<h3>Contrarian Insight</h3><p>[one counterintuitive take the data supports]</p>
+</div>
+<div class="card"><h2>Data Quality</h2>
+<table><tr><th>Year</th><th>Coverage</th></tr>
+[one row per year: <td>Year</td><td><span class="badge badge-{{high|med|low}}">A-F grade</span></td> — use each year's real Data Coverage letter from the digests above; badge-high for A/B, badge-med for C, badge-low for D/F]
+</table>
+<p>[1-2 sentences on overall confidence and any year whose sample is notably thin]</p></div>
+
+Be specific. No platitudes — this feeds a real product decision for this exact game. Every grade must be one already given in the digests above — never invent one."""
+
+
+def _run_multi_year_game(years: list, analysis_by_year: dict,
+                         game_text: str, game_label: str) -> tuple:
+    """Runs one Claude call per year, concurrently, then a final small
+    synthesis call — the same fix applied to the multi-genre market report,
+    applied here since this path had the same single-mega-call shape (one
+    call across every selected year, max_tokens=32000) that pushed generation
+    time past Vercel's 300s ceiling when a studio picked several years."""
+    blocks, registry = _prep_game_year_blocks(years, analysis_by_year)
+
+    def _run_year(y):
+        prompt = _game_year_prompt(y, blocks[y], game_text, game_label)
+        raw = llm.generate_html(prompt, max_tokens=1800)
+        digest, _, section_html = raw.partition("===DIGEST-END===")
+        return y, digest.strip(), section_html.strip()
+
+    with ThreadPoolExecutor(max_workers=len(years)) as ex:
+        results = list(ex.map(_run_year, sorted(years)))
+
+    digests = {y: d for y, d, _ in results}
+    sections_html = "\n".join(s for _, _, s in results if s)
+
+    synth_prompt = _game_synthesis_prompt(digests, years, game_text, game_label)
+    synth_raw = llm.generate_html(synth_prompt, max_tokens=3000)
+    opening_html, _, closing_html = synth_raw.partition("===MID-END===")
+
+    html = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
 {DESIGN_SPEC}
-"""
-    return prompt, registry
+</style>
+</head>
+<body>
+{opening_html.strip()}
+{sections_html}
+{closing_html.strip()}
+</body>
+</html>"""
+    return html, registry
 
 
 def generate_game_report(years: list, game_text: str, game_label: str = "your game") -> str:
     """Run analysis (aggregated across every active genre) for the needed
-    years, then ask Claude to analyse the uploaded game against it."""
-    analysis_by_year = {str(y): analyse(y) for y in set(years)}
-    prompt, registry = build_game_prompt(years, analysis_by_year, game_text, game_label)
-    html = llm.generate_html(prompt, max_tokens=32000)
+    years, then ask Claude to analyse the uploaded game against it — one
+    smaller call per year, run concurrently, plus a synthesis call, instead
+    of one mega-call across every selected year."""
+    years = sorted(set(years))
+    analysis_by_year = {str(y): analyse(y) for y in years}
+    html, registry = _run_multi_year_game(years, analysis_by_year, game_text, game_label)
 
     result = validate_citations(html, registry)
     if not result["valid"]:
