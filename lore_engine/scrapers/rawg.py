@@ -17,7 +17,11 @@ def _fetch(genre_slug: str | None, y: int, log) -> list:
     if genre_slug:
         params["genres"] = genre_slug
     try:
-        return requests.get(API, params=params, timeout=20).json().get("results", [])
+        resp = requests.get(API, params=params, timeout=20)
+        if not resp.ok:
+            log(f"  [rawg] error (genre={genre_slug}): HTTP {resp.status_code} — {resp.text[:200]!r}")
+            return []
+        return resp.json().get("results", [])
     except Exception as e:
         log(f"  [rawg] error (genre={genre_slug}): {e}")
         return []

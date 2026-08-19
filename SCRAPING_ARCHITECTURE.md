@@ -352,12 +352,25 @@ re-deriving them from scratch:
 | scheduler's inline S3/SQS policy | `redtail-scheduler-bucket` on `redtail-scrape-scheduler-role` — as of the historical-year backfill, this **must** include `s3:GetObject` (not `HeadObject` — that's not a real IAM action) **and** `s3:ListBucket` on the bare bucket ARN (not just `bucket/*`). Originally had only `PutObject`+`SendMessage`, which fails the backfill with `403` on any genuinely-missing platform — see §2. |
 
 **Rebuild and redeploy the worker after a code change:**
+
+The `--platform`/`--python-version` flags below MUST match the Lambda's
+actual configured runtime (`aws lambda get-function-configuration
+--function-name <worker-fn> --query Runtime`) — currently `python3.14`.
+Compiled deps (numpy/pandas, pulled in by pytrends) ship as `.so` files
+tagged to one CPython ABI; a mismatch doesn't error at build time, it fails
+*silently* at import time inside the Lambda (caught by scrapers' own
+broad `except Exception` around their imports) and gets misreported as
+"not installed" — see the 2026-08-19 incident where this exact drift
+(built for 3.11, deployed to a 3.14 runtime) killed the googletrends
+scraper for weeks without ever raising a Lambda error or CloudWatch alarm.
+`manylinux2014` doesn't have cp314 wheels for numpy/pandas yet; use
+`manylinux_2_28_x86_64` instead.
 ```bash
 rm -rf /tmp/lore-worker-build && mkdir -p /tmp/lore-worker-build
 cp lore_engine/{worker,storage,config,manifest}.py /tmp/lore-worker-build/
 cp -r lore_engine/scrapers /tmp/lore-worker-build/
 pip install -r requirements-worker.txt \
-  --platform manylinux2014_x86_64 --implementation cp --python-version 3.11 \
+  --platform manylinux_2_28_x86_64 --implementation cp --python-version 3.14 \
   --only-binary=:all: -t /tmp/lore-worker-build/
 
 rm -f /tmp/lore-worker.zip
@@ -373,7 +386,7 @@ aws lambda wait function-updated --function-name <worker-fn>
 rm -rf /tmp/lore-scheduler-build && mkdir -p /tmp/lore-scheduler-build
 cp lore_engine/{scheduler,storage,config}.py /tmp/lore-scheduler-build/
 pip install -r requirements-scheduler.txt \
-  --platform manylinux2014_x86_64 --implementation cp --python-version 3.11 \
+  --platform manylinux_2_28_x86_64 --implementation cp --python-version 3.14 \
   --only-binary=:all: -t /tmp/lore-scheduler-build/
 
 rm -f /tmp/lore-scheduler.zip
