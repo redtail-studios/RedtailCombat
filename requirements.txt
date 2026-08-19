@@ -8,7 +8,6 @@ awscli>=1.45.47
 boto3>=1.15.0
 python-dotenv>=1.0.0
 requests>=2.31.0
-boto3>=1.15.0
 pypdf>=4.0.0
 google-play-scraper>=1.2.7
 vaderSentiment>=3.3.2

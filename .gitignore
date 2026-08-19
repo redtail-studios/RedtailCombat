@@ -2,9 +2,21 @@
 .env.*
 __pycache__/
 *.pyc
+*.pyo
 lore_snapshots/
 .DS_Store
 .git
 .claude
 tasks.md
 .coverage
+scraper/data/
+scraper/output/
+
+# Unity
+RedtailBattle/Library/
+RedtailBattle/Temp/
+RedtailBattle/obj/
+RedtailBattle/Logs/
+RedtailBattle/UserSettings/
+RedtailBattle/*.sln
+RedtailBattle/*.csproj
