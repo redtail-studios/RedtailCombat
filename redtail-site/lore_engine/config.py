@@ -69,27 +69,38 @@ PLATFORMS = [
 ]
 PLATFORM_IDS = [p["id"] for p in PLATFORMS]
 
-# Add a source weight dictionary to adjust which platforms weigh more
-# during report generation. We could have them sum up to 1.0. 
+# Source weight dictionary, summing to 1.0, tiered by how directly a source
+# reflects actual player voice vs. secondary/aggregate signal:
+#   Tier 1 (0.12-0.13) — direct player reviews/discussion: reddit, steam,
+#     googleplay, appstore. Unprompted text from people who actually played.
+#   Tier 2 (0.06-0.08) — player-adjacent commentary: youtube (real viewers,
+#     noisier than a review), hackernews (real discussion, dev/tech-skewed
+#     audience rather than specifically players).
+#   Tier 3 (0.03-0.04) — journalism: gamenews, gdelt. Real market signal, but
+#     editorial coverage, not player voice.
+#   Tier 4 (0.02-0.03) — aggregate/behavioral metrics with no real opinion
+#     text (search interest, pageviews, charts, hype scores): googletrends,
+#     wikipedia, steamtrending, steamcharts, github, itch, appcharts, rawg,
+#     twitch, igdb.
 SOURCE_WEIGHTS = {
-    "reddit"            : 1.0,
-    "steam"             : 1.0,
-    "googleplay"        : 1.0,
-    "appstore"          : 1.0,
-    "hackernews"        : 1.0,
-    "gamenews"          : 1.0,
-    "googletrends"      : 1.0,
-    "wikipedia"         : 1.0,
-    "steamtrending"     : 1.0,
-    "steamcharts"       : 1.0,
-    "github"            : 1.0,
-    "itch"              : 1.0,
-    "appcharts"         : 1.0,
-    "rawg"              : 1.0,
-    "youtube"           : 1.0,
-    "twitch"            : 1.0,
-    "igdb"              : 1.0,
-    "gdelt"             : 1.0
+    "reddit"            : 0.13,
+    "steam"             : 0.13,
+    "googleplay"        : 0.12,
+    "appstore"          : 0.12,
+    "hackernews"        : 0.06,
+    "gamenews"          : 0.04,
+    "googletrends"      : 0.03,
+    "wikipedia"         : 0.03,
+    "steamtrending"     : 0.03,
+    "steamcharts"       : 0.03,
+    "github"            : 0.03,
+    "itch"              : 0.03,
+    "appcharts"         : 0.03,
+    "rawg"              : 0.03,
+    "youtube"           : 0.08,
+    "twitch"            : 0.03,
+    "igdb"              : 0.02,
+    "gdelt"             : 0.03
 }
 
 

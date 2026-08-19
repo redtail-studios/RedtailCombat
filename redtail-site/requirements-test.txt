@@ -1,0 +1,5 @@
+# Extra deps for the E2E integration test suite only (NOT needed by the
+# deployed app). Install locally with:  pip install -r requirements-test.txt
+-r requirements.txt
+httpx>=0.27.0      # FastAPI TestClient dependency
+moto[s3,sqs]>=5.0.0
