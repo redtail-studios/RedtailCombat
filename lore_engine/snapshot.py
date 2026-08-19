@@ -57,6 +57,18 @@ def game_name(path: str) -> str:
     return os.path.splitext(os.path.basename(path))[0]
 
 
+def prep_upload(upload_bytes: bytes, upload_name: str | None) -> tuple[str, str]:
+    """Write an uploaded game file to a temp path; return (path, game_name).
+    Used directly by server.py's /api/lore/game-report endpoint."""
+    import tempfile
+    ext = os.path.splitext(upload_name or "game.pdf")[1].lower() or ".pdf"
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=ext)
+    tmp.write(upload_bytes)
+    tmp.close()
+    gname = os.path.splitext(os.path.basename(upload_name or "uploaded-game"))[0]
+    return tmp.name, gname
+
+
 # ── Claude: derive modifications + image prompt ──────────────────────────────
 ART_STYLE = (
     "2D hand-drawn rubber-hose cartoon style, thick black ink outlines, flat "
@@ -138,15 +150,9 @@ def generate_snapshot(year: int, game_path: str | None = None,
                       upload_name: str | None = None) -> dict:
     from concurrent.futures import ThreadPoolExecutor
     from config import SNAPSHOT_MAX, SNAPSHOT_WORKERS
-    import tempfile
 
     if upload_bytes is not None:
-        ext = os.path.splitext(upload_name or "game.pdf")[1].lower() or ".pdf"
-        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=ext)
-        tmp.write(upload_bytes)
-        tmp.close()
-        path = tmp.name
-        gname = os.path.splitext(os.path.basename(upload_name or "uploaded-game"))[0]
+        path, gname = prep_upload(upload_bytes, upload_name)
     else:
         path = find_game(game_path)
         gname = game_name(path)

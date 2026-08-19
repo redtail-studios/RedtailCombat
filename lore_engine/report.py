@@ -289,3 +289,55 @@ def generate(backtest_years: list, validation_years: list | None = None,
               f"uncited_gaps={result['uncited_gaps']}")
 
     return html
+
+
+def build_game_prompt(years: list, analysis_by_year: dict,
+                      game_text: str, game_label: str) -> tuple:
+    ids = count(1)
+    registry = {}
+    yrs = ", ".join(str(y) for y in sorted(years))
+    data = "".join(_year_block(y, analysis_by_year[str(y)], ids, registry)
+                   for y in sorted(years))
+
+    prompt = f"""You are running in non-interactive report-generation mode. Output ONLY a complete, self-contained HTML document (<!DOCTYPE html> ... </html>). No tool calls, no markdown fences, no commentary — just the HTML.
+
+You are a senior market-intelligence analyst. A studio has uploaded their own game's design document and wants to know how it stacks up against real scraped player-market data (Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets, Steam trending, Wikipedia interest) from {yrs}.
+
+## THE GAME — "{game_label}"
+{game_text[:6000]}
+
+## MARKET DATA ({yrs})
+{data}
+
+## REPORT REQUIREMENTS
+Produce a premium HTML intelligence report analysing THIS SPECIFIC GAME against the market data, with these sections:
+
+1. Executive Summary — how well this game's current design lines up with what the market data shows players want, in 2-3 tight paragraphs.
+2. Market Fit — which real market gaps/demand signals this game ALREADY serves well, citing signal scores + hit counts + real player quotes.
+3. Exposed Gaps — which unmet player needs from the data this game currently does NOT address, and how big a miss that is.
+4. Competitive Position — how this game compares to the named competitors given what's failing them with players.
+5. Strategic Recommendations — top 3 concrete changes this specific game should make, grounded in the data, plus one contrarian insight.
+6. Data Quality — rate coverage per platform (A-F) and state overall confidence. Flag where the sample is thin.
+
+Be specific. Cite exact numbers and real quotes. No platitudes — this feeds a real product decision for this exact game.
+
+## DESIGN
+{DESIGN_SPEC}
+"""
+    return prompt, registry
+
+
+def generate_game_report(years: list, game_text: str, game_label: str = "your game") -> str:
+    """Run analysis (aggregated across every active genre) for the needed
+    years, then ask Claude to analyse the uploaded game against it."""
+    analysis_by_year = {str(y): analyse(y) for y in set(years)}
+    prompt, registry = build_game_prompt(years, analysis_by_year, game_text, game_label)
+    html = llm.generate_html(prompt, max_tokens=32000)
+
+    result = validate_citations(html, registry)
+    if not result["valid"]:
+        print(f"[report.generate_game_report] citation validation failed — "
+              f"hallucinated_ids={result['hallucinated_ids']} "
+              f"uncited_gaps={result['uncited_gaps']}")
+
+    return html

@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import analysis
 from analysis import dedupe_items, signal_scores, scorecard, competitors, analyse
+from config import SOURCE_WEIGHTS
 
 
 def _item(text, source, compound=0.0):
@@ -58,7 +59,9 @@ def test_dedupe_removes_duplicate_before_signal_scores_and_competitors():
     ]
     deduped = dedupe_items(items)
     sigs = signal_scores(deduped)
-    assert sigs["Competitive / PvP demand"]["hits"] == 1
+    # both items dedupe to the one that appeared first ("reddit") — its
+    # SOURCE_WEIGHTS entry, not a hardcoded 1.0, is what should come through
+    assert sigs["Competitive / PvP demand"]["hits"] == SOURCE_WEIGHTS["reddit"]
 
     comp_items = [
         _item("Brawlhalla just added a new legend, great patch.", "reddit"),
@@ -68,7 +71,7 @@ def test_dedupe_removes_duplicate_before_signal_scores_and_competitors():
     comps = competitors(deduped_comp)
     brawlhalla = next((c for c in comps if c["name"] == "Brawlhalla"), None)
     assert brawlhalla is not None
-    assert brawlhalla["mentions"] == 1
+    assert brawlhalla["mentions"] == SOURCE_WEIGHTS["reddit"]
 
 
 def test_load_items_dedupes_across_platforms(tmp_path, monkeypatch):

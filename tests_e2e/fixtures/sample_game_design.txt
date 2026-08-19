@@ -1,0 +1,7 @@
+Sample Game Design Doc — Rubber Duel
+
+Rubber Duel is a 2D fighting game with rubber-hose art, portrait phone
+framing, and ~30-second duels. Two-thumb controls, fixed camera,
+player-bottom/rival-top layout, cosmetic-only monetization.
+
+Core loop: quick match -> 1v1 duel -> rank up -> unlock cosmetics.
