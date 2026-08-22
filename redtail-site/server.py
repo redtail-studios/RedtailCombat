@@ -51,7 +51,7 @@ LORE_PASSWORD = os.getenv("LORE_PASSWORD", "redtaillore@2026")
 # check is the actual server-side gate every API call goes through.
 GUEST_PASSWORD = os.getenv("LORE_GUEST_PASSWORD", "loreguest@2026")
 GUEST_EXPIRES = datetime.fromisoformat(
-    os.getenv("LORE_GUEST_EXPIRES", "2026-08-07T23:59:59+00:00"))
+    os.getenv("LORE_GUEST_EXPIRES", "2026-08-29T23:59:59+00:00"))
 
 # Vercel sets VERCEL=1 on deployed functions.
 DEPLOYED = config.DEPLOYED
