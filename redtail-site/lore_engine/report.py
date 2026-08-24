@@ -225,9 +225,12 @@ The Data Quality section is required — do not run out of room before writing i
 Be specific. No platitudes — a founding team makes real decisions from this. Every score, percentage, and grade must be one already given in the digests above — never invent one."""
 
 
-DESIGN_SPEC = """
-Use this exact clean, light design system:
-
+# Pure CSS only — this constant gets dropped verbatim into a real <style> tag
+# by _run_multi_genre/_run_multi_year_game, so it must never contain prose
+# (a stray sentence there is invalid CSS and can silently invalidate the
+# whole first rule it gets glued onto — that's how the shared body{} layout
+# rule went missing in production even though it reads fine here as a string).
+DESIGN_CSS = """
 body { background:#ffffff; color:#1a1a1a; font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif; line-height:1.6; max-width:1000px; margin:0 auto; padding:40px 24px; }
 h1 { color:#ff6b2b; font-size:34px; letter-spacing:-0.02em; }
 h2 { color:#1a1a1a; border-bottom:2px solid #ff6b2b; padding-bottom:8px; margin-top:40px; }
@@ -247,7 +250,15 @@ p, li, td { color:#1a1a1a !important; }
 .badge-high { background:rgba(34,153,84,0.12); color:#1a7a42; }
 .badge-med  { background:rgba(217,164,6,0.12); color:#9c6b05; }
 .badge-low  { background:rgba(220,38,38,0.12); color:#b91c1c; }
+"""
 
+# Instructional wrapper for build_prompt()'s single-genre path, where Claude
+# writes its own <style> tag from these instructions rather than us splicing
+# raw CSS into the page — safe to include prose here since none of it is
+# ever output verbatim.
+DESIGN_SPEC = f"""
+Use this exact clean, light design system:
+{DESIGN_CSS}
 Include a CSS-only bar chart for the signal scores and a styled table for competitors.
 """
 
@@ -387,7 +398,7 @@ def _run_multi_genre(backtest_years: list, validation_years: list, has_val: bool
 <head>
 <meta charset="utf-8">
 <style>
-{DESIGN_SPEC}
+{DESIGN_CSS}
 </style>
 </head>
 <body>
@@ -476,20 +487,29 @@ Biggest Gap: <one sentence — the single unmet {year} player need this game doe
 Data Coverage: <A-F, your judgment of how thin or solid this year's sample is, one letter only>
 This feeds a final executive summary and a data-quality table, so all three lines must be real values from the DATA section above.
 
-PART 2 (after the separator): the HTML section for this year. This fragment gets embedded into a page with its own stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag.
+PART 2 (after the separator): the HTML section for this year. This fragment gets embedded into a page with its own stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag. The only inline styles you should use are the layout ones shown in the bar-chart example below (width/flex/gap/margin). This is a visual intelligence report, not a text summary, so signal scores render as bar charts and competitors render as a table, never as prose describing the numbers:
 <div class="card">
 <h3>{year}</h3>
+<h4>Demand Signals</h4>
+[one row per signal from the data above, strongest first, using this exact pattern with the REAL score for each — e.g. for a signal scoring 8.5/10:]
+<div style="display:flex;align-items:center;gap:10px;margin:6px 0"><span style="width:160px">Signal Name</span><div class="bar-track" style="flex:1"><div class="bar-fill" style="width:85%"></div></div><span>8.5/10</span></div>
+[repeat for every signal in the data above — do not skip any, do not invent scores]
 <h4>Market Fit</h4>
-<p>[2-3 sentences: which real demand signals this game already serves well, citing scores + hit counts]</p>
+<p>[2-3 sentences: which of the signals above this game already serves well, citing scores + hit counts]</p>
 <h4>Exposed Gaps</h4>
 <p>[the biggest unmet need this game does NOT address, citing the signal score + hit count and why it matters]</p>
 <blockquote>"[a real player quote backing this gap]" [Qn]</blockquote>
 [Do not invent the quote or its ID — it must be a real [Qn] from the data above.]
+<h4>Competitors</h4>
+[a table of every named competitor from the data above — do not skip any, do not invent competitors:]
+<table><tr><th>Competitor</th><th>Mentions</th><th>Sentiment</th></tr>
+<tr><td>Name</td><td>N mentions</td><td>X% pos / Y% neg</td></tr>
+[one row per competitor]</table>
 <h4>Competitive Position</h4>
-<p>[how this game compares to the named competitors given what's failing them with players in {year}]</p>
+<p>[how this game compares to the competitors above given what's failing them with players in {year}]</p>
 </div>
 
-Be specific. Cite exact numbers. Use real quotes. No platitudes — this feeds a real product decision for this exact game. Every number must come from the DATA section above — never invent a score, a mention count, or a percentage."""
+Be specific. Cite exact numbers. Use real quotes. No platitudes — this feeds a real product decision for this exact game. Every number in your HTML must come from the DATA section above — never invent a score, a mention count, or a percentage."""
 
 
 def _game_synthesis_prompt(digests: dict, years: list, game_text: str, game_label: str) -> str:
@@ -547,7 +567,7 @@ def _run_multi_year_game(years: list, analysis_by_year: dict,
 
     def _run_year(y):
         prompt = _game_year_prompt(y, blocks[y], game_text, game_label)
-        raw = llm.generate_html(prompt, max_tokens=1800)
+        raw = llm.generate_html(prompt, max_tokens=2500)
         digest, _, section_html = raw.partition("===DIGEST-END===")
         return y, digest.strip(), section_html.strip()
 
@@ -566,7 +586,7 @@ def _run_multi_year_game(years: list, analysis_by_year: dict,
 <head>
 <meta charset="utf-8">
 <style>
-{DESIGN_SPEC}
+{DESIGN_CSS}
 </style>
 </head>
 <body>
