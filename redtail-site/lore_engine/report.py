@@ -452,7 +452,8 @@ def _prep_game_year_blocks(years: list, analysis_by_year: dict) -> tuple:
     """Pre-formats each year's data block once, up front, assigning globally
     unique quote IDs — same reasoning as _prep_multi_genre_blocks: doing this
     synchronously before any LLM call means the per-year game calls (see
-    _game_year_prompt) can run concurrently without coordinating over IDs.
+    _game_year_fit_prompt/_game_year_competitive_prompt) can run concurrently
+    without coordinating over IDs.
 
     Returns (blocks, registry) where blocks[year] is a formatted str."""
     ids = count(1)
@@ -462,18 +463,20 @@ def _prep_game_year_blocks(years: list, analysis_by_year: dict) -> tuple:
     return blocks, registry
 
 
-def _game_year_prompt(year: int, block: str, game_text: str, game_label: str) -> str:
-    """One year's slice of the game-fit report, as its own small prompt — this
-    is what used to be folded into one mega-call across every selected year
-    (up to 5), which is exactly the pattern that pushed the market report past
-    Vercel's 300s ceiling before it was split by genre. Splitting the game
-    report by year the same way buys the same speedup."""
+def _game_year_fit_prompt(year: int, block: str, game_text: str, game_label: str) -> str:
+    """Half of one year's slice of the game-fit report — signals + fit + gaps
+    only. Split from competitive analysis (see _game_year_competitive_prompt)
+    into its own call so the two run concurrently instead of one call doing
+    both: wall-clock for the per-year stage is the slowest single call, and
+    trimming prose length alone didn't meaningfully cut that call's duration
+    (the cost is the cross-referencing reasoning, not the word count) — so
+    this halves the reasoning load per call instead."""
     return f"""You are running in non-interactive report-generation mode. Output ONLY the two parts described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary.
 
 You are a senior market-intelligence analyst comparing a studio's uploaded game design against real scraped player-market data (Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets, Steam trending, Wikipedia interest) for {year} only.
 
 ## THE GAME — "{game_label}"
-{game_text[:6000]}
+{game_text[:4000]}
 
 ## MARKET DATA ({year})
 {block}
@@ -484,32 +487,63 @@ Output exactly two parts, separated by a line containing only: ===DIGEST-END===
 PART 1 (before the separator): plain text, no HTML, in exactly this format — real values pulled from the DATA above, not invented:
 Market Fit: <one sentence — the strongest way this game already matches {year} demand, citing a real signal score + hit count>
 Biggest Gap: <one sentence — the single unmet {year} player need this game does NOT currently address, citing a real signal score + hit count>
-Data Coverage: <A-F, your judgment of how thin or solid this year's sample is, one letter only>
-This feeds a final executive summary and a data-quality table, so all three lines must be real values from the DATA section above.
+Sentiment: <positive>% positive / <negative>% negative
+Data Coverage: <A-F, your judgment of how thin or solid this year's sample is, one letter only, plus a 3-6 word reason (e.g. "thin sample outside core platforms")>
+This feeds a final executive summary and a data-quality table, so all four lines must be real values from the DATA section above.
 
-PART 2 (after the separator): the HTML section for this year. This fragment gets embedded into a page with its own stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag. The only inline styles you should use are the layout ones shown in the bar-chart example below (width/flex/gap/margin). This is a visual intelligence report, not a text summary, so signal scores render as bar charts and competitors render as a table, never as prose describing the numbers:
+PART 2 (after the separator): the HTML section for this year. This fragment gets embedded into a page with its own stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag. The only inline styles you should use are the layout ones shown in the bar-chart example below (width/flex/gap/margin). This is a visual intelligence report, not a text summary — go deep, the way a paid analyst deliverable would: cite every relevant number and don't settle for one sentence where the data supports three.
 <div class="card">
-<h3>{year}</h3>
+<h3>{year} — Market Fit &amp; Gaps</h3>
 <h4>Demand Signals</h4>
 [one row per signal from the data above, strongest first, using this exact pattern with the REAL score for each — e.g. for a signal scoring 8.5/10:]
 <div style="display:flex;align-items:center;gap:10px;margin:6px 0"><span style="width:160px">Signal Name</span><div class="bar-track" style="flex:1"><div class="bar-fill" style="width:85%"></div></div><span>8.5/10</span></div>
 [repeat for every signal in the data above — do not skip any, do not invent scores]
+
 <h4>Market Fit</h4>
-<p>[2-3 sentences: which of the signals above this game already serves well, citing scores + hit counts]</p>
+<p>[2-4 sentences: name every signal above this game already serves well, not just the strongest one — cite each one's real score + hit count and explain concretely which part of the game's design (from THE GAME section above) earns that fit]</p>
+
 <h4>Exposed Gaps</h4>
-<p>[the biggest unmet need this game does NOT address, citing the signal score + hit count and why it matters]</p>
-<blockquote>"[a real player quote backing this gap]" [Qn]</blockquote>
+[a ranked table of every signal this game does NOT currently serve well, worst first — do not skip any real gap, do not invent one:]
+<table><tr><th>Gap</th><th>Signal Score</th><th>Hits</th><th>Severity</th></tr>
+<tr><td>Gap name</td><td>X/10</td><td>N hits</td><td><span class="badge badge-low">CRITICAL</span></td></tr>
+[one row per real gap — badge-low for CRITICAL (top-ranked unaddressed signal), badge-med for SIGNIFICANT, badge-high for MINOR]
+</table>
+<p>[for the single most critical gap in the table above: 2-3 sentences on why it matters and how the game's existing mechanics (from THE GAME section) could plausibly be extended to address it — be concrete, not generic]</p>
+<blockquote>"[a real player quote backing the top gap]" [Qn]</blockquote>
 [Do not invent the quote or its ID — it must be a real [Qn] from the data above.]
-<h4>Competitors</h4>
-[a table of every named competitor from the data above — do not skip any, do not invent competitors:]
-<table><tr><th>Competitor</th><th>Mentions</th><th>Sentiment</th></tr>
-<tr><td>Name</td><td>N mentions</td><td>X% pos / Y% neg</td></tr>
-[one row per competitor]</table>
-<h4>Competitive Position</h4>
-<p>[how this game compares to the competitors above given what's failing them with players in {year}]</p>
 </div>
 
 Be specific. Cite exact numbers. Use real quotes. No platitudes — this feeds a real product decision for this exact game. Every number in your HTML must come from the DATA section above — never invent a score, a mention count, or a percentage."""
+
+
+def _game_year_competitive_prompt(year: int, block: str, game_text: str, game_label: str) -> str:
+    """The other half of one year's slice — competitive analysis only, no
+    digest needed since the synthesis call doesn't reference it. Runs
+    concurrently with _game_year_fit_prompt for the same year."""
+    return f"""You are running in non-interactive report-generation mode. Output ONLY the HTML fragment described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary, no digest text.
+
+You are a senior market-intelligence analyst comparing a studio's uploaded game design against real scraped player-market data (Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets, Steam trending, Wikipedia interest) for {year} only.
+
+## THE GAME — "{game_label}"
+{game_text[:4000]}
+
+## MARKET DATA ({year})
+{block}
+
+## OUTPUT
+This fragment gets embedded into a page with its own stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag.
+<div class="card">
+<h3>{year} — Competitive Landscape</h3>
+<h4>Competitors</h4>
+[a table of the top 4 named competitors by mention count from the data above — do not invent competitors:]
+<table><tr><th>Competitor</th><th>Mentions</th><th>Sentiment</th><th>Contrast</th></tr>
+<tr><td>Name</td><td>N mentions</td><td>X% pos / Y% neg</td><td>[one short phrase: what's failing this competitor with players, and whether this game's design avoids or shares that failure]</td></tr>
+[one row per competitor, top 4 only]</table>
+<h4>Competitive Position</h4>
+<p>[2-3 sentences: synthesize the table above into the single most useful competitive insight for {year} — e.g. a shared failure mode across several competitors this game structurally avoids, or a sentiment number that cuts against the obvious read]</p>
+</div>
+
+Be specific. Cite exact numbers. No platitudes — this feeds a real product decision for this exact game. Every number in your HTML must come from the DATA section above — never invent a mention count or a percentage."""
 
 
 def _game_synthesis_prompt(digests: dict, years: list, game_text: str, game_label: str) -> str:
@@ -526,7 +560,7 @@ def _game_synthesis_prompt(digests: dict, years: list, game_text: str, game_labe
 You are a senior market-intelligence analyst writing the opening and closing sections of a market-fit report for "{game_label}". Each year's detailed section has already been written by a separate analyst; you are writing only the parts that need a view across all of them.
 
 ## THE GAME — "{game_label}"
-{game_text[:3000]}
+{game_text[:2000]}
 
 ## PER-YEAR DIGESTS ({yrs})
 {digest_text}
@@ -538,47 +572,65 @@ These fragments get embedded into a page with its own stylesheet you do not see 
 
 PART 1 — the report opening, as HTML:
 <h1>{game_label} — Market Fit Report</h1>
-<div class="card"><h2>Executive Summary</h2><p>[2-3 tight paragraphs: how well this game's current design lines up with what the market data shows players want across {yrs}, using real numbers from the digests above]</p></div>
+<div class="card"><h2>Executive Summary</h2><p>[3-4 tight paragraphs, in this order: (1) the game's strongest genuine market fit, naming the specific design elements that earn it, with real numbers; (2) the single most damaging exposed gap across {yrs}, with real numbers and why it's structurally hard to ignore; (3) how the game's competitive position nets out against the named competitors; (4) a closing read on overall opportunity size and the biggest risk to it. Use real numbers from the digests above throughout — this should read like a paid analyst deliverable, not a summary.]</p></div>
 
 PART 2 — the report closing, as HTML:
 <div class="card"><h2>Strategic Recommendations</h2>
-<h3>Recommendation 1</h3><p>[a concrete change grounded in the digests above]</p>
-<h3>Recommendation 2</h3><p>[a concrete change grounded in the digests above]</p>
-<h3>Recommendation 3</h3><p>[a concrete change grounded in the digests above]</p>
-<h3>Contrarian Insight</h3><p>[one counterintuitive take the data supports]</p>
+<h3>Recommendation 1</h3><p>[a concrete change grounded in the digests above, with an implementation note on how it fits the game's existing mechanics]</p>
+<h3>Recommendation 2</h3><p>[a concrete change grounded in the digests above, with an implementation note on how it fits the game's existing mechanics]</p>
+<h3>Recommendation 3</h3><p>[a concrete change grounded in the digests above, with an implementation note on how it fits the game's existing mechanics]</p>
+<h3>Contrarian Insight</h3><p>[one counterintuitive take the data supports — a reason NOT to chase the top-scoring signal, or a reframe of a perceived weakness as a positioning asset]</p>
 </div>
 <div class="card"><h2>Data Quality</h2>
-<table><tr><th>Year</th><th>Coverage</th></tr>
-[one row per year: <td>Year</td><td><span class="badge badge-{{high|med|low}}">A-F grade</span></td> — use each year's real Data Coverage letter from the digests above; badge-high for A/B, badge-med for C, badge-low for D/F]
+<table><tr><th>Year</th><th>Coverage</th><th>Notes</th></tr>
+[one row per year: <td>Year</td><td><span class="badge badge-{{high|med|low}}">A-F grade</span></td><td>the real reason string from that year's Data Coverage line in the digests above</td> — badge-high for A/B, badge-med for C, badge-low for D/F]
 </table>
-<p>[1-2 sentences on overall confidence and any year whose sample is notably thin]</p></div>
+<p>[2-3 sentences on overall confidence across {yrs}, which year's sample is thinnest, and what that means for how much weight to put on the findings above]</p></div>
 
-Be specific. No platitudes — this feeds a real product decision for this exact game. Every grade must be one already given in the digests above — never invent one."""
+Be specific. No platitudes — this feeds a real product decision for this exact game. Every grade and reason must be one already given in the digests above — never invent one."""
 
 
 def _run_multi_year_game(years: list, analysis_by_year: dict,
                          game_text: str, game_label: str) -> tuple:
-    """Runs one Claude call per year, concurrently, then a final small
-    synthesis call — the same fix applied to the multi-genre market report,
-    applied here since this path had the same single-mega-call shape (one
-    call across every selected year, max_tokens=32000) that pushed generation
-    time past Vercel's 300s ceiling when a studio picked several years."""
+    """Runs two Claude calls per year (fit+gaps, competitive), concurrently
+    across every year, then a final small synthesis call — the same fix
+    applied to the multi-genre market report, applied here since this path
+    had the same single-mega-call shape (one call across every selected year,
+    max_tokens=32000) that pushed generation time past Vercel's 300s ceiling
+    when a studio picked several years. Splitting further into two calls per
+    year (rather than one) exists because trimming prose length alone didn't
+    meaningfully cut a single combined call's duration — the cost is the
+    cross-referencing reasoning (matching game mechanics to gap data,
+    assessing competitor contrast), not the token count, so halving the
+    reasoning load per call is what actually buys wall-clock headroom."""
+    years = sorted(years)
     blocks, registry = _prep_game_year_blocks(years, analysis_by_year)
 
-    def _run_year(y):
-        prompt = _game_year_prompt(y, blocks[y], game_text, game_label)
-        raw = llm.generate_html(prompt, max_tokens=2500)
+    def _run_fit(y):
+        prompt = _game_year_fit_prompt(y, blocks[y], game_text, game_label)
+        raw = llm.generate_html(prompt, max_tokens=2000)
         digest, _, section_html = raw.partition("===DIGEST-END===")
-        return y, digest.strip(), section_html.strip()
+        return digest.strip(), section_html.strip()
 
-    with ThreadPoolExecutor(max_workers=len(years)) as ex:
-        results = list(ex.map(_run_year, sorted(years)))
+    def _run_competitive(y):
+        prompt = _game_year_competitive_prompt(y, blocks[y], game_text, game_label)
+        return llm.generate_html(prompt, max_tokens=1600).strip()
 
-    digests = {y: d for y, d, _ in results}
-    sections_html = "\n".join(s for _, _, s in results if s)
+    with ThreadPoolExecutor(max_workers=len(years) * 2) as ex:
+        fit_futures = {y: ex.submit(_run_fit, y) for y in years}
+        comp_futures = {y: ex.submit(_run_competitive, y) for y in years}
+        digests = {}
+        cards_by_year = {}
+        for y in years:
+            digest, fit_html = fit_futures[y].result()
+            comp_html = comp_futures[y].result()
+            digests[y] = digest
+            cards_by_year[y] = f"{fit_html}\n{comp_html}"
+
+    sections_html = "\n".join(cards_by_year[y] for y in years if cards_by_year[y])
 
     synth_prompt = _game_synthesis_prompt(digests, years, game_text, game_label)
-    synth_raw = llm.generate_html(synth_prompt, max_tokens=3000)
+    synth_raw = llm.generate_html(synth_prompt, max_tokens=3200)
     opening_html, _, closing_html = synth_raw.partition("===MID-END===")
 
     html = f"""<!DOCTYPE html>
