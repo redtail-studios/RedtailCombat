@@ -574,6 +574,66 @@
             margin-bottom: 18px
         }
 
+        .glossary-list {
+            display: flex;
+            flex-direction: column;
+            border-top: 2px solid var(--ink)
+        }
+
+        .gterm {
+            border-bottom: 2px solid var(--ink)
+        }
+
+        .gterm summary {
+            cursor: pointer;
+            list-style: none;
+            padding: 15px 2px;
+            font-family: "Space Grotesk", sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--ink)
+        }
+
+        .gterm summary::-webkit-details-marker {
+            display: none
+        }
+
+        .gterm summary::after {
+            content: "+";
+            font-size: 22px;
+            line-height: 1;
+            color: var(--coral-5);
+            font-weight: 700;
+            flex-shrink: 0
+        }
+
+        .gterm[open] summary::after {
+            content: "\2212"
+        }
+
+        .gterm summary:hover {
+            color: var(--coral-5)
+        }
+
+        .gterm p {
+            padding: 0 2px 16px;
+            color: var(--ink-soft);
+            font-size: 15px;
+            line-height: 1.5
+        }
+
+        .gterm code {
+            background: var(--coral-1);
+            border: 1px solid var(--ink);
+            padding: 1px 6px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 13px
+        }
+
         .row {
             display: flex;
             align-items: center;
@@ -1052,6 +1112,69 @@
                     <button class="btn small" onclick="downloadReport(LAST_GAME_REPORT_HTML, 'lore-game-report-' + slug(LAST_GAME_NAME) + '.html')">⬇ Download report</button>
                     <button class="btn small" onclick="goRedesignFromGame()">Continue to redesign ▸</button>
                 </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-label">Glossary — Report terms explained</div>
+            <h3>What do these terms mean?</h3>
+            <div class="desc">Click a term to expand its explanation.</div>
+            <div class="glossary-list">
+                <details class="gterm">
+                    <summary>Hits</summary>
+                    <p>The number of scraped player-content items (Reddit posts, Steam/Google Play reviews,
+                        Hacker News comments, gaming-news text) that matched at least one keyword for that
+                        demand signal, for that year. E.g. a review saying "would love to play this with
+                        friends" counts as one hit for Co-op / Social Play.</p>
+                </details>
+                <details class="gterm">
+                    <summary>Signal score (X/10)</summary>
+                    <p>Not the raw hit count — it's that signal's hits as a share of all scraped items that
+                        year, scaled relative to whichever signal had the most hits. The strongest signal that
+                        year caps out around 9.5/10; others scale down proportionally.</p>
+                </details>
+                <details class="gterm">
+                    <summary>Sentiment (% positive / % negative)</summary>
+                    <p>The share of scraped text with clearly positive or negative tone, based on automated
+                        sentiment scoring of each review, comment, or post. The remainder is neutral.</p>
+                </details>
+                <details class="gterm">
+                    <summary>Fit badges — Strong Fit / Partial Fit / Miss / Avoided</summary>
+                    <p>How well a game's current design serves a given demand signal. <b>Strong Fit</b> — the
+                        design clearly serves it. <b>Partial Fit</b> — served incompletely. <b>Miss</b> — not
+                        addressed at all. <b>Avoided</b> — a negative signal (like ad fatigue) the design
+                        correctly sidesteps.</p>
+                </details>
+                <details class="gterm">
+                    <summary>Gap severity — Critical / Significant / Minor</summary>
+                    <p>How urgent an exposed gap is. <b>Critical</b> — the top-ranked demand signal the game
+                        doesn't address. <b>Significant</b> — a real but lower-ranked gap. <b>Minor</b> — a
+                        smaller, lower-priority gap.</p>
+                </details>
+                <details class="gterm">
+                    <summary>Quote citations — <code>[Q7]</code></summary>
+                    <p>A bracketed ID next to a quoted line means that quote is real, pulled directly from the
+                        scraped data — not written or paraphrased by Claude. Every claim in a report should be
+                        traceable back to a real <code>[Qn]</code> quote or a real number.</p>
+                </details>
+                <details class="gterm">
+                    <summary>Mentions</summary>
+                    <p>How many scraped items referenced a named competitor by name (e.g. "Genshin Impact",
+                        "Candy Crush"). Sentiment for a competitor is the positive/negative split within just
+                        those mentions.</p>
+                </details>
+                <details class="gterm">
+                    <summary>Data Coverage grade (A–F)</summary>
+                    <p>Claude's judgment of how thin or solid the scraped sample is for that year — an A
+                        means a large, well-rounded sample across sources; a D or F means the sample is
+                        thin and findings should be treated as more directional than precise.</p>
+                </details>
+                <details class="gterm">
+                    <summary>Backtest / Validation years</summary>
+                    <p>When both are selected, the backtest years are analysed as if predicting the future
+                        at that time, then the validation years (what actually happened) are used to score
+                        how accurate those predictions turned out to be.</p>
+                </details>
             </div>
         </div>
     </main>
