@@ -494,13 +494,11 @@ This feeds a final executive summary and a data-quality table, so all four lines
 PART 2 (after the separator): the HTML section for this year. This fragment gets embedded into a page with its own stylesheet you do not see — do not add any color, background, or background-color styles anywhere, inline or otherwise, and do not add your own <style> tag. The only inline styles you should use are the layout ones shown in the bar-chart example below (width/flex/gap/margin). This is a visual intelligence report, not a text summary — go deep, the way a paid analyst deliverable would: cite every relevant number and don't settle for one sentence where the data supports three.
 <div class="card">
 <h3>{year} — Market Fit &amp; Gaps</h3>
-<h4>Demand Signals</h4>
-[one row per signal from the data above, strongest first, using this exact pattern with the REAL score for each — e.g. for a signal scoring 8.5/10:]
-<div style="display:flex;align-items:center;gap:10px;margin:6px 0"><span style="width:160px">Signal Name</span><div class="bar-track" style="flex:1"><div class="bar-fill" style="width:85%"></div></div><span>8.5/10</span></div>
-[repeat for every signal in the data above — do not skip any, do not invent scores]
-
 <h4>Market Fit</h4>
-<p>[2-4 sentences: name every signal above this game already serves well, not just the strongest one — cite each one's real score + hit count and explain concretely which part of the game's design (from THE GAME section above) earns that fit]</p>
+[one row per signal from the data above, strongest first — the chart IS the market-fit analysis, not a reference for prose below it. Each row must carry a fit-quality badge classifying how well the game's design (from THE GAME section above) serves that signal. Use this exact pattern — e.g. for a signal scoring 8.5/10 that the game serves well:]
+<div style="display:flex;align-items:center;gap:10px;margin:6px 0"><span style="width:230px">Signal Name <span class="badge badge-high">STRONG FIT</span></span><div class="bar-track" style="flex:1"><div class="bar-fill" style="width:85%"></div></div><span>8.5/10</span></div>
+[repeat for every signal in the data above — do not skip any, do not invent scores. Badge per row: badge-high "STRONG FIT" (design clearly serves this) or "AVOIDED" (a negative signal, like ad-fatigue, that the design correctly sidesteps); badge-med "PARTIAL FIT" (served incompletely); badge-low "MISS" (not addressed at all).]
+<p>[2-3 sentences: the single clearest takeaway from the chart above — which STRONG FIT row matters most and why, citing its real score + hit count and the specific part of the game's design that earns it]</p>
 
 <h4>Exposed Gaps</h4>
 [a ranked table of every signal this game does NOT currently serve well, worst first — do not skip any real gap, do not invent one:]
