@@ -309,6 +309,36 @@ def scrape_status_snapshot(year: int) -> dict:
     return out
 
 
+# ── Waitlist signups (public, unauthenticated — see server.py /api/lore/waitlist) ──
+WAITLIST_KEY = f"{_ROOT_PREFIX}/waitlist.json"
+
+
+def add_waitlist_entry(first_name: str, last_name: str, email: str) -> None:
+    """Append-only signup log for people without Lore credentials. Low
+    volume (a signup form), so a plain read-modify-write is fine — no
+    locking, no dedup beyond what's visible when the file is reviewed."""
+    entry = {
+        "first_name": first_name.strip(),
+        "last_name": last_name.strip(),
+        "email": email.strip().lower(),
+        "submitted_at": datetime.now(timezone.utc).isoformat(),
+    }
+    try:
+        resp = _s3_client().get_object(Bucket=BUCKET, Key=WAITLIST_KEY)
+        entries = json.loads(resp["Body"].read())
+    except ClientError as e:
+        if _not_found(e):
+            entries = []
+        else:
+            raise
+    entries.append(entry)
+    _s3_client().put_object(
+        Bucket=BUCKET, Key=WAITLIST_KEY,
+        Body=json.dumps(entries, ensure_ascii=False, indent=2).encode("utf-8"),
+        ContentType="application/json",
+    )
+
+
 # ── SQS enqueue (producer side; the worker is invoked by the SQS trigger
 #    itself, so there is no matching dequeue function here) ─────────────────
 def enqueue_scrape(year: int, platform: str) -> None:

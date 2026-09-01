@@ -9,6 +9,7 @@ Serves the static site (locally) + the Lore API:
   POST /api/lore/report        — LIVE Claude intelligence report (password-gated)
   POST /api/lore/game-report   — LIVE report analysing an UPLOADED game vs. market data (password-gated)
   POST /api/lore/snapshot      — redesign from an UPLOADED game PDF (password-gated)
+  POST /api/lore/waitlist      — collect name+email from non-members (public, no password)
 
 On Vercel only /api/* hits this function (see vercel.json); the HTML/images are
 served statically. Locally, this also serves the static files.
@@ -24,6 +25,7 @@ on the current calendar year only.
 import importlib
 import json
 import os
+import re
 import sys
 import threading
 from pathlib import Path
@@ -81,6 +83,15 @@ class ReportReq(BaseModel):
 class ScrapeReq(BaseModel):
     year: int
     password: str = ""
+
+
+class WaitlistReq(BaseModel):
+    first_name: str
+    last_name: str
+    email: str
+
+
+_EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 @app.get("/api/lore/env")
@@ -227,6 +238,32 @@ async def make_game_report(file: UploadFile = File(...), years: str = Form(...),
         path, gname = snapshot.prep_upload(data, file.filename)
         game_text = snapshot.load_game_text(path)
         return {"html": report.generate_game_report(yrs, game_text, gname), "game": gname}
+    except Exception as e:
+        return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
+
+
+@app.post("/api/lore/waitlist")
+def join_waitlist(req: WaitlistReq):
+    first = req.first_name.strip()
+    last = req.last_name.strip()
+    email = req.email.strip()
+    if not first or not last:
+        return JSONResponse({"error": "First and last name are required"}, status_code=400)
+    if not _EMAIL_RE.match(email):
+        return JSONResponse({"error": "Enter a valid email address"}, status_code=400)
+    try:
+        if DEPLOYED:
+            storage.add_waitlist_entry(first, last, email)
+        else:
+            path = os.path.join(config.DATA_DIR, "waitlist.json")
+            entries = json.load(open(path)) if os.path.exists(path) else []
+            entries.append({
+                "first_name": first, "last_name": last, "email": email.lower(),
+                "submitted_at": datetime.now(timezone.utc).isoformat(),
+            })
+            os.makedirs(config.DATA_DIR, exist_ok=True)
+            json.dump(entries, open(path, "w"), ensure_ascii=False, indent=2)
+        return {"status": "ok"}
     except Exception as e:
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
 
