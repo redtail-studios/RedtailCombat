@@ -533,6 +533,35 @@
             margin: 2px 0 12px
         }
 
+        .success {
+            color: var(--green);
+            font-family: "JetBrains Mono", monospace;
+            font-size: 13px;
+            margin: 2px 0 12px;
+            display: none
+        }
+
+        .success.show { display: block }
+
+        .waitlist-toggle {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 12px;
+            color: var(--ink-soft);
+            margin-top: 16px;
+            text-align: center
+        }
+
+        .waitlist-toggle a {
+            color: var(--coral-5);
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1px solid var(--coral-2)
+        }
+
+        .waitlist-toggle a:hover {
+            border-bottom-color: var(--coral-5)
+        }
+
         /* ===== APP (console + redesign) ===== */
         .section-label {
             font-family: "JetBrains Mono", monospace;
@@ -1006,15 +1035,29 @@
 
     <!-- ============ SIGN-IN ============ -->
     <div class="overlay" id="signin" onclick="if(event.target===this)closeSignin()">
-        <form class="panel" onsubmit="return doLogin(event)">
+        <form class="panel hidden" id="signinPanel" onsubmit="return doLogin(event)">
             <button type="button" class="close" onclick="closeSignin()" aria-label="Close">&times;</button>
             <div class="tag">Restricted</div>
             <h2>Sign in to Lore</h2>
-            <div class="field"><label>Username</label><input id="user" autocomplete="username" autofocus></div>
+            <div class="field"><label>Username</label><input id="user" autocomplete="username"></div>
             <div class="field"><label>Password</label><input id="pass" type="password" autocomplete="current-password">
             </div>
             <div class="err" id="loginErr"></div>
             <button class="btn small" type="submit">Enter ▸</button>
+            <div class="waitlist-toggle">Not a member? <a href="#" onclick="showWaitlist(event)">Join our waitlist</a></div>
+        </form>
+
+        <form class="panel" id="waitlistPanel" onsubmit="return submitWaitlist(event)">
+            <button type="button" class="close" onclick="closeSignin()" aria-label="Close">&times;</button>
+            <div class="tag">Waitlist</div>
+            <h2>Join the Lore waitlist</h2>
+            <div class="field"><label>First name</label><input id="wlFirst" autocomplete="given-name" autofocus></div>
+            <div class="field"><label>Last name</label><input id="wlLast" autocomplete="family-name"></div>
+            <div class="field"><label>Email</label><input id="wlEmail" type="email" autocomplete="email"></div>
+            <div class="err" id="waitlistErr"></div>
+            <div class="success" id="waitlistOk"></div>
+            <button class="btn small" type="submit" id="waitlistBtn">Join waitlist ▸</button>
+            <div class="waitlist-toggle">Already a member? <a href="#" onclick="showSignin(event)">Sign in here</a></div>
         </form>
     </div>
 
@@ -1243,9 +1286,55 @@
             downloadReport(html, `lore-redesign-${slug(d.headline || RDYEAR)}.html`);
         }
         function showView(v) { ["intro", "console", "redesign"].forEach(id => document.getElementById(id).classList.toggle("hidden", id !== v)); window.scrollTo(0, 0); }
-        function openSignin() { document.getElementById("signin").classList.add("open"); document.getElementById("loginErr").textContent = ""; document.getElementById("user").focus(); }
+        function openSignin() { document.getElementById("signin").classList.add("open"); document.getElementById("loginErr").textContent = ""; showWaitlist(); }
         function closeSignin() { document.getElementById("signin").classList.remove("open"); }
         document.addEventListener("keydown", e => { if (e.key === "Escape") closeSignin(); });
+
+        function showWaitlist(e) {
+            if (e) e.preventDefault();
+            document.getElementById("signinPanel").classList.add("hidden");
+            document.getElementById("waitlistPanel").classList.remove("hidden");
+            document.getElementById("waitlistErr").textContent = "";
+            document.getElementById("waitlistOk").classList.remove("show");
+            document.getElementById("wlFirst").focus();
+        }
+        function showSignin(e) {
+            if (e) e.preventDefault();
+            document.getElementById("waitlistPanel").classList.add("hidden");
+            document.getElementById("signinPanel").classList.remove("hidden");
+            document.getElementById("user").focus();
+        }
+        async function submitWaitlist(e) {
+            e.preventDefault();
+            const first = document.getElementById("wlFirst").value.trim();
+            const last = document.getElementById("wlLast").value.trim();
+            const email = document.getElementById("wlEmail").value.trim();
+            const errEl = document.getElementById("waitlistErr");
+            const okEl = document.getElementById("waitlistOk");
+            const btn = document.getElementById("waitlistBtn");
+            errEl.textContent = ""; okEl.classList.remove("show");
+            if (!first || !last) { errEl.textContent = "First and last name are required."; return false; }
+            if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { errEl.textContent = "Enter a valid email address."; return false; }
+            btn.disabled = true; btn.textContent = "Joining…";
+            try {
+                const r = await fetch("/api/lore/waitlist", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ first_name: first, last_name: last, email })
+                });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.error || "Something went wrong");
+                okEl.textContent = "You're on the list — we'll be in touch.";
+                okEl.classList.add("show");
+                document.getElementById("wlFirst").value = "";
+                document.getElementById("wlLast").value = "";
+                document.getElementById("wlEmail").value = "";
+            } catch (err) {
+                errEl.textContent = err.message || "Something went wrong. Try again.";
+            } finally {
+                btn.disabled = false; btn.textContent = "Join waitlist ▸";
+            }
+            return false;
+        }
 
         const GUEST_EXPIRES = new Date("2026-08-29T23:59:59Z").getTime();
         async function doLogin(e) {
