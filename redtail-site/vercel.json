@@ -1,9 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {
-    "api/index.py": { "maxDuration": 300, "includeFiles": "lore_engine/**" }
-  },
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index" }
+  "builds": [
+    { "src": "frontend/package.json", "use": "@vercel/static-build", "config": { "distDir": "dist" } },
+    { "src": "api/index.py", "use": "@vercel/python", "config": { "maxLambdaSize": "50mb", "includeFiles": "lore_engine/**" } }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/index.py" },
+    { "src": "/assets/(.*)", "dest": "/frontend/assets/$1" },
+    { "src": "/redtail-logo.png", "dest": "/frontend/redtail-logo.png" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/frontend/index.html" }
   ]
 }

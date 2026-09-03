@@ -6,3 +6,6 @@ lore_snapshots/
 .DS_Store
 .git
 .claude
+frontend/node_modules
+frontend/dist
+redtail-site-aws
