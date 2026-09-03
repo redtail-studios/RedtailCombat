@@ -4,6 +4,10 @@ server.py — Lore backend for the Redtail site.
 Serves the static site (locally) + the Lore API:
   GET  /api/lore/env           — model info + deployed flag + platform list
   GET  /api/lore/status        — scrape snapshot (green ticks + last scraped)
+  GET  /api/lore/market-snapshot — real Google Trends + recent gaming-news headlines (public)
+  GET  /api/lore/signal-analysis — real signal scores + competitor mentions per year (public)
+  GET  /api/lore/user-data      — per-user saved reports + portfolio (password-gated, bound to username)
+  POST /api/lore/user-data      — save per-user reports + portfolio (password-gated, bound to username)
   POST /api/lore/scrape        — scrape a year (password-gated)
   GET  /api/lore/scrape/status — poll a scrape job's per-source progress
   POST /api/lore/report        — LIVE Claude intelligence report (password-gated)
@@ -28,6 +32,7 @@ import os
 import re
 import sys
 import threading
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -46,6 +51,7 @@ import llm         # noqa: E402
 import config      # noqa: E402
 import manifest as manifest_mod  # noqa: E402
 import storage      # noqa: E402
+import analysis     # noqa: E402
 
 LORE_PASSWORD = os.getenv("LORE_PASSWORD", "redtaillore@2026")
 # Time-boxed guest login — expires on its own, no separate revoke step needed.
@@ -70,7 +76,34 @@ def _ok(pw: str) -> bool:
     if pw == GUEST_PASSWORD:
         return datetime.now(timezone.utc) < GUEST_EXPIRES
     return False
-    
+
+
+def _user_ok(username: str, password: str) -> bool:
+    """Like _ok(), but binds the password to the specific username it
+    belongs to — so 'guest' can't accidentally (or otherwise) read/write
+    'lore's saved dashboard data by only getting the password right."""
+    username = (username or "").strip().lower()
+    if username == "lore":
+        return password == LORE_PASSWORD
+    if username == "guest":
+        return password == GUEST_PASSWORD and datetime.now(timezone.utc) < GUEST_EXPIRES
+    return False
+
+
+def _user_data_path(username: str) -> str:
+    safe = re.sub(r"[^a-z0-9_-]", "", (username or "").lower())[:32] or "anon"
+    d = os.path.join(config.DATA_DIR, "users")
+    os.makedirs(d, exist_ok=True)
+    return os.path.join(d, f"{safe}.json")
+
+
+class UserDataReq(BaseModel):
+    username: str
+    password: str = ""
+    reports: list = []
+    portfolio: list = []
+
+
 
 
 class ReportReq(BaseModel):
@@ -112,6 +145,94 @@ def status():
     return {"scraped_at": "unknown", "years": {}}
 
 
+def _read_platform(year: int, platform: str) -> list:
+    if DEPLOYED:
+        return storage.get_raw_records(year, platform) or []
+    path = os.path.join(config.get_year_dir(year), f"{platform}_data.json")
+    if os.path.exists(path):
+        return json.load(open(path))
+    return []
+
+
+def _news_sort_key(item: dict):
+    try:
+        return parsedate_to_datetime(item.get("date", ""))
+    except Exception:
+        return datetime.min.replace(tzinfo=timezone.utc)
+
+
+@app.get("/api/lore/market-snapshot")
+def market_snapshot(year: int | None = None):
+    """Real Google Trends + recent gaming-news headlines from the current
+    scrape snapshot — read-only, no password (same public tier as env/status).
+    Powers the dashboard's Market Trends page."""
+    y = year if year in config.SUPPORTED_YEARS else config.SUPPORTED_YEARS[-1]
+    trends = _read_platform(y, "googletrends")
+    news = sorted(_read_platform(y, "gamenews"), key=_news_sort_key, reverse=True)[:30]
+    return {"year": y, "trends": trends, "news": news}
+
+
+_SIGNAL_ANALYSIS_CACHE = {}      # genre -> (computed_at, response)
+_SIGNAL_ANALYSIS_TTL = 600        # seconds — analysis.analyse()'s fuzzy dedup
+                                   # (SequenceMatcher, effectively O(n^2)) makes
+                                   # this expensive across 5 years of scraped
+                                   # data (40+s for 2026 alone), so cache it
+                                   # rather than recompute on every page load.
+
+
+@app.get("/api/lore/signal-analysis")
+def signal_analysis(genre: str | None = None):
+    """Real signal scores + sentiment + competitor mentions per year
+    (2022-2026), straight from analysis.analyse() — no LLM call. Read-only,
+    no password. Powers the dashboard's signal/competitor charts."""
+    cached = _SIGNAL_ANALYSIS_CACHE.get(genre)
+    now = datetime.now(timezone.utc).timestamp()
+    if cached and (now - cached[0]) < _SIGNAL_ANALYSIS_TTL:
+        return cached[1]
+
+    years = {}
+    for y in config.SUPPORTED_YEARS:
+        try:
+            a = analysis.analyse(y, genre)
+            a.pop("quotes", None)  # unused by the dashboard charts, drop to keep the payload small
+            years[str(y)] = a
+        except Exception as e:
+            years[str(y)] = {"total_items": 0, "signals": {}, "scorecard": {},
+                              "competitors": [], "error": str(e)}
+    result = {"years": years}
+    _SIGNAL_ANALYSIS_CACHE[genre] = (now, result)
+    return result
+
+
+_MAX_STORED_REPORTS = 20   # matches the previous client-side localStorage cap
+
+
+@app.get("/api/lore/user-data")
+def get_user_data(username: str, password: str = ""):
+    """Per-user saved dashboard state (reports + portfolio) — so it's there
+    next time this username logs in, from any browser. Password-gated and
+    bound to the username (see _user_ok) so 'guest' can't read 'lore's data."""
+    if not _user_ok(username, password):
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    path = _user_data_path(username)
+    if os.path.exists(path):
+        try:
+            return json.load(open(path, encoding="utf-8"))
+        except Exception:
+            pass
+    return {"reports": [], "portfolio": []}
+
+
+@app.post("/api/lore/user-data")
+def save_user_data(req: UserDataReq):
+    if not _user_ok(req.username, req.password):
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    path = _user_data_path(req.username)
+    payload = {"reports": req.reports[:_MAX_STORED_REPORTS], "portfolio": req.portfolio}
+    json.dump(payload, open(path, "w", encoding="utf-8"), ensure_ascii=False)
+    return {"status": "ok"}
+
+
 # ── Scrape jobs (local only) ─────────────────────────────────────────────────
 _scrape_lock = threading.Lock()
 
@@ -150,6 +271,7 @@ def _run_scrape_job(year: int):
         with _scrape_lock:
             if has_data:
                 _scrape[ys]["status"] = "done"
+                _SIGNAL_ANALYSIS_CACHE.clear()  # this year's data just changed
             else:
                 _scrape[ys]["status"] = "error"
                 _scrape[ys]["error"] = "Scrape finished with no usable data"
