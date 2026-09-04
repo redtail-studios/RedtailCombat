@@ -14,6 +14,7 @@ Serves the static site (locally) + the Lore API:
   POST /api/lore/game-report   — LIVE report analysing an UPLOADED game vs. market data (password-gated)
   POST /api/lore/snapshot      — redesign from an UPLOADED game PDF (password-gated)
   POST /api/lore/waitlist      — collect name+email from non-members (public, no password)
+  GET  /api/lore/waitlist/export — pull a local backup of the waitlist (password-gated, json or csv)
 
 On Vercel only /api/* hits this function (see vercel.json); the HTML/images are
 served statically. Locally, this also serves the static files.
@@ -41,7 +42,7 @@ sys.path.insert(0, str(HERE / "lore_engine"))   # engine modules import each oth
 
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -388,6 +389,31 @@ def join_waitlist(req: WaitlistReq):
         return {"status": "ok"}
     except Exception as e:
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
+
+
+@app.get("/api/lore/waitlist/export")
+def export_waitlist(password: str = "", format: str = "json"):
+    """Pull a local backup of the waitlist on demand — password-gated (same
+    admin password as the rest of the Lore console), not tied to S3 alone."""
+    if not _ok(password):
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    if DEPLOYED:
+        entries = storage.get_waitlist_entries()
+    else:
+        path = os.path.join(config.DATA_DIR, "waitlist.json")
+        entries = json.load(open(path)) if os.path.exists(path) else []
+    if format == "csv":
+        import csv
+        import io
+        buf = io.StringIO()
+        writer = csv.DictWriter(buf, fieldnames=["first_name", "last_name", "email", "submitted_at"])
+        writer.writeheader()
+        writer.writerows(entries)
+        return Response(
+            content=buf.getvalue(), media_type="text/csv",
+            headers={"Content-Disposition": "attachment; filename=waitlist.csv"},
+        )
+    return {"count": len(entries), "entries": entries}
 
 
 @app.post("/api/lore/snapshot")

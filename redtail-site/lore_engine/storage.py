@@ -339,6 +339,18 @@ def add_waitlist_entry(first_name: str, last_name: str, email: str) -> None:
     )
 
 
+def get_waitlist_entries() -> list:
+    """Read-path counterpart to add_waitlist_entry() — lets an admin pull a
+    local backup of the signup list on demand (see /api/lore/waitlist/export)."""
+    try:
+        resp = _s3_client().get_object(Bucket=BUCKET, Key=WAITLIST_KEY)
+        return json.loads(resp["Body"].read())
+    except ClientError as e:
+        if _not_found(e):
+            return []
+        raise
+
+
 # ── SQS enqueue (producer side; the worker is invoked by the SQS trigger
 #    itself, so there is no matching dequeue function here) ─────────────────
 def enqueue_scrape(year: int, platform: str) -> None:
