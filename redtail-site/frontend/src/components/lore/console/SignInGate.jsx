@@ -5,9 +5,18 @@ import { Label } from "@/components/ui/label";
 import PixelButton from "@/components/PixelButton";
 import PixelFrame from "@/components/PixelFrame";
 import { useDashboardAuth } from "@/lib/DashboardAuthContext";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 
 const fieldClass = "h-11 rounded-none bg-ink border-white/15 font-mono text-sm";
+const labelClass = "font-mono text-xs uppercase tracking-wider text-platinum/60";
+
+function RequiredLabel({ htmlFor, children }) {
+  return (
+    <Label htmlFor={htmlFor} className={labelClass}>
+      {children} <span className="text-pulse">*</span>
+    </Label>
+  );
+}
 
 export default function SignInGate() {
   const { dashboardLogin } = useDashboardAuth();
@@ -17,6 +26,7 @@ export default function SignInGate() {
   // sign-in state
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loginErr, setLoginErr] = useState("");
 
   // waitlist state
@@ -95,14 +105,25 @@ export default function SignInGate() {
                   <p className="font-mono text-xs uppercase tracking-[0.22em] text-pulse font-bold">Restricted</p>
                   <h2 className="font-pixel text-base leading-relaxed text-platinum">Sign in to Lore</h2>
                   <div className="space-y-2">
-                    <Label htmlFor="lore-user" className="font-mono text-xs uppercase tracking-wider text-platinum/60">Username</Label>
+                    <RequiredLabel htmlFor="lore-user">Username</RequiredLabel>
                     <Input id="lore-user" autoComplete="username" autoFocus value={username}
-                      onChange={(e) => setUsername(e.target.value)} className={fieldClass} />
+                      onChange={(e) => setUsername(e.target.value)} className={fieldClass} required />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lore-pass" className="font-mono text-xs uppercase tracking-wider text-platinum/60">Password</Label>
-                    <Input id="lore-pass" type="password" autoComplete="current-password" value={password}
-                      onChange={(e) => setPassword(e.target.value)} className={fieldClass} />
+                    <RequiredLabel htmlFor="lore-pass">Password</RequiredLabel>
+                    <div className="relative">
+                      <Input id="lore-pass" type={showPassword ? "text" : "password"} autoComplete="current-password" value={password}
+                        onChange={(e) => setPassword(e.target.value)} className={`${fieldClass} pr-10`} required />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((s) => !s)}
+                        className="absolute right-0 top-0 h-11 w-10 flex items-center justify-center text-platinum/40 hover:text-platinum transition-colors"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
                   </div>
                   {loginErr && <p className="text-pulse font-mono text-xs">{loginErr}</p>}
                   <PixelButton type="submit" className="w-full">Enter ▸</PixelButton>
@@ -118,19 +139,19 @@ export default function SignInGate() {
                   <p className="font-mono text-xs uppercase tracking-[0.22em] text-pulse font-bold">Waitlist</p>
                   <h2 className="font-pixel text-base leading-relaxed text-platinum">Join the Lore waitlist</h2>
                   <div className="space-y-2">
-                    <Label htmlFor="lore-first" className="font-mono text-xs uppercase tracking-wider text-platinum/60">First name</Label>
+                    <RequiredLabel htmlFor="lore-first">First name</RequiredLabel>
                     <Input id="lore-first" autoComplete="given-name" autoFocus value={first}
-                      onChange={(e) => setFirst(e.target.value)} className={fieldClass} />
+                      onChange={(e) => setFirst(e.target.value)} className={fieldClass} required />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lore-last" className="font-mono text-xs uppercase tracking-wider text-platinum/60">Last name</Label>
+                    <RequiredLabel htmlFor="lore-last">Last name</RequiredLabel>
                     <Input id="lore-last" autoComplete="family-name" value={last}
-                      onChange={(e) => setLast(e.target.value)} className={fieldClass} />
+                      onChange={(e) => setLast(e.target.value)} className={fieldClass} required />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lore-email" className="font-mono text-xs uppercase tracking-wider text-platinum/60">Email</Label>
+                    <RequiredLabel htmlFor="lore-email">Email</RequiredLabel>
                     <Input id="lore-email" type="email" autoComplete="email" value={email}
-                      onChange={(e) => setEmail(e.target.value)} className={fieldClass} />
+                      onChange={(e) => setEmail(e.target.value)} className={fieldClass} required />
                   </div>
                   {wlErr && <p className="text-pulse font-mono text-xs">{wlErr}</p>}
                   {wlOk && <p className="text-moss font-mono text-xs">You're on the list — we'll be in touch.</p>}

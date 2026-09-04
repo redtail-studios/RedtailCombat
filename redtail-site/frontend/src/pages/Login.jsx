@@ -3,12 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogIn, UserPlus, Loader2 } from "lucide-react";
+import { LogIn, UserPlus, Loader2, Eye, EyeOff } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import { useDashboardAuth } from "@/lib/DashboardAuthContext";
 
 const HAS_LOGGED_IN_KEY = "lore_has_logged_in";
 const fieldClass = "h-12 rounded-none bg-ink border-white/15 font-mono";
+
+function RequiredLabel({ htmlFor, children }) {
+  return (
+    <Label htmlFor={htmlFor}>
+      {children} <span className="text-pulse">*</span>
+    </Label>
+  );
+}
 
 export default function Login() {
   const navigate = useNavigate();
@@ -22,6 +30,7 @@ export default function Login() {
   // sign-in state
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loginErr, setLoginErr] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -88,7 +97,7 @@ export default function Login() {
         )}
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
+            <RequiredLabel htmlFor="username">Username</RequiredLabel>
             <Input
               id="username"
               autoComplete="username"
@@ -101,17 +110,28 @@ export default function Login() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={fieldClass}
-              required
-            />
+            <RequiredLabel htmlFor="password">Password</RequiredLabel>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`${fieldClass} pr-11`}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((s) => !s)}
+                className="absolute right-0 top-0 h-12 w-11 flex items-center justify-center text-platinum/40 hover:text-platinum transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
           <Button type="submit" className="w-full h-12 rounded-none font-pixel text-[10px] uppercase tracking-wider bg-pulse text-ink hover:bg-[#ff4747]" disabled={loginLoading}>
             {loginLoading ? (<><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Logging in...</>) : "Log in"}
@@ -143,7 +163,7 @@ export default function Login() {
     <AuthLayout icon={UserPlus} title="JOIN THE WAITLIST" subtitle="restricted tool · request access">
       <form onSubmit={handleWaitlist} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="firstName">First name</Label>
+          <RequiredLabel htmlFor="firstName">First name</RequiredLabel>
           <Input
             id="firstName"
             autoComplete="given-name"
@@ -155,7 +175,7 @@ export default function Login() {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="lastName">Last name</Label>
+          <RequiredLabel htmlFor="lastName">Last name</RequiredLabel>
           <Input
             id="lastName"
             autoComplete="family-name"
@@ -166,7 +186,7 @@ export default function Login() {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <RequiredLabel htmlFor="email">Email</RequiredLabel>
           <Input
             id="email"
             type="email"
