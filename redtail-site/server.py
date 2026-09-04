@@ -61,6 +61,9 @@ LORE_PASSWORD = os.getenv("LORE_PASSWORD", "redtaillore@2026")
 GUEST_PASSWORD = os.getenv("LORE_GUEST_PASSWORD", "loreguest@2026")
 GUEST_EXPIRES = datetime.fromisoformat(
     os.getenv("LORE_GUEST_EXPIRES", "2026-08-29T23:59:59+00:00"))
+# Second permanent account (co-founders) — same full access as LORE_PASSWORD,
+# just a separate credential so it can be shared/rotated independently.
+ADMIN_PASSWORD = os.getenv("LORE_ADMIN_PASSWORD", "redtailadmin@2026")
 
 # Vercel sets VERCEL=1 on deployed functions.
 DEPLOYED = config.DEPLOYED
@@ -74,6 +77,8 @@ def _ok(pw: str) -> bool:
     pw = pw or ""
     if pw == LORE_PASSWORD:
         return True
+    if pw == ADMIN_PASSWORD:
+        return True
     if pw == GUEST_PASSWORD:
         return datetime.now(timezone.utc) < GUEST_EXPIRES
     return False
@@ -86,6 +91,8 @@ def _user_ok(username: str, password: str) -> bool:
     username = (username or "").strip().lower()
     if username == "lore":
         return password == LORE_PASSWORD
+    if username == "admin":
+        return password == ADMIN_PASSWORD
     if username == "guest":
         return password == GUEST_PASSWORD and datetime.now(timezone.utc) < GUEST_EXPIRES
     return False

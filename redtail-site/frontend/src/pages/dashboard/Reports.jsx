@@ -1,7 +1,68 @@
-import React, { useState } from 'react';
-import { FileText, Download, Eye, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { FileText, Download, Eye, X, Users, Loader2 } from 'lucide-react';
 import { useLoreReports } from '@/lib/LoreReportsContext';
-import { downloadHtml, slug } from '@/lib/loreReportUtils';
+import { useDashboardAuth } from '@/lib/DashboardAuthContext';
+import { downloadHtml, downloadFromApi, slug } from '@/lib/loreReportUtils';
+
+function WaitlistBackupCard() {
+  const { dashboardPassword } = useDashboardAuth();
+  const [count, setCount] = useState(null);
+  const [busy, setBusy] = useState(null); // 'csv' | 'json' | null
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!dashboardPassword) return;
+    fetch(`/api/lore/waitlist/export?password=${encodeURIComponent(dashboardPassword)}`)
+      .then((r) => r.json())
+      .then((d) => setCount(typeof d.count === 'number' ? d.count : null))
+      .catch(() => {});
+  }, [dashboardPassword]);
+
+  const download = async (format) => {
+    setError('');
+    setBusy(format);
+    try {
+      await downloadFromApi(
+        `/api/lore/waitlist/export?password=${encodeURIComponent(dashboardPassword)}&format=${format}`,
+        `waitlist-backup-${new Date().toISOString().slice(0, 10)}.${format}`
+      );
+    } catch (e) {
+      setError(e.message || 'Download failed');
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  return (
+    <div className="bg-panel border border-white/5 p-4 pixel-clip-sm mb-6">
+      <div className="flex items-center gap-2 mb-2">
+        <Users className="w-3.5 h-3.5 text-pulse" />
+        <span className="font-pixel text-[7px] uppercase tracking-wider text-platinum/50">Waitlist Backup</span>
+      </div>
+      <p className="font-mono text-xs text-platinum/40 mb-4">
+        Pull a local copy of the real S3-backed waitlist signups anytime.
+        {count !== null && <> Currently <b className="text-platinum">{count}</b> signup{count === 1 ? '' : 's'}.</>}
+      </p>
+      {error && <p className="font-mono text-xs text-pulse mb-3">{error}</p>}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => download('csv')}
+          disabled={busy !== null}
+          className="flex items-center gap-1.5 px-3 py-2 font-mono text-[10px] font-medium bg-pulse text-ink hover:opacity-90 disabled:opacity-40 transition-opacity pixel-clip-sm"
+        >
+          {busy === 'csv' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />} Download CSV
+        </button>
+        <button
+          onClick={() => download('json')}
+          disabled={busy !== null}
+          className="flex items-center gap-1.5 px-3 py-2 font-mono text-[10px] border border-white/10 text-platinum/60 hover:text-platinum hover:border-white/20 disabled:opacity-40 transition-colors pixel-clip-sm"
+        >
+          {busy === 'json' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Download className="w-3 h-3" />} Download JSON
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function Reports() {
   const { reports } = useLoreReports();
@@ -13,6 +74,8 @@ export default function Reports() {
       <p className="font-mono text-xs text-platinum/40 mb-6">
         Live Lore reports generated from /lore — market reports and per-game analyses land here.
       </p>
+
+      <WaitlistBackupCard />
 
       {reports.length === 0 ? (
         <div className="border-2 border-dashed border-white/10 flex flex-col items-center justify-center py-20 text-center pixel-clip-sm">
