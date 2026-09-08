@@ -1,12 +1,62 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-import { Plus, Gamepad2, FileText, Sparkles, Clock, ArrowRight, RefreshCw } from 'lucide-react';
+import { Plus, Gamepad2, FileText, Sparkles, Clock, ChevronDown, RefreshCw, Trash2 } from 'lucide-react';
 import { useLoreReports } from '@/lib/LoreReportsContext';
+
+function GameCard({ game, report, onReanalyse, onDelete }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="bg-panel border border-white/5 p-5 pixel-clip">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 pixel-clip-sm bg-ink border border-white/5 flex items-center justify-center flex-shrink-0">
+            <Gamepad2 className="w-4 h-4 text-pulse" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="font-pixel text-sm text-platinum truncate">{game.name}</h3>
+            <p className="font-mono text-[10px] text-platinum/40 mt-1">
+              Analysed against {game.lastYears || '—'} · {formatDistanceToNow(new Date(game.updatedAt || game.addedAt), { addSuffix: true })}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={() => setExpanded((e) => !e)}
+            disabled={!report}
+            title={report ? 'View real report' : 'No report saved for this game'}
+            className="flex items-center gap-1.5 px-3 py-2 font-mono text-[10px] border border-white/10 text-platinum/60 hover:text-platinum hover:border-white/20 disabled:opacity-30 disabled:pointer-events-none transition-colors pixel-clip-sm"
+          >
+            Details <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+          </button>
+          <button
+            onClick={onReanalyse}
+            className="flex items-center gap-1.5 px-3 py-2 font-mono text-[10px] bg-pulse text-ink hover:opacity-90 transition-opacity pixel-clip-sm"
+          >
+            <RefreshCw className="w-3 h-3" /> Re-analyse
+          </button>
+          <button
+            onClick={onDelete}
+            title="Delete game"
+            className="flex items-center justify-center w-8 h-8 text-platinum/30 hover:text-pulse border border-white/10 hover:border-pulse/40 transition-colors pixel-clip-sm flex-shrink-0"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+      {expanded && report && (
+        <div className="mt-4 border border-white/10 pixel-clip-sm overflow-hidden">
+          <iframe title={`${game.name} report`} srcDoc={report.html} className="w-full h-[520px] border-0 block bg-black" />
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Portfolio() {
   const navigate = useNavigate();
-  const { portfolio, reports } = useLoreReports();
+  const { portfolio, reports, removePortfolioGame } = useLoreReports();
   const [showAddForm, setShowAddForm] = useState(false);
   const [gameName, setGameName] = useState('');
 
@@ -17,6 +67,12 @@ export default function Portfolio() {
     // the sidebar), which continues into the real redesign step once a
     // report is generated, and adds the game here automatically.
     navigate('/dashboard/analyze?tab=game');
+  };
+
+  const handleDelete = (game) => {
+    if (window.confirm(`Remove ${game.name} from your portfolio? This only removes it from this list — it doesn't delete anything on the server.`)) {
+      removePortfolioGame(game.id);
+    }
   };
 
   const gameReports = reports.filter((r) => r.type === 'game');
@@ -75,33 +131,13 @@ export default function Portfolio() {
       {portfolio.length > 0 ? (
         <div className="space-y-3">
           {portfolio.map((game) => (
-            <div key={game.id} className="bg-panel border border-white/5 p-5 pixel-clip flex items-center justify-between gap-4 flex-wrap">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-9 h-9 pixel-clip-sm bg-ink border border-white/5 flex items-center justify-center flex-shrink-0">
-                  <Gamepad2 className="w-4 h-4 text-pulse" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-pixel text-sm text-platinum truncate">{game.name}</h3>
-                  <p className="font-mono text-[10px] text-platinum/40 mt-1">
-                    Analysed against {game.lastYears || '—'} · {formatDistanceToNow(new Date(game.updatedAt || game.addedAt), { addSuffix: true })}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <button
-                  onClick={() => navigate('/dashboard/reports')}
-                  className="flex items-center gap-1.5 px-3 py-2 font-mono text-[10px] border border-white/10 text-platinum/60 hover:text-platinum hover:border-white/20 transition-colors pixel-clip-sm"
-                >
-                  View report <ArrowRight className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={goAnalyzeGame}
-                  className="flex items-center gap-1.5 px-3 py-2 font-mono text-[10px] bg-pulse text-ink hover:opacity-90 transition-opacity pixel-clip-sm"
-                >
-                  <RefreshCw className="w-3 h-3" /> Re-analyse
-                </button>
-              </div>
-            </div>
+            <GameCard
+              key={game.id}
+              game={game}
+              report={reports.find((r) => r.id === game.lastReportId)}
+              onReanalyse={goAnalyzeGame}
+              onDelete={() => handleDelete(game)}
+            />
           ))}
         </div>
       ) : (

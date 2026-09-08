@@ -7,12 +7,24 @@ import { Rocket, Swords } from 'lucide-react';
 import { scoreColor, chartTooltipStyle, chartTickFont } from '@/lib/dashboardData';
 
 const YEARS = [2022, 2023, 2024, 2025, 2026];
+// Signal-trend lines are just 3 different demand categories — no good/bad
+// value judgment, so an arbitrary distinct-color palette is correct here.
 const LINE_COLORS = ['#FF2E2E', '#B4FF39', '#8FB3FF'];
 
 function verdict(topScore) {
   if (topScore >= 8) return { label: 'STRONG', color: '#B4FF39' };
   if (topScore >= 5) return { label: 'MODERATE', color: '#8FB3FF' };
   return { label: 'EARLY', color: '#FF2E2E' };
+}
+
+// Competitors DO carry a value judgment (real sentiment), so their color
+// should reflect actual performance, not just click/selection order —
+// red = genuinely negative reception, green = genuinely positive, blue = mixed.
+function competitorColor(c) {
+  const net = (c?.positive_pct ?? 0) - (c?.negative_pct ?? 0);
+  if (net >= 30) return '#B4FF39';
+  if (net <= -10) return '#FF2E2E';
+  return '#8FB3FF';
 }
 
 const SimTile = ({ label, value, color }) => (
@@ -188,17 +200,18 @@ export default function SignalAnalysis() {
         {competitors.length > 0 ? (
           <>
             <div className="flex gap-1.5 mb-4 flex-wrap">
-              {competitors.slice(0, 4).map((c, i) => {
+              {competitors.slice(0, 4).map((c) => {
                 const sel = selectedCompetitors.includes(c.name);
+                const color = competitorColor(c);
                 return (
                   <button
                     key={c.name}
                     onClick={() => setSelectedCompetitors((s) => sel ? s.filter((n) => n !== c.name) : s.length >= 2 ? [s[1], c.name] : [...s, c.name])}
                     className="px-3 py-1.5 pixel-clip-sm transition-all"
                     style={{
-                      background: sel ? `${LINE_COLORS[i % LINE_COLORS.length]}20` : 'transparent',
-                      border: `1px solid ${sel ? LINE_COLORS[i % LINE_COLORS.length] : 'rgba(255,255,255,0.1)'}`,
-                      color: sel ? LINE_COLORS[i % LINE_COLORS.length] : 'rgba(226,226,226,0.4)',
+                      background: sel ? `${color}20` : 'transparent',
+                      border: `1px solid ${sel ? color : 'rgba(255,255,255,0.1)'}`,
+                      color: sel ? color : 'rgba(226,226,226,0.4)',
                     }}
                   >
                     <span className="font-mono text-[10px]">{c.name}</span>
@@ -212,8 +225,8 @@ export default function SignalAnalysis() {
                 <PolarGrid stroke="rgba(255,255,255,0.08)" />
                 <PolarAngleAxis dataKey="axis" tick={{ fill: 'rgba(226,226,226,0.4)', fontSize: 9, ...chartTickFont }} />
                 <PolarRadiusAxis domain={[0, 10]} tick={false} axisLine={false} />
-                {competitors.filter((c) => selectedCompetitors.includes(c.name)).map((c, i) => (
-                  <Radar key={c.name} name={c.name} dataKey={c.name} stroke={LINE_COLORS[i]} fill={LINE_COLORS[i]} fillOpacity={0.25} strokeWidth={2} />
+                {competitors.filter((c) => selectedCompetitors.includes(c.name)).map((c) => (
+                  <Radar key={c.name} name={c.name} dataKey={c.name} stroke={competitorColor(c)} fill={competitorColor(c)} fillOpacity={0.25} strokeWidth={2} />
                 ))}
                 <Legend wrapperStyle={{ fontSize: '9px', fontFamily: '"JetBrains Mono", monospace', color: 'rgba(226,226,226,0.5)' }} iconType="circle" iconSize={6} />
                 <Tooltip contentStyle={chartTooltipStyle} />
@@ -221,10 +234,10 @@ export default function SignalAnalysis() {
             </ResponsiveContainer>
 
             <div className="space-y-1.5 mt-3">
-              {competitors.slice(0, 4).map((c, i) => (
+              {competitors.slice(0, 4).map((c) => (
                 <div key={c.name} className="flex items-center justify-between font-mono text-[10px] text-platinum/40">
                   <span className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: LINE_COLORS[i % LINE_COLORS.length] }} />
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: competitorColor(c) }} />
                     {c.name}
                   </span>
                   <span>{Math.round(c.mentions)} mentions · {c.positive_pct}% pos</span>

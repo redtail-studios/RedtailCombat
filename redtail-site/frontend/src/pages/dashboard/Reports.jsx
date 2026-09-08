@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FileText, Download, Eye, X, Users, Loader2 } from 'lucide-react';
+import { FileText, Download, Eye, X, Users, Loader2, Trash2 } from 'lucide-react';
 import { useLoreReports } from '@/lib/LoreReportsContext';
 import { useDashboardAuth } from '@/lib/DashboardAuthContext';
 import { downloadHtml, downloadFromApi, slug } from '@/lib/loreReportUtils';
@@ -65,8 +65,16 @@ function WaitlistBackupCard() {
 }
 
 export default function Reports() {
-  const { reports } = useLoreReports();
+  const { reports, removeReport } = useLoreReports();
   const [viewing, setViewing] = useState(null);
+
+  const handleDelete = (r) => {
+    const label = r.type === 'game' ? `Game analysis — ${r.gameName || 'uploaded game'}` : 'Market report';
+    if (window.confirm(`Delete "${label}"? This only removes it from this list — it doesn't delete anything on the server.`)) {
+      if (viewing?.id === r.id) setViewing(null);
+      removeReport(r.id);
+    }
+  };
 
   return (
     <div className="px-6 py-6 max-w-5xl mx-auto">
@@ -106,6 +114,13 @@ export default function Reports() {
                   className="flex items-center gap-1.5 px-3 py-2 font-mono text-[10px] border border-white/10 text-platinum/60 hover:text-platinum hover:border-white/20 transition-colors pixel-clip-sm"
                 >
                   <Download className="w-3 h-3" /> Download
+                </button>
+                <button
+                  onClick={() => handleDelete(r)}
+                  title="Delete report"
+                  className="flex items-center justify-center w-8 h-8 text-platinum/30 hover:text-pulse border border-white/10 hover:border-pulse/40 transition-colors pixel-clip-sm flex-shrink-0"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>

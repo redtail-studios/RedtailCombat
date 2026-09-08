@@ -5,6 +5,7 @@ Serves the static site (locally) + the Lore API:
   GET  /api/lore/env           — model info + deployed flag + platform list
   GET  /api/lore/status        — scrape snapshot (green ticks + last scraped)
   GET  /api/lore/market-snapshot — real Google Trends + recent gaming-news headlines (public)
+  POST /api/lore/ask            — "Ask Lore" co-pilot, real Claude call grounded in current news (password-gated)
   GET  /api/lore/signal-analysis — real signal scores + competitor mentions per year (public)
   GET  /api/lore/user-data      — per-user saved reports + portfolio (password-gated, bound to username)
   POST /api/lore/user-data      — save per-user reports + portfolio (password-gated, bound to username)
@@ -132,6 +133,11 @@ class WaitlistReq(BaseModel):
     email: str
 
 
+class AskReq(BaseModel):
+    question: str
+    password: str = ""
+
+
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
@@ -178,6 +184,36 @@ def market_snapshot(year: int | None = None):
     trends = _read_platform(y, "googletrends")
     news = sorted(_read_platform(y, "gamenews"), key=_news_sort_key, reverse=True)[:30]
     return {"year": y, "trends": trends, "news": news}
+
+
+@app.post("/api/lore/ask")
+def ask_lore(req: AskReq):
+    """'Ask Lore' co-pilot — a real Claude call grounded only in the current
+    scraped gaming-news headlines (password-gated, same tier as report gen)."""
+    if not _ok(req.password):
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    question = req.question.strip()
+    if not question:
+        return JSONResponse({"error": "Ask a question"}, status_code=400)
+    try:
+        y = config.SUPPORTED_YEARS[-1]
+        news = sorted(_read_platform(y, "gamenews"), key=_news_sort_key, reverse=True)[:30]
+        context = "\n".join(
+            f"- [{n.get('site', '?')}] {n.get('title', '')}: {(n.get('text') or '')[:200]}"
+            for n in news
+        ) or "(no news items currently scraped)"
+        prompt = (
+            "You are Lore, Redtail Studios' AI co-pilot (a hawk). You help the team make sense "
+            "of real-time gaming-industry news. Answer the question using ONLY the news items "
+            "below — never invent facts that aren't in them. If they don't cover the question, "
+            "say so plainly instead of guessing. Keep it conversational and under ~150 words.\n\n"
+            f"RECENT GAMING NEWS:\n{context}\n\n"
+            f"QUESTION: {question}\n\nANSWER:"
+        )
+        answer = llm.generate(prompt, max_tokens=600)
+        return {"answer": answer.strip()}
+    except Exception as e:
+        return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
 
 
 _SIGNAL_ANALYSIS_CACHE = {}      # genre -> (computed_at, response)
