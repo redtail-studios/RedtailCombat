@@ -12,6 +12,7 @@ export default function ReportPanel({
   rMode, onModeChange, analyseSel, backSel, valSel, onToggleAnalyse, onToggleBack, onToggleVal,
   repMeta, repDisabled, reportState, onGenerateReport, onDownloadReport, onContinueToRedesign,
   gameFile, onGameFileChange, gameSel, onToggleGame, gameRepMeta, gameRepDisabled,
+  genres, gameGenre, onGameGenreChange,
   gameReportState, onGenerateGameReport, onDownloadGameReport, onContinueToRedesignFromGame,
 }) {
   return (
@@ -81,6 +82,21 @@ export default function ReportPanel({
               Choose PDF
               <input type="file" accept="application/pdf" className="hidden" onChange={(e) => onGameFileChange(e.target.files[0] || null)} />
             </label>
+          </div>
+          <p className="font-mono text-[10px] uppercase tracking-wider text-platinum/40 mb-2">Which genre does it compete in?</p>
+          <div className="flex items-center gap-1.5 mb-4 flex-wrap">
+            {(genres || []).map((g) => (
+              <button
+                key={g.id}
+                type="button"
+                onClick={() => onGameGenreChange(g.id)}
+                className={`px-2.5 py-1.5 pixel-clip-sm font-mono text-[10px] transition-colors ${
+                  gameGenre === g.id ? 'bg-platinum text-ink' : 'border border-white/10 text-platinum/40 hover:text-platinum/60'
+                }`}
+              >
+                {g.label}
+              </button>
+            ))}
           </div>
           <p className="font-mono text-[10px] uppercase tracking-wider text-platinum/40 mb-2">Years to analyse</p>
           <YearChips years={availYears} selected={gameSel} onToggle={onToggleGame} />

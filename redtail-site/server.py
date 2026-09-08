@@ -12,7 +12,7 @@ Serves the static site (locally) + the Lore API:
   POST /api/lore/scrape        — scrape a year (password-gated)
   GET  /api/lore/scrape/status — poll a scrape job's per-source progress
   POST /api/lore/report        — LIVE Claude intelligence report (password-gated)
-  POST /api/lore/game-report   — LIVE report analysing an UPLOADED game vs. market data (password-gated)
+  POST /api/lore/game-report   — LIVE report analysing an UPLOADED game vs. market data, one genre (password-gated)
   POST /api/lore/snapshot      — redesign from an UPLOADED game PDF (password-gated)
   POST /api/lore/waitlist      — collect name+email from non-members (public, no password)
   GET  /api/lore/waitlist/export — pull a local backup of the waitlist (password-gated, json or csv)
@@ -74,6 +74,17 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"],
                    allow_methods=["*"], allow_headers=["*"])
 
 
+@app.exception_handler(Exception)
+async def _json_error_handler(request, exc: Exception):
+    # Every endpoint below expects a JSON body even on failure (the frontend
+    # always calls r.json() on the response) — without this, an unhandled
+    # exception (e.g. a broken AWS credential deep inside storage.py) falls
+    # through to FastAPI/Starlette's default plain-text "Internal Server
+    # Error", which then fails to JSON-parse client-side with a cryptic
+    # browser-internal error instead of a readable message.
+    return JSONResponse({"error": f"{type(exc).__name__}: {exc}"}, status_code=500)
+
+
 def _ok(pw: str) -> bool:
     pw = pw or ""
     if pw == LORE_PASSWORD:
@@ -99,11 +110,14 @@ def _user_ok(username: str, password: str) -> bool:
     return False
 
 
+def _safe_username(username: str) -> str:
+    return re.sub(r"[^a-z0-9_-]", "", (username or "").lower())[:32] or "anon"
+
+
 def _user_data_path(username: str) -> str:
-    safe = re.sub(r"[^a-z0-9_-]", "", (username or "").lower())[:32] or "anon"
     d = os.path.join(config.DATA_DIR, "users")
     os.makedirs(d, exist_ok=True)
-    return os.path.join(d, f"{safe}.json")
+    return os.path.join(d, f"{_safe_username(username)}.json")
 
 
 class UserDataReq(BaseModel):
@@ -258,6 +272,8 @@ def get_user_data(username: str, password: str = ""):
     bound to the username (see _user_ok) so 'guest' can't read 'lore's data."""
     if not _user_ok(username, password):
         return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    if DEPLOYED:
+        return storage.get_user_data(_safe_username(username)) or {"reports": [], "portfolio": []}
     path = _user_data_path(username)
     if os.path.exists(path):
         try:
@@ -271,9 +287,27 @@ def get_user_data(username: str, password: str = ""):
 def save_user_data(req: UserDataReq):
     if not _user_ok(req.username, req.password):
         return JSONResponse({"error": "Unauthorized"}, status_code=401)
-    path = _user_data_path(req.username)
     payload = {"reports": req.reports[:_MAX_STORED_REPORTS], "portfolio": req.portfolio}
-    json.dump(payload, open(path, "w", encoding="utf-8"), ensure_ascii=False)
+    if DEPLOYED:
+        # Vercel's Python functions have a read-only filesystem outside /tmp —
+        # the local-file path below silently threw OSError here, so this data
+        # never actually persisted in production. S3's put_object also avoids
+        # the torn-write race described below (whole object replaced in one
+        # call, no read-modify-write window).
+        storage.save_user_data(_safe_username(req.username), payload)
+        return {"status": "ok"}
+    path = _user_data_path(req.username)
+    # Two saves can land close together (e.g. addReport then addPortfolioGame
+    # right after a game report finishes) — writing straight to `path` let one
+    # request's write interleave with another's and leave a torn/corrupted
+    # file (valid JSON prefix + garbage suffix). Writing to a sibling temp
+    # file and os.replace()-ing it in is atomic at the filesystem level, so
+    # the file is always either the old or the new complete content, never a
+    # partial mix of both.
+    tmp_path = f"{path}.{os.getpid()}.{threading.get_ident()}.tmp"
+    with open(tmp_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False)
+    os.replace(tmp_path, path)
     return {"status": "ok"}
 
 
@@ -390,7 +424,7 @@ def make_report(req: ReportReq):
 
 @app.post("/api/lore/game-report")
 async def make_game_report(file: UploadFile = File(...), years: str = Form(...),
-                           password: str = Form("")):
+                           genre: str = Form(""), password: str = Form("")):
     if not _ok(password):
         return JSONResponse({"error": "Unauthorized"}, status_code=401)
     try:
@@ -399,11 +433,16 @@ async def make_game_report(file: UploadFile = File(...), years: str = Form(...),
         return JSONResponse({"error": "Invalid years"}, status_code=400)
     if not yrs:
         return JSONResponse({"error": "Select at least one year"}, status_code=400)
+    genre = genre.strip() or None
+    if genre and genre not in config.GENRES:
+        return JSONResponse({"error": f"genre must be one of {list(config.GENRES)}"},
+                             status_code=400)
     try:
         data = await file.read()
         path, gname = snapshot.prep_upload(data, file.filename)
         game_text = snapshot.load_game_text(path)
-        return {"html": report.generate_game_report(yrs, game_text, gname), "game": gname}
+        html = report.generate_game_report(yrs, game_text, gname, genre)
+        return {"html": html, "game": gname, "genre": genre}
     except Exception as e:
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
 
@@ -428,7 +467,10 @@ def join_waitlist(req: WaitlistReq):
                 "submitted_at": datetime.now(timezone.utc).isoformat(),
             })
             os.makedirs(config.DATA_DIR, exist_ok=True)
-            json.dump(entries, open(path, "w"), ensure_ascii=False, indent=2)
+            tmp_path = f"{path}.{os.getpid()}.{threading.get_ident()}.tmp"
+            with open(tmp_path, "w") as f:
+                json.dump(entries, f, ensure_ascii=False, indent=2)
+            os.replace(tmp_path, path)
         return {"status": "ok"}
     except Exception as e:
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)

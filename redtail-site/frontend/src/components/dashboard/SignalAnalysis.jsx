@@ -34,7 +34,13 @@ const SimTile = ({ label, value, color }) => (
   </div>
 );
 
-export default function SignalAnalysis() {
+// forcedGenre: when set (a specific game is picked in the Market Analysis
+// tab), the genre is driven by that game and the manual genre chips are
+// replaced by a label naming it — a game's competitors/signals should
+// reflect the genre it was actually analysed against, not a separately
+// browsed genre. forcedGenre=null (the default) restores the original
+// free-browsing genre-chip UI.
+export default function SignalAnalysis({ forcedGenre = null, forcedGenreLabel = '' }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [year, setYear] = useState(2026);
@@ -52,16 +58,27 @@ export default function SignalAnalysis() {
       .catch(() => {});
   }, []);
 
+  // A picked game overrides whatever genre was manually browsed.
+  useEffect(() => {
+    if (forcedGenre) setGenre(forcedGenre);
+  }, [forcedGenre]);
+
+  const effectiveGenre = forcedGenre || genre;
+
   useEffect(() => {
     let cancelled = false;
     setData(null);
-    const qs = genre ? `?genre=${encodeURIComponent(genre)}` : '';
+    const qs = effectiveGenre ? `?genre=${encodeURIComponent(effectiveGenre)}` : '';
     fetch(`/api/lore/signal-analysis${qs}`)
       .then((r) => r.json())
-      .then((d) => { if (!cancelled) setData(d); })
+      .then((d) => {
+        if (cancelled) return;
+        if (d.error) throw new Error(d.error);
+        setData(d);
+      })
       .catch((e) => { if (!cancelled) setError(e.message); });
     return () => { cancelled = true; };
-  }, [genre]);
+  }, [effectiveGenre]);
 
   const years = data?.years || {};
   const current = years[String(year)] || { total_items: 0, signals: {}, scorecard: {}, competitors: [] };
@@ -108,7 +125,15 @@ export default function SignalAnalysis() {
 
   return (
     <div>
-      {genres.length > 0 && (
+      {forcedGenre ? (
+        <div className="flex items-center gap-1.5 mb-4 flex-wrap">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-platinum/30 mr-1">Genre</span>
+          <span className="px-2.5 py-1 pixel-clip-sm font-mono text-[10px] bg-platinum text-ink">
+            {genres.find((g) => g.id === forcedGenre)?.label || forcedGenre}
+          </span>
+          <span className="font-mono text-[10px] text-platinum/30">— from {forcedGenreLabel || 'the selected game'}</span>
+        </div>
+      ) : genres.length > 0 && (
         <div className="flex items-center gap-1.5 mb-4 flex-wrap">
           <span className="font-mono text-[10px] uppercase tracking-wider text-platinum/30 mr-1">Genre</span>
           <button

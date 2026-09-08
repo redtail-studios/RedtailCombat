@@ -351,6 +351,41 @@ def get_waitlist_entries() -> list:
         raise
 
 
+# ── Per-user dashboard data (reports + portfolio) ───────────────────────────
+# Vercel's Python functions have a read-only filesystem outside /tmp, so the
+# local-dev path (server.py writing straight to lore_data/users/<u>.json)
+# silently fails there — every save threw OSError: Read-only file system,
+# meaning portfolio/report data never actually persisted in production, only
+# in that tab's in-memory React state. S3 fixes both problems at once: it's
+# writable from a serverless function, and put_object replaces the whole
+# object in one call, so there's no read-modify-write window for two
+# near-simultaneous saves to interleave and corrupt the file (the same class
+# of bug the local path's os.replace() fix addresses).
+USERDATA_PREFIX = f"{_ROOT_PREFIX}/userdata"  # <prefix>/userdata/<username>.json
+
+
+def _userdata_key(username: str) -> str:
+    return f"{USERDATA_PREFIX}/{username}.json"
+
+
+def get_user_data(username: str) -> dict | None:
+    try:
+        resp = _s3_client().get_object(Bucket=BUCKET, Key=_userdata_key(username))
+    except ClientError as e:
+        if _not_found(e):
+            return None
+        raise
+    return json.loads(resp["Body"].read())
+
+
+def save_user_data(username: str, payload: dict) -> None:
+    _s3_client().put_object(
+        Bucket=BUCKET, Key=_userdata_key(username),
+        Body=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+        ContentType="application/json",
+    )
+
+
 # ── SQS enqueue (producer side; the worker is invoked by the SQS trigger
 #    itself, so there is no matching dequeue function here) ─────────────────
 def enqueue_scrape(year: int, platform: str) -> None:

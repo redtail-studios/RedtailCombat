@@ -46,6 +46,9 @@ export default function Analyze() {
           onGameFileChange={c.setGameFile}
           gameSel={c.gameSel}
           onToggleGame={c.onToggleGame}
+          genres={c.genres}
+          gameGenre={c.gameGenre}
+          onGameGenreChange={c.setGameGenre}
           gameRepMeta={c.gameRepMeta}
           gameRepDisabled={c.gameRepDisabled}
           gameReportState={c.gameReportState}

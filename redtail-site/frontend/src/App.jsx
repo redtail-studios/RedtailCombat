@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -7,19 +8,29 @@ import { DashboardAuthProvider, useDashboardAuth } from '@/lib/DashboardAuthCont
 import { LoreReportsProvider } from '@/lib/LoreReportsContext';
 import ScrollToTop from './components/ScrollToTop';
 import Layout from '@/components/Layout';
-import Home from '@/pages/Home';
-import Agents from '@/pages/Agents';
-import Lore from '@/pages/Lore';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
-import ForgotPassword from '@/pages/ForgotPassword';
-import ResetPassword from '@/pages/ResetPassword';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import MarketTrends from '@/pages/dashboard/MarketTrends';
-import Portfolio from '@/pages/dashboard/Portfolio';
-import Analyze from '@/pages/dashboard/Analyze';
-import Reports from '@/pages/dashboard/Reports';
-import DashboardPlaceholder from '@/pages/dashboard/DashboardPlaceholder';
+
+// Route-level code splitting — each page (and its own dependencies, e.g.
+// recharts/framer-motion) only downloads when its route is actually visited,
+// instead of every page's code shipping in one ~1MB upfront bundle.
+const Home = lazy(() => import('@/pages/Home'));
+const Agents = lazy(() => import('@/pages/Agents'));
+const Lore = lazy(() => import('@/pages/Lore'));
+const Login = lazy(() => import('@/pages/Login'));
+const Register = lazy(() => import('@/pages/Register'));
+const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
+const MarketTrends = lazy(() => import('@/pages/dashboard/MarketTrends'));
+const Portfolio = lazy(() => import('@/pages/dashboard/Portfolio'));
+const Analyze = lazy(() => import('@/pages/dashboard/Analyze'));
+const Reports = lazy(() => import('@/pages/dashboard/Reports'));
+const DashboardPlaceholder = lazy(() => import('@/pages/dashboard/DashboardPlaceholder'));
+
+const RouteFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-ink">
+    <div className="w-6 h-6 border-2 border-white/10 border-t-pulse rounded-full animate-spin" />
+  </div>
+);
 
 const ProtectedDashboardRoute = ({ children }) => {
   const { isDashboardAuthenticated } = useDashboardAuth();
@@ -32,6 +43,7 @@ const ProtectedDashboardRoute = ({ children }) => {
 const AuthenticatedApp = () => {
   // Home/Agents/Lore are public; /dashboard is gated by DashboardAuthProvider below.
   return (
+    <Suspense fallback={<RouteFallback />}>
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
@@ -59,6 +71,7 @@ const AuthenticatedApp = () => {
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
+    </Suspense>
   );
 };
 

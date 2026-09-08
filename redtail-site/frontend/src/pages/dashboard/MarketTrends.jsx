@@ -35,17 +35,28 @@ const TABS = [
 
 export default function MarketTrends() {
   const navigate = useNavigate();
-  const { reports } = useLoreReports();
+  const { reports, portfolio } = useLoreReports();
   const hasReports = reports.length > 0;
   const [snapshot, setSnapshot] = useState(null);
   const [error, setError] = useState(null);
   const [tab, setTab] = useState('news');
 
+  // Only games analysed against a specific genre can drive the Signal
+  // Simulator/Competitor Radar — older games analysed before genre-scoped
+  // analysis existed won't have one, and just don't show up here.
+  const gamesWithGenre = portfolio.filter((g) => g.genre);
+  const [selectedGameId, setSelectedGameId] = useState('');
+  const selectedGame = gamesWithGenre.find((g) => g.id === selectedGameId) || null;
+
   useEffect(() => {
     let cancelled = false;
     fetch('/api/lore/market-snapshot')
       .then((r) => r.json())
-      .then((d) => { if (!cancelled) setSnapshot(d); })
+      .then((d) => {
+        if (cancelled) return;
+        if (d.error) throw new Error(d.error);
+        setSnapshot(d);
+      })
       .catch((e) => { if (!cancelled) setError(e.message); });
     return () => { cancelled = true; };
   }, []);
@@ -195,13 +206,30 @@ export default function MarketTrends() {
               blur + overlay until you have a report, then just themselves,
               unblurred. Never swapped for anything else. */}
           <div className="bg-panel border border-white/5 p-4 pixel-clip-sm">
-            <div className="flex items-center gap-2 mb-3">
-              <BarChart3 className="w-3.5 h-3.5 text-pulse" />
-              <span className="font-pixel text-[7px] uppercase tracking-wider text-platinum/50">Market signal simulation</span>
+            <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
+              <div className="flex items-center gap-2">
+                <BarChart3 className="w-3.5 h-3.5 text-pulse" />
+                <span className="font-pixel text-[7px] uppercase tracking-wider text-platinum/50">Market signal simulation</span>
+              </div>
+              {hasReports && gamesWithGenre.length > 0 && (
+                <label className="flex items-center gap-2">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-platinum/30">Game</span>
+                  <select
+                    value={selectedGameId}
+                    onChange={(e) => setSelectedGameId(e.target.value)}
+                    className="h-8 px-2 font-mono text-[10px] bg-ink border border-white/15 text-platinum outline-none focus:border-pulse/40 pixel-clip-sm"
+                  >
+                    <option value="">All games (aggregate)</option>
+                    {gamesWithGenre.map((g) => (
+                      <option key={g.id} value={g.id}>{g.name}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
             </div>
             <div className="relative">
               <div className={!hasReports ? 'blur-md opacity-40 pointer-events-none select-none' : ''}>
-                <SignalAnalysis />
+                <SignalAnalysis forcedGenre={selectedGame?.genre || null} forcedGenreLabel={selectedGame?.name || ''} />
               </div>
               {!hasReports && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">

@@ -648,13 +648,15 @@ def _run_multi_year_game(years: list, analysis_by_year: dict,
     return html, registry
 
 
-def generate_game_report(years: list, game_text: str, game_label: str = "your game") -> str:
-    """Run analysis (aggregated across every active genre) for the needed
-    years, then ask Claude to analyse the uploaded game against it — one
-    smaller call per year, run concurrently, plus a synthesis call, instead
-    of one mega-call across every selected year."""
+def generate_game_report(years: list, game_text: str, game_label: str = "your game",
+                          genre: str | None = None) -> str:
+    """Run analysis for the needed years — scoped to one genre if given,
+    otherwise aggregated across every active genre — then ask Claude to
+    analyse the uploaded game against it — one smaller call per year, run
+    concurrently, plus a synthesis call, instead of one mega-call across
+    every selected year."""
     years = sorted(set(years))
-    analysis_by_year = {str(y): analyse(y) for y in years}
+    analysis_by_year = {str(y): analyse(y, genre) for y in years}
     html, registry = _run_multi_year_game(years, analysis_by_year, game_text, game_label)
 
     result = validate_citations(html, registry)

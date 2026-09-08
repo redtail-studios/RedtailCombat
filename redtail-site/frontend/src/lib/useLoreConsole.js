@@ -35,6 +35,7 @@ export function useLoreConsole() {
   const [scrapedAt, setScrapedAt] = useState(null);
   const [availYears, setAvailYears] = useState([]);
   const [platforms, setPlatforms] = useState([]);
+  const [genres, setGenres] = useState([]); // [{id, label}] — which genre a game competes in
   const [scrapeYear, setScrapeYear] = useState(2026);
   const [scrapeStatus, setScrapeStatus] = useState({ status: "idle", platforms: {}, error: null });
   const [scrapeStarting, setScrapeStarting] = useState(false);
@@ -56,6 +57,8 @@ export function useLoreConsole() {
       try {
         const d = await (await fetch("/api/lore/env")).json();
         setPlatforms(d.platforms || []);
+        const active = d.active_genres || [];
+        setGenres(active.map((id) => ({ id, label: d.genres?.[id] || id })));
       } catch (e) { /* ignore */ }
     })();
   }, []);
@@ -147,30 +150,35 @@ export function useLoreConsole() {
   // ---- Step 2 (analyse your own game) ----
   const [gameFile, setGameFile] = useState(null);
   const [gameSel, setGameSel] = useState([]);
+  const [gameGenre, setGameGenre] = useState(null); // which genre this game competes in
   const [gameReportState, setGameReportState] = useState({ status: "idle", html: null, gameName: null, error: null, label: "" });
   const gameReportElapsed = useElapsed(gameReportState.status === "loading");
   const [redesignFile, setRedesignFile] = useState(null);
 
-  const gameRepDisabled = !gameFile || gameSel.length === 0;
-  const gameRepMeta = !gameFile ? "Upload a PDF" : (gameSel.length ? `Analysing your game against ${gameSel.join(", ")}` : "Select at least one year");
+  const gameRepDisabled = !gameFile || gameSel.length === 0 || !gameGenre;
+  const gameRepMeta = !gameFile ? "Upload a PDF"
+    : !gameGenre ? "Pick which genre your game competes in"
+    : (gameSel.length ? `Analysing your game against ${gameSel.join(", ")}` : "Select at least one year");
 
   const genGameReport = async () => {
-    if (!gameFile || !gameSel.length) return;
+    if (!gameFile || !gameSel.length || !gameGenre) return;
     const year = gameSel[gameSel.length - 1];
     setRdYear(year);
     const label = gameSel.join(", ");
+    const genreAtSubmit = gameGenre;
     setGameReportState({ status: "loading", html: null, gameName: null, error: null, label });
     try {
       const fd = new FormData();
-      fd.append("file", gameFile); fd.append("years", gameSel.join(",")); fd.append("password", dashboardPassword);
+      fd.append("file", gameFile); fd.append("years", gameSel.join(","));
+      fd.append("genre", genreAtSubmit); fd.append("password", dashboardPassword);
       const r = await fetch("/api/lore/game-report", { method: "POST", body: fd });
       const d = await r.json();
       if (!r.ok || d.error) setGameReportState({ status: "error", html: null, gameName: null, error: d.error || "error", label });
       else {
         setGameReportState({ status: "done", html: d.html, gameName: d.game, error: null, label });
         setRedesignFile(gameFile);
-        const reportId = addReport({ type: "game", label, html: d.html, gameName: d.game });
-        addPortfolioGame({ name: d.game, lastYears: label, lastReportId: reportId });
+        const reportId = addReport({ type: "game", label, html: d.html, gameName: d.game, genre: genreAtSubmit });
+        addPortfolioGame({ name: d.game, lastYears: label, lastReportId: reportId, genre: genreAtSubmit });
       }
     } catch (e) {
       setGameReportState({ status: "error", html: null, gameName: null, error: e.message, label });
@@ -217,7 +225,7 @@ h1{color:#ff6b2b} .feat{background:#141414;border:1px solid #222;border-radius:1
   return {
     view, setView,
     // Step 1
-    scrapedAt, availYears, platforms, scrapeYear, setScrapeYear, scrapeStatus, scrapeStarting, scrapeMeta, startScrape,
+    scrapedAt, availYears, platforms, genres, scrapeYear, setScrapeYear, scrapeStatus, scrapeStarting, scrapeMeta, startScrape,
     // Step 2 — market report
     rMode, setRMode, activeTab, setActiveTab, analyseSel, backSel, valSel,
     onToggleAnalyse: (y) => setAnalyseSel((s) => toggleYear(s, y)),
@@ -228,7 +236,7 @@ h1{color:#ff6b2b} .feat{background:#141414;border:1px solid #222;border-radius:1
     genReport,
     downloadReport: () => downloadHtml(reportState.html, `lore-market-report-${slug(rdYear)}.html`),
     // Step 2 — analyse your game
-    gameFile, setGameFile, gameSel,
+    gameFile, setGameFile, gameSel, gameGenre, setGameGenre,
     onToggleGame: (y) => setGameSel((s) => toggleYear(s, y)),
     gameRepMeta, gameRepDisabled,
     gameReportState: { ...gameReportState, elapsed: gameReportElapsed },
