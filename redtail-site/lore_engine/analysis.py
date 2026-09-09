@@ -10,6 +10,7 @@ dependency-light (no model calls here), so it runs fine on Vercel.
 import json
 import os
 from collections import defaultdict, deque
+from concurrent.futures import ThreadPoolExecutor
 
 from config import DEPLOYED, SIGNAL_KEYWORDS, COMPETITORS, PLATFORM_IDS, SOURCE_WEIGHTS, get_year_dir
 import storage
@@ -19,21 +20,33 @@ from difflib import SequenceMatcher
 
 
 # ── Loading ──────────────────────────────────────────────────────────────────
-def _iter_records(year: int, genre: str | None = None):
+def _fetch_all_platforms(year: int) -> list:
+    """[(platform_id, records)] for every platform that has data for this
+    year. When DEPLOYED, each platform is its own S3 GET — fetched in
+    parallel (same pattern as storage.get_all_statuses/compute_manifest)
+    instead of PLATFORM_IDS-many sequential round-trips, which otherwise
+    dominates signal-analysis's wall-clock time far more than the actual
+    dedup/scoring computation does."""
+    if DEPLOYED:
+        with ThreadPoolExecutor(max_workers=8) as ex:
+            pairs = list(ex.map(lambda pid: (pid, storage.get_cached_records(year, pid)), PLATFORM_IDS))
+        return [(pid, records) for pid, records in pairs if records is not None]
+
+    out = []
     for pid in PLATFORM_IDS:
-        if DEPLOYED:
-            records = storage.get_cached_records(year, pid)
-            if records is None:  # miss or stale — same silent-skip as before
-                continue
-        else:
-            fpath = os.path.join(get_year_dir(year), f"{pid}_data.json")
-            if not os.path.exists(fpath):
-                continue
-            try:
-                with open(fpath, encoding="utf-8") as f:
-                    records = json.load(f)
-            except Exception:
-                continue
+        fpath = os.path.join(get_year_dir(year), f"{pid}_data.json")
+        if not os.path.exists(fpath):
+            continue
+        try:
+            with open(fpath, encoding="utf-8") as f:
+                out.append((pid, json.load(f)))
+        except Exception:
+            continue
+    return out
+
+
+def _iter_records(year: int, genre: str | None = None):
+    for pid, records in _fetch_all_platforms(year):
         for record in records:
             # Records without a "genre" tag (whole-market signals: news,
             # GitHub, itch.io, Steam charts, Twitch, ...) or tagged "general"
@@ -253,9 +266,16 @@ def competitors(items: list) -> list:
     return out[:6]
 
 
-def analyse(year: int, genre: str | None = None) -> dict:
+def analyse(year: int, genre: str | None = None, include_quotes: bool = True) -> dict:
     """Full cheap analysis for one year. genre=None aggregates across every
-    genre scraped for that year (today's original behavior, unchanged)."""
+    genre scraped for that year (today's original behavior, unchanged).
+
+    include_quotes=False skips top_quotes() entirely — it re-fetches every
+    platform's records independently (its own full _iter_records pass) and
+    reruns dedupe_items on top, so it roughly doubles this function's cost
+    for a caller that's just going to discard the result anyway (the
+    dashboard's signal-analysis endpoint never shows quotes; report
+    generation still needs them and keeps the default)."""
     items = load_items(year, genre)
     sigs  = signal_scores(items)
     return {
@@ -263,5 +283,5 @@ def analyse(year: int, genre: str | None = None) -> dict:
         "signals":     sigs,
         "scorecard":   scorecard(items, sigs),
         "competitors": competitors(items),
-        "quotes":      top_quotes(year, n=25, genre=genre),
+        "quotes":      top_quotes(year, n=25, genre=genre) if include_quotes else [],
     }

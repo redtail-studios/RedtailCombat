@@ -268,8 +268,11 @@ def signal_analysis(genre: str | None = None):
             years[str(y)] = cached[1]
             continue
         try:
-            a = analysis.analyse(y, genre)
-            a.pop("quotes", None)  # unused by the dashboard charts, drop to keep the payload small
+            # include_quotes=False: top_quotes() re-fetches every platform's
+            # records independently and reruns dedupe on top — the dashboard
+            # charts never show quotes, so skip computing them at all rather
+            # than computing and discarding them.
+            a = analysis.analyse(y, genre, include_quotes=False)
         except Exception as e:
             a = {"total_items": 0, "signals": {}, "scorecard": {}, "competitors": [], "error": str(e)}
         _SIGNAL_ANALYSIS_CACHE[key] = (now, a)
