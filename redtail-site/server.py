@@ -237,12 +237,19 @@ def ask_lore(req: AskReq):
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
 
 
-_SIGNAL_ANALYSIS_CACHE = {}      # genre -> (computed_at, response)
+_SIGNAL_ANALYSIS_CACHE = {}      # (genre, year) -> (computed_at, response)
 _SIGNAL_ANALYSIS_TTL = 600        # seconds — analysis.analyse()'s fuzzy dedup
-                                   # (SequenceMatcher, effectively O(n^2)) makes
-                                   # this expensive across 5 years of scraped
-                                   # data (40+s for 2026 alone), so cache it
-                                   # rather than recompute on every page load.
+                                   # (SequenceMatcher-based) makes this
+                                   # expensive per year (worse still after a
+                                   # big scrape — a single year's item count
+                                   # can jump 4-5x), so cache it rather than
+                                   # recompute on every page load. Only the
+                                   # CURRENT year is subject to this TTL —
+                                   # past years' scraped data never changes
+                                   # (see storage._is_fresh's same rule), so
+                                   # they're cached indefinitely per-process
+                                   # instead of being needlessly recomputed
+                                   # on the same 10-minute clock as 2026.
 
 
 @app.get("/api/lore/signal-analysis")
@@ -250,23 +257,24 @@ def signal_analysis(genre: str | None = None):
     """Real signal scores + sentiment + competitor mentions per year
     (2022-2026), straight from analysis.analyse() — no LLM call. Read-only,
     no password. Powers the dashboard's signal/competitor charts."""
-    cached = _SIGNAL_ANALYSIS_CACHE.get(genre)
     now = datetime.now(timezone.utc).timestamp()
-    if cached and (now - cached[0]) < _SIGNAL_ANALYSIS_TTL:
-        return cached[1]
-
+    current_year = config.SUPPORTED_YEARS[-1]
     years = {}
     for y in config.SUPPORTED_YEARS:
+        key = (genre, y)
+        cached = _SIGNAL_ANALYSIS_CACHE.get(key)
+        fresh = cached and (y != current_year or (now - cached[0]) < _SIGNAL_ANALYSIS_TTL)
+        if fresh:
+            years[str(y)] = cached[1]
+            continue
         try:
             a = analysis.analyse(y, genre)
             a.pop("quotes", None)  # unused by the dashboard charts, drop to keep the payload small
-            years[str(y)] = a
         except Exception as e:
-            years[str(y)] = {"total_items": 0, "signals": {}, "scorecard": {},
-                              "competitors": [], "error": str(e)}
-    result = {"years": years}
-    _SIGNAL_ANALYSIS_CACHE[genre] = (now, result)
-    return result
+            a = {"total_items": 0, "signals": {}, "scorecard": {}, "competitors": [], "error": str(e)}
+        _SIGNAL_ANALYSIS_CACHE[key] = (now, a)
+        years[str(y)] = a
+    return {"years": years}
 
 
 _MAX_STORED_REPORTS = 20   # matches the previous client-side localStorage cap

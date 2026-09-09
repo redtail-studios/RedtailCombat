@@ -122,6 +122,12 @@ def dedupe_items(items: list, sim_ratio: float = 0.85) -> list:
          is already <= sim_ratio, ratio() is guaranteed to be too, so most
          non-duplicate pairs (the overwhelming majority in real data) get
          rejected without ever running the expensive comparison.
+      3. Before even that: a plain length-ratio check (no string scanning at
+         all) rejects pairs whose lengths differ too much for ratio() to
+         possibly exceed sim_ratio, regardless of content — cheaper than
+         quick_ratio() and catches most of the same rejections up front.
+         Became worth adding once a single year's item count grew past
+         ~20k (a big scrape can easily 4-5x a prior count).
     """
     queue = deque(maxlen=50) # compare against a bounded window, not the full list pairwise — O(N) not O(N^2) once lore_data/ has thousands of items
     keep = []
@@ -133,8 +139,21 @@ def dedupe_items(items: list, sim_ratio: float = 0.85) -> list:
         text = re.sub(r'\s+', ' ', text).strip() # removes extraneous whitespace
         # compare for duplicates
         sm.set_seq2(text)
+        tlen = len(text)
         duplicate = None
         for cand in queue:
+            clen = cand["len"]
+            # SequenceMatcher.ratio() = 2*M/(la+lb), M <= min(la, lb), so
+            # ratio is capped at 2*min(la,lb)/(la+lb) regardless of content —
+            # below this length-ratio threshold, no comparison can possibly
+            # exceed sim_ratio. A plain length check is far cheaper than
+            # quick_ratio() (which still scans both strings' character
+            # frequencies), so this rejects most non-duplicate pairs (very
+            # different lengths, the common case across unrelated items)
+            # before any string is touched at all.
+            shorter, longer = (tlen, clen) if tlen <= clen else (clen, tlen)
+            if longer and 2 * shorter / longer <= sim_ratio:
+                continue
             sm.set_seq1(cand["norm"])
             if sm.quick_ratio() > sim_ratio and sm.ratio() > sim_ratio:
                 duplicate = cand
@@ -145,13 +164,14 @@ def dedupe_items(items: list, sim_ratio: float = 0.85) -> list:
                 duplicate["sources"].append(item["source"])
         else:
             # found something unique
-            elem = {**item, "norm" : text, "sources" : [item["source"]]}
+            elem = {**item, "norm": text, "len": tlen, "sources": [item["source"]]}
             keep.append(elem)
             queue.append(elem)
 
     for item in keep:
-        # remove norm from final result
+        # remove norm/len from final result
         del item["norm"]
+        del item["len"]
 
     return keep
         
