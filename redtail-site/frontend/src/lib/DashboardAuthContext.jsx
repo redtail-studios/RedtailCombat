@@ -8,6 +8,11 @@ const VALID_PASSWORD = 'redtaillore@2026';
 // ADMIN_PASSWORD. Same full access as the owner login, separate credential.
 const ADMIN_USERNAME = 'admin';
 const ADMIN_PASSWORD = 'redtailadmin@2026';
+// Third permanent account (Dakota) — mirrors server.py's DAKOTA_PASSWORD.
+// Same full access, own credential, own isolated portfolio/reports (data is
+// scoped per-username, same as every other account here).
+const DAKOTA_USERNAME = 'dakota';
+const DAKOTA_PASSWORD = 'dakotaredtail@2026';
 // Time-boxed guest login — mirrors server.py's GUEST_PASSWORD/GUEST_EXPIRES
 // (LORE_GUEST_EXPIRES in .env). Keep these two in sync — the server is the
 // real gate, this just avoids a round-trip for an obviously-expired guess.
@@ -42,8 +47,9 @@ export const DashboardAuthProvider = ({ children }) => {
   const dashboardLogin = (username, password) => {
     const isOwner = username === VALID_USERNAME && password === VALID_PASSWORD;
     const isAdmin = username === ADMIN_USERNAME && password === ADMIN_PASSWORD;
+    const isDakota = username === DAKOTA_USERNAME && password === DAKOTA_PASSWORD;
     const isGuest = username === GUEST_USERNAME && password === GUEST_PASSWORD && Date.now() < GUEST_EXPIRES;
-    if (isOwner || isAdmin || isGuest) {
+    if (isOwner || isAdmin || isDakota || isGuest) {
       localStorage.setItem('dashboard_auth', 'true');
       localStorage.setItem('dashboard_auth_user', username);
       localStorage.setItem('dashboard_auth_pw', password);
