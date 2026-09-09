@@ -12,7 +12,7 @@ import os
 from collections import defaultdict, deque
 from concurrent.futures import ThreadPoolExecutor
 
-from config import DEPLOYED, SIGNAL_KEYWORDS, COMPETITORS, PLATFORM_IDS, SOURCE_WEIGHTS, get_year_dir
+from config import DEPLOYED, SIGNAL_KEYWORDS, COMPETITORS, GENRES, PLATFORM_IDS, SOURCE_WEIGHTS, get_year_dir
 import storage
 import re
 from difflib import SequenceMatcher
@@ -237,12 +237,21 @@ def scorecard(items: list, sigs: dict) -> dict:
     }
 
 
-def competitors(items: list) -> list:
+def competitors(items: list, genre: str | None = None) -> list:
+    """genre=None (aggregate view) checks the full merged COMPETITORS list —
+    reasonable when the items themselves aren't scoped to one genre either.
+    A specific genre must only check *that* genre's own competitor list —
+    checking the global merged list against genre-filtered items let an
+    unrelated genre's game (e.g. Candy Crush, defined only under "puzzle")
+    surface as a "competitor" in, say, a Fighting-genre view just because it
+    got mentioned in a general-tagged gaming-news item that passed the
+    filter (see _iter_records's "general" pass-through)."""
+    comp_registry = COMPETITORS if not genre else GENRES.get(genre, {}).get("competitors", COMPETITORS)
     agg = defaultdict(lambda: {"mentions": 0, "pos": 0, "neg": 0, "quote": ""})
     for it in items:
         source = it["source"]
         low = it["text"].lower()
-        for name, subs in COMPETITORS.items():
+        for name, subs in comp_registry.items():
             if any(s in low for s in subs):
                 s = it["sentiment"].get("compound", 0)
                 agg[name]["mentions"] += SOURCE_WEIGHTS.get(source, 1.0)
@@ -282,6 +291,6 @@ def analyse(year: int, genre: str | None = None, include_quotes: bool = True) ->
         "total_items": len(items),
         "signals":     sigs,
         "scorecard":   scorecard(items, sigs),
-        "competitors": competitors(items),
+        "competitors": competitors(items, genre),
         "quotes":      top_quotes(year, n=25, genre=genre) if include_quotes else [],
     }

@@ -194,6 +194,13 @@ GENRES = {
             "Mortal Kombat":  ["mortal kombat"],
             "Injustice":      ["injustice"],
             "Clash Royale":   ["clash royale"],
+            # Indie platform fighters — real, actively-discussed titles, not
+            # just the AAA names above, so they have a chance to actually
+            # surface instead of the same handful of mainstream games always
+            # winning by sheer name-recognition mention volume.
+            "Skullgirls":            ["skullgirls"],
+            "Rivals of Aether":      ["rivals of aether"],
+            "Them's Fightin' Herds": ["them's fightin' herds", "thems fightin herds"],
         },
     },
     "puzzle": {
@@ -222,6 +229,10 @@ GENRES = {
             "Candy Crush":   ["candy crush"],
             "Gardenscapes":  ["gardenscapes"],
             "Homescapes":    ["homescapes"],
+            # Indie puzzle hits — same reasoning as fighting's list above.
+            "Baba Is You": ["baba is you"],
+            "Two Dots":    ["two dots"],
+            "Puzzmo":      ["puzzmo"],
         },
     },
     "gacha": {
@@ -251,6 +262,11 @@ GENRES = {
             "Fate/Grand Order":     ["fate/grand order", "fgo"],
             "Honkai: Star Rail":    ["honkai"],
             "Raid: Shadow Legends": ["raid: shadow legends", "raid shadow legends"],
+            # Smaller/indie-adjacent studios — real gacha titles that aren't
+            # the same two or three giants (miHoYo/Sony) every time.
+            "Arknights":         ["arknights"],
+            "Epic Seven":        ["epic seven"],
+            "Girls' Frontline":  ["girls' frontline", "girls frontline"],
         },
     },
     "idle": {
@@ -281,6 +297,11 @@ GENRES = {
             "Egg, Inc.":     ["egg, inc", "egg inc"],
             "Cookie Clicker": ["cookie clicker"],
             "Idle Heroes":   ["idle heroes"],
+            # Idle is already a genre solo/small-team devs dominate — a few
+            # more real, actively-discussed indie idle titles.
+            "Melvor Idle": ["melvor idle"],
+            "NGU Idle":    ["ngu idle"],
+            "Idle Slayer": ["idle slayer"],
         },
     },
     "hybrid_casual": {
@@ -308,6 +329,9 @@ GENRES = {
             "Join Clash":     ["join clash"],
             "Count Masters":  ["count masters"],
             "Save the Doge":  ["save the doge"],
+            # More small-studio hyper-casual titles alongside the above.
+            "Stack Ball":   ["stack ball"],
+            "Twisty Road!": ["twisty road"],
         },
     },
 }
