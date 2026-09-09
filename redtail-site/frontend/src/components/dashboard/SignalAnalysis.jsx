@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { Rocket, Swords } from 'lucide-react';
 import { scoreColor, chartTooltipStyle, chartTickFont } from '@/lib/dashboardData';
+import InfoTooltip from '@/components/dashboard/InfoTooltip';
 
 const YEARS = [2022, 2023, 2024, 2025, 2026];
 // Signal-trend lines are just 3 different demand categories — no good/bad
@@ -160,6 +161,13 @@ export default function SignalAnalysis({ forcedGenre = null, forcedGenreLabel = 
         <div className="flex items-center gap-2 mb-3">
           <Rocket className="w-3.5 h-3.5 text-pulse" />
           <span className="font-pixel text-[7px] uppercase tracking-wider text-platinum/50">Signal Simulator</span>
+          <InfoTooltip>
+            <b className="text-platinum">Hits:</b> how many scraped items (Reddit posts, reviews, comments, news text) matched a keyword for that demand signal — e.g. a review saying "great with friends" is a hit for Co-op / Social Play.
+            <br /><br />
+            <b className="text-platinum">Signal score (X/10):</b> not the raw hit count — that signal's hits as a share of all scraped items, scaled relative to whichever signal had the most hits that year.
+            <br /><br />
+            <b className="text-platinum">Positive / Negative:</b> share of scraped text with clearly positive or negative sentiment (VADER scoring). The rest is neutral.
+          </InfoTooltip>
         </div>
         <p className="font-mono text-[10px] text-platinum/40 mb-4">Real demand-signal strength by scraped year</p>
 
@@ -219,6 +227,13 @@ export default function SignalAnalysis({ forcedGenre = null, forcedGenreLabel = 
         <div className="flex items-center gap-2 mb-3">
           <Swords className="w-3.5 h-3.5 text-pulse" />
           <span className="font-pixel text-[7px] uppercase tracking-wider text-platinum/50">Competitor Radar</span>
+          <InfoTooltip>
+            <b className="text-platinum">Mentions:</b> how many scraped items named that competitor directly (e.g. "Genshin Impact", "Street Fighter"). Only games belonging to the selected genre are checked — switching genre changes which competitors can even show up here.
+            <br /><br />
+            <b className="text-platinum">Positive %:</b> the sentiment split within just that competitor's own mentions, not the market overall.
+            <br /><br />
+            <b className="text-platinum">Chip color:</b> green = mostly positive reception, red = mostly negative, blue = mixed — reflects real sentiment, not click order.
+          </InfoTooltip>
         </div>
         <p className="font-mono text-[10px] text-platinum/40 mb-4">Real named-competitor mentions &amp; sentiment, {year}</p>
 

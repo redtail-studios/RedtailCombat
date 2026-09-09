@@ -9,6 +9,7 @@ import { chartTooltipStyle, chartTickFont } from '@/lib/dashboardData';
 import { useLoreReports } from '@/lib/LoreReportsContext';
 import SignalAnalysis from '@/components/dashboard/SignalAnalysis';
 import AskLore from '@/components/dashboard/AskLore';
+import InfoTooltip from '@/components/dashboard/InfoTooltip';
 
 function sentimentTag(sentiment) {
   const c = sentiment?.compound ?? 0;
@@ -110,6 +111,11 @@ export default function MarketTrends() {
             <div className="flex items-center gap-2 mb-3">
               <Newspaper className="w-3.5 h-3.5 text-pulse" />
               <span className="font-pixel text-[7px] uppercase tracking-wider text-platinum/50">Recent gaming-industry news</span>
+              <InfoTooltip>
+                Real headlines pulled from gaming-news RSS feeds (IGN, Polygon, Eurogamer + more) during the last scrape — not curated or written by Claude.
+                <br /><br />
+                The colored tag (POSITIVE / NEGATIVE / NEUTRAL) is automated sentiment scoring of the headline + summary text, not an editorial judgment about the game itself.
+              </InfoTooltip>
             </div>
             {news.length > 0 ? (
               <div className="space-y-3">
@@ -169,6 +175,11 @@ export default function MarketTrends() {
               <span className="font-pixel text-[7px] uppercase tracking-wider text-platinum/50">
                 Google search interest — {snapshot?.year || '—'}
               </span>
+              <InfoTooltip>
+                <b className="text-platinum">Bar chart:</b> Google Trends' 0–100 search-interest index for each genre term over the year — 100 is that term's own peak popularity, not an absolute search-volume count.
+                <br /><br />
+                <b className="text-platinum">Rising related searches (e.g. "+3900%"):</b> how much that specific related search grew versus its own recent baseline — a huge percentage usually means it went from near-zero to a sudden spike, not that the game is literally 39x more popular than the genre term above it.
+              </InfoTooltip>
             </div>
             {trendChartData.length > 0 ? (
               <>
