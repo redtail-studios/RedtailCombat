@@ -83,8 +83,10 @@ export default function ReportPanel({
               <input type="file" accept="application/pdf" className="hidden" onChange={(e) => onGameFileChange(e.target.files[0] || null)} />
             </label>
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-wider text-platinum/40 mb-2">Which genre does it compete in?</p>
-          <div className="flex items-center gap-1.5 mb-4 flex-wrap">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-platinum/40 mb-2">
+            Which genre does it compete in? <span className="text-pulse">*</span>
+          </p>
+          <div className={`flex items-center gap-1.5 mb-4 flex-wrap p-2 -m-2 transition-colors ${!gameGenre && gameFile ? 'ring-1 ring-pulse/40' : ''}`}>
             {(genres || []).map((g) => (
               <button
                 key={g.id}
@@ -101,7 +103,9 @@ export default function ReportPanel({
           <p className="font-mono text-[10px] uppercase tracking-wider text-platinum/40 mb-2">Years to analyse</p>
           <YearChips years={availYears} selected={gameSel} onToggle={onToggleGame} />
           <div className="flex items-center justify-between flex-wrap gap-3 mt-3 pt-3 border-t border-white/5">
-            <p className="font-mono text-xs text-platinum/40">{gameRepMeta}</p>
+            <p className={`font-mono text-xs ${gameFile && gameSel.length > 0 && !gameGenre ? 'text-pulse font-medium' : 'text-platinum/40'}`}>
+              {gameFile && gameSel.length > 0 && !gameGenre ? '⚠ Pick a genre above to enable "Analyse my game"' : gameRepMeta}
+            </p>
             <button onClick={onGenerateGameReport} disabled={gameRepDisabled || gameReportState.status === "loading"} className={dashBtn}>
               {gameReportState.status === "loading" ? (<><Loader2 className="w-3.5 h-3.5 animate-spin" /> Analysing…</>) : "Analyse my game"}
             </button>
