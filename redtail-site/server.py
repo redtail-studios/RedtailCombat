@@ -68,6 +68,8 @@ ADMIN_PASSWORD = os.getenv("LORE_ADMIN_PASSWORD", "redtailadmin@2026")
 # Third permanent account (Dakota) — same full access, own credential, own
 # isolated per-user portfolio/reports (see _user_ok/_safe_username).
 DAKOTA_PASSWORD = os.getenv("LORE_DAKOTA_PASSWORD", "dakotaredtail@2026")
+# Fourth permanent account (Andres Sevilla) — same pattern as Dakota above.
+ANDRES_PASSWORD = os.getenv("LORE_ANDRES_PASSWORD", "andresredtail@2026")
 
 # Vercel sets VERCEL=1 on deployed functions.
 DEPLOYED = config.DEPLOYED
@@ -96,6 +98,8 @@ def _ok(pw: str) -> bool:
         return True
     if pw == DAKOTA_PASSWORD:
         return True
+    if pw == ANDRES_PASSWORD:
+        return True
     if pw == GUEST_PASSWORD:
         return datetime.now(timezone.utc) < GUEST_EXPIRES
     return False
@@ -112,6 +116,8 @@ def _user_ok(username: str, password: str) -> bool:
         return password == ADMIN_PASSWORD
     if username == "dakota":
         return password == DAKOTA_PASSWORD
+    if username == "andres":
+        return password == ANDRES_PASSWORD
     if username == "guest":
         return password == GUEST_PASSWORD and datetime.now(timezone.utc) < GUEST_EXPIRES
     return False
