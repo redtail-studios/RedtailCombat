@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDashboardAuth } from '@/lib/DashboardAuthContext';
 import { useLoreReports } from '@/lib/LoreReportsContext';
-import { TrendingUp, Briefcase, Bell, FileText, CreditCard, Settings, LogOut, ChevronDown, User } from 'lucide-react';
+import { TrendingUp, Briefcase, Bell, FileText, CreditCard, Settings, LogOut, ChevronDown, User, Menu, X } from 'lucide-react';
 import { LOGO_URL } from '@/lib/teamData';
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
@@ -42,6 +42,7 @@ export default function DashboardLayout() {
   const location = useLocation();
   const isRealDataPage = REAL_DATA_PATHS.includes(location.pathname);
   const badgeFor = (item) => (item.to === '/dashboard/portfolio' ? String(portfolio.length) : item.badge);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const handleLogout = () => {
     dashboardLogout();
@@ -50,10 +51,24 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-ink">
-      {/* Sidebar */}
-      <aside className="flex flex-col flex-shrink-0 w-60 h-full border-r border-white/5 bg-ink">
+      {/* Backdrop — mobile only, tap to close the drawer */}
+      {mobileNavOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 md:hidden"
+          onClick={() => setMobileNavOpen(false)}
+        />
+      )}
+
+      {/* Sidebar — an off-canvas drawer below md (slides in/out, closable),
+          the normal always-visible column at md+ (unchanged desktop behavior) */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col w-60 h-full border-r border-white/5 bg-ink
+          transform transition-transform duration-200 ease-in-out
+          ${mobileNavOpen ? 'translate-x-0' : '-translate-x-full'}
+          md:static md:translate-x-0 md:flex-shrink-0`}
+      >
         {/* Logo */}
-        <div className="px-4 py-5 border-b border-white/5">
+        <div className="px-4 py-5 border-b border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <img src={LOGO_URL} alt="Redtail" className="h-8 w-8 object-contain drop-shadow-[0_0_10px_rgba(255,46,46,0.4)]" />
             <div>
@@ -65,6 +80,13 @@ export default function DashboardLayout() {
               </div>
             </div>
           </div>
+          <button
+            onClick={() => setMobileNavOpen(false)}
+            aria-label="Close menu"
+            className="md:hidden text-platinum/40 hover:text-platinum p-1"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
         {/* Nav sections */}
@@ -81,6 +103,7 @@ export default function DashboardLayout() {
                     key={item.to}
                     to={item.to}
                     end={item.end}
+                    onClick={() => setMobileNavOpen(false)}
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-4 py-2.5 font-mono text-xs transition-colors ${
                         isActive ? 'text-pulse' : 'text-platinum/50 hover:text-platinum'
@@ -151,10 +174,19 @@ export default function DashboardLayout() {
           )}
 
           {/* Header row */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 bg-ink">
-            <span className="font-mono text-[10px] px-3 py-1 rounded-full bg-pulse/10 text-pulse border border-pulse/20">
-              0 signals need review
-            </span>
+          <div className="flex items-center justify-between gap-3 px-6 py-3 border-b border-white/5 bg-ink">
+            <div className="flex items-center gap-3 min-w-0">
+              <button
+                onClick={() => setMobileNavOpen(true)}
+                aria-label="Open menu"
+                className="md:hidden flex-shrink-0 text-platinum/60 hover:text-platinum p-1 -ml-1"
+              >
+                <Menu className="w-4 h-4" />
+              </button>
+              <span className="font-mono text-[10px] px-3 py-1 rounded-full bg-pulse/10 text-pulse border border-pulse/20 whitespace-nowrap">
+                0 signals need review
+              </span>
+            </div>
             <div className="flex items-center gap-3">
               <button className="font-mono text-[10px] px-3 py-1.5 border border-white/10 text-platinum/60 hover:text-platinum hover:border-white/20 transition-colors pixel-clip-sm">
                 Reports left 4
