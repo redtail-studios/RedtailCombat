@@ -413,7 +413,13 @@ YT_COMMENTS_PER   = 30
 # ── Twitch (needs free app: dev.twitch.tv/console/apps) ──────────────────────
 TWITCH_CLIENT_ID     = os.getenv("TWITCH_CLIENT_ID", "")
 TWITCH_CLIENT_SECRET = os.getenv("TWITCH_CLIENT_SECRET", "")
-TWITCH_TOP_GAMES     = 60
+# Each game now also costs one extra /helix/streams call for its real
+# viewer count (see scrapers/twitch.py) — 150 stays comfortably under
+# Twitch's ~800 req/min app-token rate limit (150 top-games + 150
+# viewer-count calls ≈ 300 total) while covering a lot more of the
+# long tail than the previous 60, which matters for genre-tagging since a
+# tracked title has to actually be IN the pulled set to get tagged.
+TWITCH_TOP_GAMES     = 150
 
 # ── IGDB (Twitch-owned game DB; reuses TWITCH_CLIENT_ID/SECRET above — no
 # separate key). Pre-release hype/buzz signal: how much attention upcoming
