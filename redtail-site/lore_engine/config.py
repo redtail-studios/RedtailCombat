@@ -413,13 +413,16 @@ YT_COMMENTS_PER   = 30
 # ── Twitch (needs free app: dev.twitch.tv/console/apps) ──────────────────────
 TWITCH_CLIENT_ID     = os.getenv("TWITCH_CLIENT_ID", "")
 TWITCH_CLIENT_SECRET = os.getenv("TWITCH_CLIENT_SECRET", "")
-# Each game now also costs one extra /helix/streams call for its real
-# viewer count (see scrapers/twitch.py) — 150 stays comfortably under
-# Twitch's ~800 req/min app-token rate limit (150 top-games + 150
-# viewer-count calls ≈ 300 total) while covering a lot more of the
-# long tail than the previous 60, which matters for genre-tagging since a
-# tracked title has to actually be IN the pulled set to get tagged.
-TWITCH_TOP_GAMES     = 150
+# Each game costs one extra /helix/streams call for its real viewer count +
+# individual stream records (see scrapers/twitch.py). Twitch's Top Games
+# ranking is dominated by the same handful of AAA titles/IRL categories for
+# roughly its first ~100 entries — real indie/niche games only start
+# appearing well past that, so a shallow pull (previously 150, before that
+# 60) structurally can't surface them regardless of genre-tagging logic.
+# 1000 reaches meaningfully into that long tail. Comfortably paced under
+# Twitch's ~800 req/min app-token rate limit even with retries (_get_with_
+# retry in twitch.py) — the run just takes several minutes wall-clock.
+TWITCH_TOP_GAMES     = 1000
 
 # ── IGDB (Twitch-owned game DB; reuses TWITCH_CLIENT_ID/SECRET above — no
 # separate key). Pre-release hype/buzz signal: how much attention upcoming

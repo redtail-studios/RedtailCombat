@@ -5,11 +5,36 @@ recognized competitor titles.
 Needs a free app: dev.twitch.tv/console/apps → create app → copy Client ID +
 Secret into .env as TWITCH_CLIENT_ID / TWITCH_CLIENT_SECRET. Skips without them.
 """
+import time
+
 import requests
 
 from config import (TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET, TWITCH_TOP_GAMES,
                     GENRES, get_year_dir)
 from scrapers import score, save
+
+
+def _get_with_retry(url, headers, params, log, tries=3):
+    """A deep pagination run makes hundreds of sequential Helix calls — a
+    single transient failure (network blip, momentary 429/5xx) used to kill
+    the whole run right there (games/top) or silently drop one game's
+    streams (streams), cutting a requested 1000-game run short at ~100 for
+    no real reason. Retries with backoff before giving up for real."""
+    for attempt in range(tries):
+        try:
+            r = requests.get(url, headers=headers, params=params, timeout=15)
+            if r.status_code == 429:
+                wait = float(r.headers.get("Ratelimit-Reset", 0)) - time.time()
+                time.sleep(max(1.0, min(wait, 10.0)))
+                continue
+            r.raise_for_status()
+            return r
+        except Exception as e:
+            if attempt == tries - 1:
+                log(f"  [twitch] request failed after {tries} tries: {e}")
+                return None
+            time.sleep(1.5 * (attempt + 1))
+    return None
 
 
 def _token() -> str | None:
@@ -55,14 +80,9 @@ def _fetch_streams(game_id: str, headers: dict, log) -> list:
     page also backs the game's aggregate viewer_count (summed below) — one
     real API call, two uses, instead of fetching it and throwing the actual
     per-stream data away."""
-    try:
-        r = requests.get("https://api.twitch.tv/helix/streams", headers=headers,
-                         params={"game_id": game_id, "first": 100}, timeout=15)
-        r.raise_for_status()
-        return r.json().get("data", [])
-    except Exception as e:
-        log(f"  [twitch] stream fetch failed for game_id={game_id}: {e}")
-        return []
+    r = _get_with_retry("https://api.twitch.tv/helix/streams", headers,
+                        {"game_id": game_id, "first": 100}, log)
+    return r.json().get("data", []) if r else []
 
 
 def run(year: int | None = None, log=print) -> list:
@@ -79,18 +99,15 @@ def run(year: int | None = None, log=print) -> list:
         f"{STREAMS_PER_GAME} real individual live streams + genre tagging (tagged {year})")
     headers = {"Client-Id": TWITCH_CLIENT_ID, "Authorization": f"Bearer {token}"}
     records, cursor, rank = [], None, 0
-    while len(records) < TWITCH_TOP_GAMES:
-        params = {"first": min(100, TWITCH_TOP_GAMES - len(records))}
+    while rank < TWITCH_TOP_GAMES:
+        params = {"first": min(100, TWITCH_TOP_GAMES - rank)}
         if cursor:
             params["after"] = cursor
-        try:
-            r = requests.get("https://api.twitch.tv/helix/games/top",
-                             headers=headers, params=params, timeout=15)
-            r.raise_for_status()
-            body = r.json()
-        except Exception as e:
-            log(f"  [twitch] error: {e}")
+        r = _get_with_retry("https://api.twitch.tv/helix/games/top", headers, params, log)
+        if r is None:
+            log(f"  [twitch] giving up on pagination after {rank} games")
             break
+        body = r.json()
         games = body.get("data", [])
         if not games:
             break
