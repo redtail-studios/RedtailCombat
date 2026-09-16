@@ -19,6 +19,43 @@ from difflib import SequenceMatcher
 
 
 
+# A platform whose *stored* record count is allowed to be huge (richer raw
+# data is good — e.g. Twitch's individual live-stream records, see
+# scrapers/twitch.py) doesn't have to feed every one of those records into
+# the expensive per-item pipeline below (dedupe_items' O(n*window) scan,
+# signal_scores/competitors' keyword pass, top_quotes' second dedupe pass —
+# all genuinely cost more as item count grows). Twitch alone went from ~150
+# to 18,200 records/year, and was over 90% of a year's total item count,
+# which is what actually made analyse() slow enough to matter for report
+# generation. Capped here, not at scrape time, so the full dataset stays in
+# S3 for anything else that might want it (a per-game stream browser, say)
+# — only the signal/report analysis path samples down, keeping the
+# highest-viewer-count (most-watched, most representative) streams first.
+_PLATFORM_ITEM_CAP = {"twitch": 3000}
+
+
+def _cap_platform_records(pid: str, records: list) -> list:
+    cap = _PLATFORM_ITEM_CAP.get(pid)
+    if not cap or len(records) <= cap:
+        return records
+    if pid == "twitch":
+        # Game-level records (no "streamer" key) are what drive genre
+        # tagging/indie discovery in the Signal Simulator and Competitor
+        # Radar — a niche indie game's own record can have a tiny
+        # viewer_count, so sorting everything together by viewer_count
+        # would cut exactly the long-tail titles the deep pagination was
+        # built to surface. Keep every game record unconditionally; only
+        # the individual-stream records (which exist purely to add real
+        # text/sentiment volume, not to represent a specific game's
+        # ranking) get capped, by their own viewer_count.
+        games = [r for r in records if "streamer" not in r]
+        streams = [r for r in records if "streamer" in r]
+        stream_budget = max(0, cap - len(games))
+        streams = sorted(streams, key=lambda r: r.get("viewer_count", 0), reverse=True)[:stream_budget]
+        return games + streams
+    return sorted(records, key=lambda r: r.get("viewer_count", 0), reverse=True)[:cap]
+
+
 # ── Loading ──────────────────────────────────────────────────────────────────
 def _fetch_all_platforms(year: int) -> list:
     """[(platform_id, records)] for every platform that has data for this
@@ -30,7 +67,7 @@ def _fetch_all_platforms(year: int) -> list:
     if DEPLOYED:
         with ThreadPoolExecutor(max_workers=8) as ex:
             pairs = list(ex.map(lambda pid: (pid, storage.get_cached_records(year, pid)), PLATFORM_IDS))
-        return [(pid, records) for pid, records in pairs if records is not None]
+        return [(pid, _cap_platform_records(pid, records)) for pid, records in pairs if records is not None]
 
     out = []
     for pid in PLATFORM_IDS:
@@ -39,7 +76,7 @@ def _fetch_all_platforms(year: int) -> list:
             continue
         try:
             with open(fpath, encoding="utf-8") as f:
-                out.append((pid, json.load(f)))
+                out.append((pid, _cap_platform_records(pid, json.load(f))))
         except Exception:
             continue
     return out

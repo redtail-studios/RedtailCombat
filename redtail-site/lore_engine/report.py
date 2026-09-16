@@ -15,6 +15,21 @@ from analysis import analyse
 from config import GENRES, ACTIVE_GENRES
 
 
+def _analyse_many(jobs: list) -> dict:
+    """Runs analyse(year, genre) for every (year, genre) job concurrently —
+    each one is a handful of parallel S3 reads plus a real dedup/scoring
+    pass over that year's items (worth 10-20+ seconds once a year's dataset
+    is large, e.g. after the Twitch stream-level expansion), and every call
+    site here used to run them one at a time. The actual Claude calls that
+    consume this were already made concurrent (see generate_game_report's
+    and generate's docstrings) specifically to buy speed through
+    parallelism rather than a thinner report — this is the same fix applied
+    one step earlier, to the analysis phase that feeds them."""
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        results = list(ex.map(lambda job: (job, analyse(*job)), jobs))
+    return dict(results)
+
+
 def _fmt_signals(sigs: dict) -> str:
     if not sigs:
         return "  (no signal data)"
@@ -430,11 +445,13 @@ def generate(backtest_years: list, validation_years: list | None = None,
     has_val = bool(validation_years)
 
     if genre:
-        analysis_by_year = {str(y): analyse(y, genre) for y in years}
+        by_job = _analyse_many([(y, genre) for y in years])
+        analysis_by_year = {str(y): by_job[(y, genre)] for y in years}
         prompt, registry = build_prompt(backtest_years, validation_years, analysis_by_year, genre)
         html = llm.generate_html(prompt, max_tokens=32000)
     else:
-        analysis_by_year_genre = {str(y): {g: analyse(y, g) for g in ACTIVE_GENRES}
+        by_job = _analyse_many([(y, g) for y in years for g in ACTIVE_GENRES])
+        analysis_by_year_genre = {str(y): {g: by_job[(y, g)] for g in ACTIVE_GENRES}
                                   for y in years}
         html, registry = _run_multi_genre(backtest_years, validation_years, has_val,
                                           analysis_by_year_genre, ACTIVE_GENRES)
@@ -656,7 +673,8 @@ def generate_game_report(years: list, game_text: str, game_label: str = "your ga
     concurrently, plus a synthesis call, instead of one mega-call across
     every selected year."""
     years = sorted(set(years))
-    analysis_by_year = {str(y): analyse(y, genre) for y in years}
+    by_job = _analyse_many([(y, genre) for y in years])
+    analysis_by_year = {str(y): by_job[(y, genre)] for y in years}
     html, registry = _run_multi_year_game(years, analysis_by_year, game_text, game_label)
 
     result = validate_citations(html, registry)
