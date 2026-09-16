@@ -19,9 +19,21 @@ PROVIDER        = os.getenv("LLM_PROVIDER", "anthropic").lower()
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-opus-4-8")
 OPENAI_MODEL    = os.getenv("OPENAI_MODEL", "gpt-4o")
 
+if PROVIDER == "anthropic":
+    # Imported once here, at module load (single-threaded) — report.py's
+    # multi-genre/multi-year reports call generate_html() from several
+    # threads at once (one per genre or year). A *lazy* `import anthropic`
+    # inside _via_anthropic meant the SDK's own one-time internal setup
+    # (Pydantic model class definitions) could get raced by several threads
+    # all importing it for the first time simultaneously on a cold start —
+    # surfaced as PydanticUserError: "BaseModel cannot be instantiated
+    # directly", intermittently, only on concurrent multi-genre calls.
+    # Importing it here means it's fully initialized before any thread
+    # pool touches it.
+    import anthropic
+
 
 def _via_anthropic(prompt: str, max_tokens: int) -> str:
-    import anthropic
     client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env
     # Stream so a long report doesn't hit the SDK's non-streaming timeout guard.
     # Note: Opus 4.8 rejects temperature/top_p/top_k — do not pass them.
