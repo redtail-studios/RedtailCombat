@@ -14,6 +14,22 @@ import llm
 from analysis import analyse
 from config import GENRES, ACTIVE_GENRES
 
+# Spliced into every prose-writing prompt below (each genre/year section, the
+# cross-genre/cross-year synthesis calls, the game-fit and competitive
+# sections) — reports were coming back readably as AI-written even when every
+# number in them was real, which undercuts them as something a founding team
+# trusts as an analyst deliverable. This targets the actual tells, not "be
+# more human" as a vague instruction that models tend to ignore.
+VOICE_SPEC = """
+VOICE — write like a specific human analyst staked their name on this, not an AI summarizing a topic:
+- Commit to a take. If the data supports a real conclusion, state it — don't hedge into "may suggest" or "could indicate" when you mean "this means."
+- Vary sentence length and rhythm on purpose. Uniform sentence length is one of the most obvious AI tells — mix a short, blunt sentence next to a longer one that earns its length.
+- Cut AI-report filler entirely: "it's important to note," "in today's [dynamic/evolving] landscape," "leverage," "robust," "seamless," "delve into," "underscores/highlights/demonstrates" as a reflex verb, and "furthermore"/"moreover" as default transitions. If the sentence survives without the phrase, the phrase wasn't doing anything.
+- Don't restate a number you just cited in softer words ("the score is 8.5/10, indicating strong demand" — the number already said that; the next sentence should say something the number alone doesn't).
+- Skip false balance ("on one hand... on the other hand..."). A real analyst picks a read and defends it.
+- No throat-clearing openers. Start with the finding, not a scene-setting sentence about the industry.
+"""
+
 
 def _analyse_many(jobs: list) -> dict:
     """Runs analyse(year, genre) for every (year, genre) job concurrently —
@@ -152,7 +168,7 @@ def _genre_section_prompt(genre: str, blocks_for_genre: dict,
     return f"""You are running in non-interactive report-generation mode. Output ONLY the two parts described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary.
 
 You are a senior market-intelligence analyst writing one genre's section of a larger multi-genre report: {label}. Find genuine GAPS in the market for this genre specifically — unmet player needs that no current product serves well.
-{backtest_note}
+{VOICE_SPEC}{backtest_note}
 ## DATA — {label} ({bt})
 {bt_data}
 {val_data}
@@ -209,7 +225,7 @@ def _synthesis_prompt(digests: dict, genres: list, backtest_years: list,
     return f"""You are running in non-interactive report-generation mode. Output ONLY the two parts described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary.
 
 You are a senior market-intelligence analyst synthesizing a multi-genre report covering: {genre_list}. Each genre's detailed section has already been written by a separate analyst; you are writing only the parts that need a view across all of them. This is a visual intelligence report — the comparison and data-quality sections render as tables, never as prose describing the same numbers.
-
+{VOICE_SPEC}
 ## PER-GENRE DIGESTS ({bt})
 {digest_text}
 
@@ -309,7 +325,7 @@ def build_prompt(backtest_years: list, validation_years: list,
     prompt = f"""You are running in non-interactive report-generation mode. Output ONLY a complete, self-contained HTML document (<!DOCTYPE html> ... </html>). No tool calls, no markdown fences, no commentary — just the HTML.
 
 You are a senior market-intelligence analyst. From real scraped data across Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets (IGN/Polygon/Eurogamer/etc.), Steam's most-played trending list, and Wikipedia interest trends, find genuine GAPS in the market — unmet player needs that no current product serves well. Use the news/trending/Wikipedia signals for *what's rising*, and the reviews/discussion for *what players are frustrated by*.
-{scope_note}{backtest_note}
+{VOICE_SPEC}{scope_note}{backtest_note}
 ## DATA ({bt})
 {bt_data}
 {val_data}
@@ -491,7 +507,7 @@ def _game_year_fit_prompt(year: int, block: str, game_text: str, game_label: str
     return f"""You are running in non-interactive report-generation mode. Output ONLY the two parts described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary.
 
 You are a senior market-intelligence analyst comparing a studio's uploaded game design against real scraped player-market data (Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets, Steam trending, Wikipedia interest) for {year} only.
-
+{VOICE_SPEC}
 ## THE GAME — "{game_label}"
 {game_text[:4000]}
 
@@ -538,7 +554,7 @@ def _game_year_competitive_prompt(year: int, block: str, game_text: str, game_la
     return f"""You are running in non-interactive report-generation mode. Output ONLY the HTML fragment described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary, no digest text.
 
 You are a senior market-intelligence analyst comparing a studio's uploaded game design against real scraped player-market data (Reddit, Steam reviews, Google Play, Hacker News, gaming-news outlets, Steam trending, Wikipedia interest) for {year} only.
-
+{VOICE_SPEC}
 ## THE GAME — "{game_label}"
 {game_text[:4000]}
 
@@ -573,7 +589,7 @@ def _game_synthesis_prompt(digests: dict, years: list, game_text: str, game_labe
     return f"""You are running in non-interactive report-generation mode. Output ONLY the two parts described below — no <!DOCTYPE>/<html>/<head>/<body> wrapper, no markdown fences, no commentary.
 
 You are a senior market-intelligence analyst writing the opening and closing sections of a market-fit report for "{game_label}". Each year's detailed section has already been written by a separate analyst; you are writing only the parts that need a view across all of them.
-
+{VOICE_SPEC}
 ## THE GAME — "{game_label}"
 {game_text[:2000]}
 
