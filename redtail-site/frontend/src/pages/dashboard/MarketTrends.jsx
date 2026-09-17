@@ -31,7 +31,9 @@ function safeDate(raw) {
 
 const TABS = [
   { id: 'news', label: 'News', icon: Newspaper },
-  { id: 'analysis', label: 'Market Analysis', icon: BarChart3 },
+  // Market Analysis tab hidden for now — keep the entry commented out (not
+  // deleted) so the toggle and its content can come back with one line.
+  // { id: 'analysis', label: 'Market Analysis', icon: BarChart3 },
 ];
 
 export default function MarketTrends() {
@@ -80,7 +82,7 @@ export default function MarketTrends() {
             Real Google Trends + gaming-news signal from the {snapshot?.year || '—'} scrape snapshot.
           </p>
         </div>
-        <div className="inline-flex border-2 border-white/20 overflow-hidden">
+        <div className={`inline-flex border-2 border-white/20 overflow-hidden ${TABS.length < 2 ? 'hidden' : ''}`}>
           {TABS.map((t) => {
             const Icon = t.icon;
             return (
