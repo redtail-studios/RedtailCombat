@@ -21,6 +21,10 @@ const ANDRES_PASSWORD = 'andresredtail@2026';
 // CARAVELA_PASSWORD. Same full access, own credential, own isolated data.
 const CARAVELA_USERNAME = 'caravelacapital';
 const CARAVELA_PASSWORD = '7ghlZU1IB9hOo1JzyveK';
+// Personal demo/preview account (Amritha) — mirrors server.py's
+// AMRITHA_PASSWORD. Same full access, own credential, own isolated data.
+const AMRITHA_USERNAME = 'amritha';
+const AMRITHA_PASSWORD = '8UKQuObuuohYaS7VqDce';
 // Time-boxed guest login — mirrors server.py's GUEST_PASSWORD/GUEST_EXPIRES
 // (LORE_GUEST_EXPIRES in .env). Keep these two in sync — the server is the
 // real gate, this just avoids a round-trip for an obviously-expired guess.
@@ -58,8 +62,9 @@ export const DashboardAuthProvider = ({ children }) => {
     const isDakota = username === DAKOTA_USERNAME && password === DAKOTA_PASSWORD;
     const isAndres = username === ANDRES_USERNAME && password === ANDRES_PASSWORD;
     const isCaravela = username === CARAVELA_USERNAME && password === CARAVELA_PASSWORD;
+    const isAmritha = username === AMRITHA_USERNAME && password === AMRITHA_PASSWORD;
     const isGuest = username === GUEST_USERNAME && password === GUEST_PASSWORD && Date.now() < GUEST_EXPIRES;
-    if (isOwner || isAdmin || isDakota || isAndres || isCaravela || isGuest) {
+    if (isOwner || isAdmin || isDakota || isAndres || isCaravela || isAmritha || isGuest) {
       localStorage.setItem('dashboard_auth', 'true');
       localStorage.setItem('dashboard_auth_user', username);
       localStorage.setItem('dashboard_auth_pw', password);
