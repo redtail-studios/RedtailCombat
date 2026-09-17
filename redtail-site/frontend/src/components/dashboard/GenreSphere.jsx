@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Pause, Play, RotateCcw } from 'lucide-react';
 const COLORS = ['#B4FF39','#8FB3FF','#E9C779','#B49BDA','#E58A86'];
 export default function GenreSphere({ name, genres, selected, onSelect }) {
   const [angle, setAngle] = useState(0);
   const [hovered, setHovered] = useState(null);
+  const [moving, setMoving] = useState(true);
+  useEffect(() => {
+    if (!moving || hovered != null) return;
+    // Slow ambient drift — reads as "alive" without competing with reading
+    // a hovered tooltip or fighting the manual slider below.
+    const timer = setInterval(() => setAngle(a => (a + 0.12) % 360), 40);
+    return () => clearInterval(timer);
+  }, [moving, hovered]);
   const nodes = genres.map((g, i) => {
     const a = (-105 + i * 72 + angle) * Math.PI / 180;
     // Floor raised (was 65) so even a near-1.0 fit still clears the core's
@@ -16,7 +25,12 @@ export default function GenreSphere({ name, genres, selected, onSelect }) {
     return { g, i, a, x, y, lx, ly };
   });
   const hoveredNode = hovered != null ? nodes[hovered] : null;
+  const reset = () => { setAngle(0); setMoving(true); };
   return <div className="p-4">
+    <div className="flex justify-end gap-2 mb-2">
+      <button aria-label={moving ? 'Pause genre sphere' : 'Rotate genre sphere'} onClick={()=>setMoving(m=>!m)} className="p-2 border border-white/15 text-platinum/50 hover:text-moss">{moving ? <Pause size={13}/> : <Play size={13}/>}</button>
+      <button aria-label="Reset genre sphere" onClick={reset} className="p-2 border border-white/15 text-platinum/50 hover:text-moss"><RotateCcw size={13}/></button>
+    </div>
     <div className="relative">
       <svg viewBox="0 0 720 490" className="w-full" role="group" aria-label="Genre similarity sphere: shorter connections indicate closer genre fit">
         <defs><radialGradient id="genre-glow"><stop stopColor="#B4FF39" stopOpacity=".08"/><stop offset="1" stopColor="#B4FF39" stopOpacity="0"/></radialGradient></defs>
@@ -52,6 +66,6 @@ export default function GenreSphere({ name, genres, selected, onSelect }) {
         {hoveredNode.g.reason || 'No description available.'}
       </div>}
     </div>
-    <label className="flex gap-4 font-mono text-[10px] text-platinum/50 items-center mt-3">ROTATE VIEW<input type="range" aria-label="Rotate genre sphere" min="-180" max="180" value={angle} onChange={e=>setAngle(Number(e.target.value))} className="flex-1 accent-[#B4FF39]"/></label>
+    <label className="flex gap-4 font-mono text-[10px] text-platinum/50 items-center mt-3">ROTATE VIEW<input type="range" aria-label="Rotate genre sphere" min="-180" max="180" value={((angle+180)%360+360)%360-180} onChange={e=>{setMoving(false);setAngle(Number(e.target.value));}} className="flex-1 accent-[#B4FF39]"/></label>
   </div>;
 }
