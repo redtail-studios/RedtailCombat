@@ -24,13 +24,19 @@ export const LoreReportsProvider = ({ children }) => {
   const reportsRef = useRef([]);
   const portfolioRef = useRef([]);
 
+  const saveQueue = useRef(Promise.resolve());
+  const [saveError, setSaveError] = useState(null);
   const persist = (nextReports, nextPortfolio) => {
-    if (!username || !dashboardPassword) return;
-    fetch('/api/lore/user-data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password: dashboardPassword, reports: nextReports, portfolio: nextPortfolio }),
-    }).catch(() => { /* best-effort — local state already reflects the change */ });
+    if (!username || !dashboardPassword) return Promise.reject(new Error('Sign in to save your game.'));
+    const body=JSON.stringify({ username, password: dashboardPassword, reports: nextReports, portfolio: nextPortfolio });
+    const save=saveQueue.current.catch(()=>{}).then(async()=>{
+      const response=await fetch('/api/lore/user-data',{method:'POST',headers:{'Content-Type':'application/json'},body});
+      if(!response.ok)throw new Error('Your analysis could not be saved. Please retry before leaving this page.');
+      setSaveError(null);
+    });
+    saveQueue.current=save;
+    save.catch(error=>setSaveError(error.message));
+    return save;
   };
 
   // Hydrate from the backend whenever the logged-in user changes (login,
@@ -71,7 +77,6 @@ export const LoreReportsProvider = ({ children }) => {
       })
       .catch(() => { if (!cancelled) setLoaded(true); });
     return () => { cancelled = true; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, dashboardPassword, isDashboardAuthenticated]);
 
   const addReport = (report) => {
@@ -100,18 +105,18 @@ export const LoreReportsProvider = ({ children }) => {
       : [{ id: makeId(), addedAt: new Date().toISOString(), ...game }, ...prev];
     portfolioRef.current = next;
     setPortfolio(next);
-    persist(reportsRef.current, next);
+    return persist(reportsRef.current, next);
   };
 
   const removePortfolioGame = (id) => {
     const next = portfolioRef.current.filter((g) => g.id !== id);
     portfolioRef.current = next;
     setPortfolio(next);
-    persist(reportsRef.current, next);
+    return persist(reportsRef.current, next);
   };
 
   return (
-    <LoreReportsContext.Provider value={{ reports, addReport, removeReport, portfolio, addPortfolioGame, removePortfolioGame, loaded }}>
+    <LoreReportsContext.Provider value={{ reports, addReport, removeReport, portfolio, addPortfolioGame, removePortfolioGame, loaded, saveError }}>
       {children}
     </LoreReportsContext.Provider>
   );

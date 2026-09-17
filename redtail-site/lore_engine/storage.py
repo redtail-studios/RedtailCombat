@@ -395,6 +395,85 @@ def enqueue_scrape(year: int, platform: str) -> None:
     )
 
 
+# ── Workspace blob store (Competition / Player experience / Redesign) ───────
+# A generic key-value store standing in for what the dashboard-preview build
+# kept as local JSON/PNG files under workspace_data/ — Vercel's Python
+# functions have a read-only filesystem outside /tmp, so that state has to
+# live in S3 instead, exactly like userdata above. Documents/analyses/briefs/
+# jobs/etc. are namespaced by `kind` (one S3 prefix per kind) so a "list every
+# brief" scan (see workspace_features.history()) only has to page one prefix
+# instead of every object in the bucket.
+WORKSPACE_PREFIX = f"{_ROOT_PREFIX}/workspace"
+
+
+def _workspace_key(kind: str, key: str) -> str:
+    return f"{WORKSPACE_PREFIX}/{kind}/{key}.json"
+
+
+def workspace_get_json(kind: str, key: str):
+    try:
+        resp = _s3_client().get_object(Bucket=BUCKET, Key=_workspace_key(kind, key))
+    except ClientError as e:
+        if _not_found(e):
+            return None
+        raise
+    return json.loads(resp["Body"].read())
+
+
+def workspace_put_json(kind: str, key: str, data) -> None:
+    _s3_client().put_object(
+        Bucket=BUCKET, Key=_workspace_key(kind, key),
+        Body=json.dumps(data, ensure_ascii=False).encode("utf-8"),
+        ContentType="application/json",
+    )
+
+
+def workspace_list_json(kind: str) -> list:
+    """Every JSON document currently stored under one kind — used for the
+    small per-installation scan history() does over persisted briefs/jobs.
+    Lists the prefix (cheap) then fans the bodies out in parallel."""
+    prefix = f"{WORKSPACE_PREFIX}/{kind}/"
+    keys = []
+    paginator = _s3_client().get_paginator("list_objects_v2")
+    for page in paginator.paginate(Bucket=BUCKET, Prefix=prefix):
+        keys.extend(obj["Key"] for obj in page.get("Contents", []))
+    if not keys:
+        return []
+
+    def read(key):
+        try:
+            resp = _s3_client().get_object(Bucket=BUCKET, Key=key)
+            return json.loads(resp["Body"].read())
+        except ClientError as e:
+            if _not_found(e):
+                return None
+            raise
+
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        return [r for r in ex.map(read, keys) if r is not None]
+
+
+def _workspace_blob_key(kind: str, key: str, ext: str) -> str:
+    return f"{WORKSPACE_PREFIX}/{kind}/{key}.{ext}"
+
+
+def workspace_get_bytes(kind: str, key: str, ext: str = "bin"):
+    try:
+        resp = _s3_client().get_object(Bucket=BUCKET, Key=_workspace_blob_key(kind, key, ext))
+    except ClientError as e:
+        if _not_found(e):
+            return None
+        raise
+    return resp["Body"].read()
+
+
+def workspace_put_bytes(kind: str, key: str, data: bytes, content_type: str, ext: str = "bin") -> None:
+    _s3_client().put_object(
+        Bucket=BUCKET, Key=_workspace_blob_key(kind, key, ext),
+        Body=data, ContentType=content_type,
+    )
+
+
 def enqueue_missing_platforms(year: int, force: bool = False) -> list:
     """Enqueue every platform that needs (re-)scraping for `year`. Shared by
     the manual ops endpoint (server.py, force=False — skip platforms whose

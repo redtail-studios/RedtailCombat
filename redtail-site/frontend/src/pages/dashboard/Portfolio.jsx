@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { Plus, Gamepad2, FileText, Sparkles, Clock, ChevronDown, RefreshCw, Trash2 } from 'lucide-react';
 import { useLoreReports } from '@/lib/LoreReportsContext';
+import MarketWelcome from '@/components/dashboard/MarketWelcome';
 
 function GameCard({ game, report, onReanalyse, onDelete }) {
   const [expanded, setExpanded] = useState(false);
@@ -21,7 +22,8 @@ function GameCard({ game, report, onReanalyse, onDelete }) {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
+          <Link to={`/dashboard/games/${encodeURIComponent(game.id)}`} className="px-3 py-2 font-mono text-[10px] bg-moss text-ink pixel-clip-sm">Open Competition ↗</Link>
           <button
             onClick={() => setExpanded((e) => !e)}
             disabled={!report}
@@ -56,7 +58,7 @@ function GameCard({ game, report, onReanalyse, onDelete }) {
 
 export default function Portfolio() {
   const navigate = useNavigate();
-  const { portfolio, reports, removePortfolioGame } = useLoreReports();
+  const { portfolio, reports, loaded, removePortfolioGame } = useLoreReports();
   const [showAddForm, setShowAddForm] = useState(false);
   const [gameName, setGameName] = useState('');
 
@@ -86,6 +88,9 @@ export default function Portfolio() {
     { label: 'Game Analyses', value: String(gameReports.length), sub: 'your games vs. market', icon: Sparkles, color: '#8FB3FF' },
     { label: 'Last Analysed', value: lastAnalysed ? formatDistanceToNow(new Date(lastAnalysed.updatedAt || lastAnalysed.addedAt), { addSuffix: true }) : '—', sub: lastAnalysed?.name || 'no games yet', icon: Clock, color: '#FF2E2E' },
   ];
+
+  if (!loaded) return <p role="status" className="p-8 font-mono text-xs text-platinum/60">Loading your games…</p>;
+  if (!portfolio.length) return <div className="max-w-[1500px] mx-auto p-4 sm:p-8"><MarketWelcome/></div>;
 
   return (
     <div className="px-6 py-6 max-w-5xl mx-auto">
@@ -149,7 +154,7 @@ export default function Portfolio() {
             onClick={() => setShowAddForm(true)}
             className="flex items-center gap-2 px-4 py-2.5 font-mono text-xs font-medium bg-pulse text-ink hover:opacity-90 transition-opacity pixel-clip-sm"
           >
-            <Plus className="w-3.5 h-3.5" /> Add your first game
+            <Plus className="w-3.5 h-3.5" /> Add your game
           </button>
         </div>
       )}

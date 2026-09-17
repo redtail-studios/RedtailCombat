@@ -21,6 +21,7 @@ const NAV_SECTIONS = [
     label: 'STUDIO',
     items: [
       { to: '/dashboard', label: 'Market trends', icon: TrendingUp, end: true, badge: null },
+      { to: '/dashboard/competition', label: 'Competition', icon: Briefcase, badge: null },
       { to: '/dashboard/portfolio', label: 'Portfolio', icon: Briefcase, badge: '0' },
       { to: '/dashboard/updates', label: 'Updates', icon: Bell, badge: '0' },
       { to: '/dashboard/reports', label: 'Reports', icon: FileText, badge: null },
@@ -40,7 +41,7 @@ export default function DashboardLayout() {
   const { portfolio } = useLoreReports();
   const navigate = useNavigate();
   const location = useLocation();
-  const isRealDataPage = REAL_DATA_PATHS.includes(location.pathname);
+  const isRealDataPage = REAL_DATA_PATHS.includes(location.pathname) || location.pathname.startsWith('/dashboard/games/') || location.pathname === '/dashboard/competition';
   const badgeFor = (item) => (item.to === '/dashboard/portfolio' ? String(portfolio.length) : item.badge);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -126,6 +127,11 @@ export default function DashboardLayout() {
               })}
             </div>
           ))}
+          <div className="px-4 pt-2 border-t border-white/5">
+            <p className="font-pixel text-[7px] text-platinum/30 my-4">YOUR GAMES</p>
+            {portfolio.map(game => <NavLink key={game.id} to={`/dashboard/games/${encodeURIComponent(game.id)}`} onClick={() => setMobileNavOpen(false)} className={({isActive}) => `block font-mono text-xs px-3 py-3 mb-2 border truncate ${isActive ? 'border-pulse/40 text-pulse bg-pulse/5' : 'border-white/5 text-platinum/60 hover:text-platinum'}`}>{game.name}</NavLink>)}
+            <NavLink to="/dashboard/analyze?tab=game" onClick={() => setMobileNavOpen(false)} className="block font-mono text-xs text-moss py-3">+ Add your game</NavLink>
+          </div>
         </nav>
 
         {/* Profile / logout */}
@@ -183,17 +189,9 @@ export default function DashboardLayout() {
               >
                 <Menu className="w-4 h-4" />
               </button>
-              <span className="font-mono text-[10px] px-3 py-1 rounded-full bg-pulse/10 text-pulse border border-pulse/20 whitespace-nowrap">
-                0 signals need review
-              </span>
+
             </div>
             <div className="flex items-center gap-3">
-              <button className="font-mono text-[10px] px-3 py-1.5 border border-white/10 text-platinum/60 hover:text-platinum hover:border-white/20 transition-colors pixel-clip-sm">
-                Reports left 4
-              </button>
-              <button className="font-mono text-[10px] px-3 py-1.5 bg-platinum text-ink hover:opacity-90 transition-opacity pixel-clip-sm">
-                Buy reports
-              </button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center justify-center w-7 h-7 pixel-clip-sm bg-pulse/15 font-pixel text-[8px] text-pulse hover:bg-pulse/25 transition-colors">
@@ -222,7 +220,7 @@ export default function DashboardLayout() {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto bg-ink scanlines">
+        <main key={location.pathname} className="flex-1 overflow-y-auto bg-ink scanlines">
           <Outlet />
         </main>
       </div>

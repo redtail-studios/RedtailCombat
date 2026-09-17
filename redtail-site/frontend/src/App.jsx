@@ -21,6 +21,7 @@ const Register = lazy(() => import('@/pages/Register'));
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
 const MarketTrends = lazy(() => import('@/pages/dashboard/MarketTrends'));
+const Competition = lazy(() => import('@/pages/dashboard/Competition'));
 const Portfolio = lazy(() => import('@/pages/dashboard/Portfolio'));
 const Analyze = lazy(() => import('@/pages/dashboard/Analyze'));
 const Reports = lazy(() => import('@/pages/dashboard/Reports'));
@@ -62,6 +63,8 @@ const AuthenticatedApp = () => {
         }
       >
         <Route path="/dashboard" element={<MarketTrends />} />
+        <Route path="/dashboard/competition" element={<Competition />} />
+        <Route path="/dashboard/games/:gameId" element={<Competition />} />
         <Route path="/dashboard/portfolio" element={<Portfolio />} />
         <Route path="/dashboard/analyze" element={<Analyze />} />
         <Route path="/dashboard/updates" element={<DashboardPlaceholder title="Updates" />} />

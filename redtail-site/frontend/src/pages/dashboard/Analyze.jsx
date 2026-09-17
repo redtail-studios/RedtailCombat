@@ -1,10 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { useLoreReports } from '@/lib/LoreReportsContext';
 import { useLoreConsole } from '@/lib/useLoreConsole';
 import ReportPanel from '@/components/dashboard/analyze/ReportPanel';
 import RedesignPanel from '@/components/dashboard/analyze/RedesignPanel';
 
 export default function Analyze() {
   const c = useLoreConsole();
+  const { portfolio } = useLoreReports();
+  const savedGame = c.gameReportState.status === "done" ? portfolio.find(g => g.name === c.gameReportState.gameName) : null;
 
   return (
     <div className="px-6 py-6 max-w-5xl mx-auto">
@@ -13,6 +17,7 @@ export default function Analyze() {
         Real market analysis, live via Claude — pick years or upload your game, then redesign it from the findings.
       </p>
 
+      {savedGame && <Link to={`/dashboard/games/${encodeURIComponent(savedGame.id)}`} className="block mb-6 p-4 bg-moss text-ink font-mono text-sm pixel-clip-sm">Your game is ready. Open Competition ↗</Link>}
       {c.view === 'redesign' ? (
         <RedesignPanel
           year={c.rdYear}

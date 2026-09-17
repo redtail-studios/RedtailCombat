@@ -12,10 +12,23 @@ Serves the static site (locally) + the Lore API:
   POST /api/lore/scrape        — scrape a year (password-gated)
   GET  /api/lore/scrape/status — poll a scrape job's per-source progress
   POST /api/lore/report        — LIVE Claude intelligence report (password-gated)
-  POST /api/lore/game-report   — LIVE report analysing an UPLOADED game vs. market data, one genre (password-gated)
+  POST /api/lore/game-report   — grounded genre/competitor analysis of an UPLOADED game doc (username+password-gated; see lore_engine/workspace.py)
   POST /api/lore/snapshot      — redesign from an UPLOADED game PDF (password-gated)
   POST /api/lore/waitlist      — collect name+email from non-members (public, no password)
   GET  /api/lore/waitlist/export — pull a local backup of the waitlist (password-gated, json or csv)
+
+  Competition workspace (per-user, per-game — see lore_engine/workspace.py +
+  workspace_features.py, installed at the bottom of this file):
+  POST /api/lore/workspace-analysis         — genre fit + competitors for one saved game
+  POST /api/lore/workspace-regions          — Google Trends regional interest for its competitors
+  POST /api/lore/workspace-feedback         — player-review topic analysis vs. its competitors
+  POST /api/lore/workspace-focus            — save a topic's priority (focus/later/open)
+  POST /api/lore/workspace-document-assets  — visual references extracted from the uploaded doc
+  POST /api/lore/workspace-redesign-brief   — AI redesign proposal from the chosen focus
+  POST /api/lore/workspace-redesign-image   — OpenAI concept image for one proposed change
+  POST /api/lore/workspace-job              — poll a redesign brief/image job
+  POST /api/lore/workspace-redesign-history — this game's saved brief + generated images
+  GET  /api/lore/discover-games             — public trending-games feed (Portfolio's empty state)
 
 On Vercel only /api/* hits this function (see vercel.json); the HTML/images are
 served statically. Locally, this also serves the static files.
@@ -54,22 +67,16 @@ import config      # noqa: E402
 import manifest as manifest_mod  # noqa: E402
 import storage      # noqa: E402
 import analysis     # noqa: E402
+import accounts     # noqa: E402
 
-LORE_PASSWORD = os.getenv("LORE_PASSWORD", "redtaillore@2026")
-# Time-boxed guest login — expires on its own, no separate revoke step needed.
-# Username is checked client-side only (see lore.html doLogin); this password
-# check is the actual server-side gate every API call goes through.
-GUEST_PASSWORD = os.getenv("LORE_GUEST_PASSWORD", "loreguest@2026")
-GUEST_EXPIRES = datetime.fromisoformat(
-    os.getenv("LORE_GUEST_EXPIRES", "2026-08-29T23:59:59+00:00"))
-# Second permanent account (co-founders) — same full access as LORE_PASSWORD,
-# just a separate credential so it can be shared/rotated independently.
-ADMIN_PASSWORD = os.getenv("LORE_ADMIN_PASSWORD", "redtailadmin@2026")
-# Third permanent account (Dakota) — same full access, own credential, own
-# isolated per-user portfolio/reports (see _user_ok/_safe_username).
-DAKOTA_PASSWORD = os.getenv("LORE_DAKOTA_PASSWORD", "dakotaredtail@2026")
-# Fourth permanent account (Andres Sevilla) — same pattern as Dakota above.
-ANDRES_PASSWORD = os.getenv("LORE_ANDRES_PASSWORD", "andresredtail@2026")
+# Auth constants + per-user data read/write now live in accounts.py so
+# workspace.py can reuse them without importing this module (circular).
+LORE_PASSWORD = accounts.LORE_PASSWORD
+GUEST_PASSWORD = accounts.GUEST_PASSWORD
+GUEST_EXPIRES = accounts.GUEST_EXPIRES
+ADMIN_PASSWORD = accounts.ADMIN_PASSWORD
+DAKOTA_PASSWORD = accounts.DAKOTA_PASSWORD
+ANDRES_PASSWORD = accounts.ANDRES_PASSWORD
 
 # Vercel sets VERCEL=1 on deployed functions.
 DEPLOYED = config.DEPLOYED
@@ -90,47 +97,9 @@ async def _json_error_handler(request, exc: Exception):
     return JSONResponse({"error": f"{type(exc).__name__}: {exc}"}, status_code=500)
 
 
-def _ok(pw: str) -> bool:
-    pw = pw or ""
-    if pw == LORE_PASSWORD:
-        return True
-    if pw == ADMIN_PASSWORD:
-        return True
-    if pw == DAKOTA_PASSWORD:
-        return True
-    if pw == ANDRES_PASSWORD:
-        return True
-    if pw == GUEST_PASSWORD:
-        return datetime.now(timezone.utc) < GUEST_EXPIRES
-    return False
-
-
-def _user_ok(username: str, password: str) -> bool:
-    """Like _ok(), but binds the password to the specific username it
-    belongs to — so 'guest' can't accidentally (or otherwise) read/write
-    'lore's saved dashboard data by only getting the password right."""
-    username = (username or "").strip().lower()
-    if username == "lore":
-        return password == LORE_PASSWORD
-    if username == "admin":
-        return password == ADMIN_PASSWORD
-    if username == "dakota":
-        return password == DAKOTA_PASSWORD
-    if username == "andres":
-        return password == ANDRES_PASSWORD
-    if username == "guest":
-        return password == GUEST_PASSWORD and datetime.now(timezone.utc) < GUEST_EXPIRES
-    return False
-
-
-def _safe_username(username: str) -> str:
-    return re.sub(r"[^a-z0-9_-]", "", (username or "").lower())[:32] or "anon"
-
-
-def _user_data_path(username: str) -> str:
-    d = os.path.join(config.DATA_DIR, "users")
-    os.makedirs(d, exist_ok=True)
-    return os.path.join(d, f"{_safe_username(username)}.json")
+_ok = accounts.ok
+_user_ok = accounts.user_ok
+_safe_username = accounts.safe_username
 
 
 class UserDataReq(BaseModel):
@@ -286,9 +255,6 @@ def signal_analysis(genre: str | None = None):
     return {"years": years}
 
 
-_MAX_STORED_REPORTS = 20   # matches the previous client-side localStorage cap
-
-
 @app.get("/api/lore/user-data")
 def get_user_data(username: str, password: str = ""):
     """Per-user saved dashboard state (reports + portfolio) — so it's there
@@ -296,42 +262,14 @@ def get_user_data(username: str, password: str = ""):
     bound to the username (see _user_ok) so 'guest' can't read 'lore's data."""
     if not _user_ok(username, password):
         return JSONResponse({"error": "Unauthorized"}, status_code=401)
-    if DEPLOYED:
-        return storage.get_user_data(_safe_username(username)) or {"reports": [], "portfolio": []}
-    path = _user_data_path(username)
-    if os.path.exists(path):
-        try:
-            return json.load(open(path, encoding="utf-8"))
-        except Exception:
-            pass
-    return {"reports": [], "portfolio": []}
+    return accounts.read_user_data(username)
 
 
 @app.post("/api/lore/user-data")
 def save_user_data(req: UserDataReq):
     if not _user_ok(req.username, req.password):
         return JSONResponse({"error": "Unauthorized"}, status_code=401)
-    payload = {"reports": req.reports[:_MAX_STORED_REPORTS], "portfolio": req.portfolio}
-    if DEPLOYED:
-        # Vercel's Python functions have a read-only filesystem outside /tmp —
-        # the local-file path below silently threw OSError here, so this data
-        # never actually persisted in production. S3's put_object also avoids
-        # the torn-write race described below (whole object replaced in one
-        # call, no read-modify-write window).
-        storage.save_user_data(_safe_username(req.username), payload)
-        return {"status": "ok"}
-    path = _user_data_path(req.username)
-    # Two saves can land close together (e.g. addReport then addPortfolioGame
-    # right after a game report finishes) — writing straight to `path` let one
-    # request's write interleave with another's and leave a torn/corrupted
-    # file (valid JSON prefix + garbage suffix). Writing to a sibling temp
-    # file and os.replace()-ing it in is atomic at the filesystem level, so
-    # the file is always either the old or the new complete content, never a
-    # partial mix of both.
-    tmp_path = f"{path}.{os.getpid()}.{threading.get_ident()}.tmp"
-    with open(tmp_path, "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False)
-    os.replace(tmp_path, path)
+    accounts.write_user_data(req.username, req.reports, req.portfolio)
     return {"status": "ok"}
 
 
@@ -446,31 +384,6 @@ def make_report(req: ReportReq):
     except Exception as e:
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
 
-@app.post("/api/lore/game-report")
-async def make_game_report(file: UploadFile = File(...), years: str = Form(...),
-                           genre: str = Form(""), password: str = Form("")):
-    if not _ok(password):
-        return JSONResponse({"error": "Unauthorized"}, status_code=401)
-    try:
-        yrs = [int(y) for y in years.split(",") if y.strip()]
-    except ValueError:
-        return JSONResponse({"error": "Invalid years"}, status_code=400)
-    if not yrs:
-        return JSONResponse({"error": "Select at least one year"}, status_code=400)
-    genre = genre.strip() or None
-    if genre and genre not in config.GENRES:
-        return JSONResponse({"error": f"genre must be one of {list(config.GENRES)}"},
-                             status_code=400)
-    try:
-        data = await file.read()
-        path, gname = snapshot.prep_upload(data, file.filename)
-        game_text = snapshot.load_game_text(path)
-        html = report.generate_game_report(yrs, game_text, gname, genre)
-        return {"html": html, "game": gname, "genre": genre}
-    except Exception as e:
-        return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
-
-
 @app.post("/api/lore/waitlist")
 def join_waitlist(req: WaitlistReq):
     first = req.first_name.strip()
@@ -537,6 +450,9 @@ async def make_snapshot(file: UploadFile = File(...), year: int = Form(2026),
     except Exception as e:
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
 
+
+import workspace  # noqa: E402  (from lore_engine/) — Competition/Player experience/Redesign
+workspace.install(app)
 
 # Static site (local dev; on Vercel the HTML/images are served directly).
 app.mount("/", StaticFiles(directory=str(HERE), html=True), name="static")

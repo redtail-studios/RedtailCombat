@@ -4,6 +4,9 @@
     { "src": "frontend/package.json", "use": "@vercel/static-build", "config": { "distDir": "dist" } },
     { "src": "api/index.py", "use": "@vercel/python", "config": { "maxLambdaSize": "50mb", "includeFiles": "lore_engine/**" } }
   ],
+  "functions": {
+    "api/index.py": { "maxDuration": 300 }
+  },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.py" },
     { "src": "/assets/(.*)", "dest": "/frontend/assets/$1" },

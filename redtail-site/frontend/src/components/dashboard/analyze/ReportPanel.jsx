@@ -12,7 +12,6 @@ export default function ReportPanel({
   rMode, onModeChange, analyseSel, backSel, valSel, onToggleAnalyse, onToggleBack, onToggleVal,
   repMeta, repDisabled, reportState, onGenerateReport, onDownloadReport, onContinueToRedesign,
   gameFile, onGameFileChange, gameSel, onToggleGame, gameRepMeta, gameRepDisabled,
-  genres, gameGenre, onGameGenreChange,
   gameReportState, onGenerateGameReport, onDownloadGameReport, onContinueToRedesignFromGame,
 }) {
   return (
@@ -73,38 +72,22 @@ export default function ReportPanel({
         </div>
       ) : (
         <div>
-          <p className="font-mono text-xs text-platinum/40 mb-4">Upload your game's design doc (PDF) and pick which years of market data to analyse it against.</p>
+          <p className="font-mono text-xs text-platinum/40 mb-4">Upload your game's design doc (PDF, TXT or Markdown) and pick which years of market data to analyse it against.</p>
           <div className="border border-dashed border-white/10 bg-ink p-4 flex items-center justify-between flex-wrap gap-3 mb-4 pixel-clip-sm">
             <p className="font-mono text-xs text-platinum/50">
               {gameFile ? <>Selected: <b className="text-platinum">{gameFile.name}</b></> : "No file selected — pick a game design PDF"}
             </p>
             <label className="font-mono text-[10px] font-medium uppercase tracking-wider border border-white/10 bg-panel px-3 py-2 cursor-pointer hover:border-white/20 pixel-clip-sm">
-              Choose PDF
-              <input type="file" accept="application/pdf" className="hidden" onChange={(e) => onGameFileChange(e.target.files[0] || null)} />
+              Choose document
+              <input type="file" accept="application/pdf,.txt,.md" className="hidden" onChange={(e) => onGameFileChange(e.target.files[0] || null)} />
             </label>
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-wider text-platinum/40 mb-2">
-            Which genre does it compete in? <span className="text-pulse">*</span>
-          </p>
-          <div className={`flex items-center gap-1.5 mb-4 flex-wrap p-2 -m-2 transition-colors ${!gameGenre && gameFile ? 'ring-1 ring-pulse/40' : ''}`}>
-            {(genres || []).map((g) => (
-              <button
-                key={g.id}
-                type="button"
-                onClick={() => onGameGenreChange(g.id)}
-                className={`px-2.5 py-1.5 pixel-clip-sm font-mono text-[10px] transition-colors ${
-                  gameGenre === g.id ? 'bg-platinum text-ink' : 'border border-white/10 text-platinum/40 hover:text-platinum/60'
-                }`}
-              >
-                {g.label}
-              </button>
-            ))}
-          </div>
+          <p className="font-mono text-xs text-moss mb-4">AI identifies your five closest genres from the document automatically.</p>
           <p className="font-mono text-[10px] uppercase tracking-wider text-platinum/40 mb-2">Years to analyse</p>
           <YearChips years={availYears} selected={gameSel} onToggle={onToggleGame} />
           <div className="flex items-center justify-between flex-wrap gap-3 mt-3 pt-3 border-t border-white/5">
-            <p className={`font-mono text-xs ${gameFile && gameSel.length > 0 && !gameGenre ? 'text-pulse font-medium' : 'text-platinum/40'}`}>
-              {gameFile && gameSel.length > 0 && !gameGenre ? '⚠ Pick a genre above to enable "Analyse my game"' : gameRepMeta}
+            <p className={`font-mono text-xs text-platinum/40`}>
+              {gameRepMeta}
             </p>
             <button onClick={onGenerateGameReport} disabled={gameRepDisabled || gameReportState.status === "loading"} className={dashBtn}>
               {gameReportState.status === "loading" ? (<><Loader2 className="w-3.5 h-3.5 animate-spin" /> Analysing…</>) : "Analyse my game"}

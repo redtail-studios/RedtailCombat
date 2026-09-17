@@ -26,7 +26,7 @@ function useElapsed(active) {
 // the dashboard-embedded Analyze page so both stay backed by one real
 // implementation instead of two drifting copies.
 export function useLoreConsole() {
-  const { dashboardPassword } = useDashboardAuth();
+  const { dashboardPassword, dashboardUser } = useDashboardAuth();
   const { addReport, addPortfolioGame } = useLoreReports();
   const [searchParams] = useSearchParams();
   const [view, setView] = useState("console"); // 'console' | 'redesign'
@@ -79,7 +79,6 @@ export function useLoreConsole() {
   useEffect(() => {
     pollScrape(scrapeYear);
     return () => clearTimeout(pollRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrapeYear]);
 
   const startScrape = async () => {
@@ -155,13 +154,12 @@ export function useLoreConsole() {
   const gameReportElapsed = useElapsed(gameReportState.status === "loading");
   const [redesignFile, setRedesignFile] = useState(null);
 
-  const gameRepDisabled = !gameFile || gameSel.length === 0 || !gameGenre;
+  const gameRepDisabled = !gameFile || gameSel.length === 0;
   const gameRepMeta = !gameFile ? "Upload a PDF"
-    : !gameGenre ? "Pick which genre your game competes in"
     : (gameSel.length ? `Analysing your game against ${gameSel.join(", ")}` : "Select at least one year");
 
   const genGameReport = async () => {
-    if (!gameFile || !gameSel.length || !gameGenre) return;
+    if (!gameFile || !gameSel.length) return;
     const year = gameSel[gameSel.length - 1];
     setRdYear(year);
     const label = gameSel.join(", ");
@@ -170,15 +168,15 @@ export function useLoreConsole() {
     try {
       const fd = new FormData();
       fd.append("file", gameFile); fd.append("years", gameSel.join(","));
-      fd.append("genre", genreAtSubmit); fd.append("password", dashboardPassword);
+      fd.append("genre", genreAtSubmit || ""); fd.append("password", dashboardPassword); fd.append("username", dashboardUser.username);
       const r = await fetch("/api/lore/game-report", { method: "POST", body: fd });
       const d = await r.json();
       if (!r.ok || d.error) setGameReportState({ status: "error", html: null, gameName: null, error: d.error || "error", label });
       else {
-        setGameReportState({ status: "done", html: d.html, gameName: d.game, error: null, label });
         setRedesignFile(gameFile);
-        const reportId = addReport({ type: "game", label, html: d.html, gameName: d.game, genre: genreAtSubmit });
-        addPortfolioGame({ name: d.game, lastYears: label, lastReportId: reportId, genre: genreAtSubmit });
+        const reportId = addReport({ type: "game", label, html: d.html, gameName: d.game, genre: d.genre || genreAtSubmit });
+        await addPortfolioGame({ name: d.game, lastYears: label, lastReportId: reportId, documentId: d.documentId, genreFit: d.analysis?.genreFit, genre: d.genre || genreAtSubmit });
+        setGameReportState({ status: "done", html: d.html, gameName: d.game, error: null, label });
       }
     } catch (e) {
       setGameReportState({ status: "error", html: null, gameName: null, error: e.message, label });

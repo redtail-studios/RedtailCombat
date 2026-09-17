@@ -1,0 +1,99 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Pause, Play, RotateCcw } from 'lucide-react';
+
+// Stylized coastlines. Regional markers use country centroid coordinates.
+const LAND = [
+  [[-168,65],[-140,70],[-125,58],[-110,52],[-90,50],[-65,55],[-55,45],[-78,28],[-88,20],[-100,25],[-115,32],[-125,48],[-150,58]],
+  [[-81,12],[-65,8],[-48,-3],[-35,-10],[-44,-25],[-60,-52],[-72,-55],[-77,-30],[-80,-5]],
+  [[-52,60],[-42,62],[-20,78],[-45,83],[-62,76]],
+  [[-17,35],[8,37],[32,31],[44,12],[50,10],[40,-15],[20,-35],[10,-25],[-2,4],[-16,12]],
+  [[-10,36],[-10,58],[10,71],[30,60],[50,70],[100,75],[150,65],[180,55],[150,45],[140,35],[120,20],[105,0],[95,18],[78,8],[65,25],[45,30],[30,42],[10,40]],
+  [[112,-12],[135,-10],[153,-25],[145,-40],[120,-35],[112,-22]],
+  [[46,-13],[50,-18],[47,-26],[44,-20]], [[130,32],[142,44],[146,40],[136,30]],
+];
+const rad = Math.PI / 180;
+function project(lon, lat, rotation, tilt = 0) {
+  const a = (lon + rotation) * rad, b = lat * rad, t = tilt * rad;
+  return { x: 360 + 226 * Math.cos(b) * Math.sin(a), y: 270 - 226 * (Math.sin(b)*Math.cos(t)-Math.cos(b)*Math.cos(a)*Math.sin(t)), z: Math.sin(b)*Math.sin(t)+Math.cos(b)*Math.cos(a)*Math.cos(t) };
+}
+function line(points, rotation, tilt) {
+  let visible = false;
+  return points.map(([lon, lat]) => {
+    const p = project(lon, lat, rotation, tilt);
+    if (p.z < 0) { visible = false; return ''; }
+    const command = visible ? 'L' : 'M'; visible = true;
+    return `${command}${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+  }).join(' ');
+}
+const GRID = [
+  ...[-60,-30,0,30,60].map(lat => Array.from({length:121},(_,i)=>[-180+i*3,lat])),
+  ...Array.from({length:12},(_,i)=>Array.from({length:61},(_,j)=>[i*30-180,-90+j*3])),
+];
+
+export default function CompetitionGlobe({ games, selected, onSelect, gameName }) {
+  const [rotation, setRotation] = useState(15);
+  const [playing, setPlaying] = useState(false);
+  const drag = useRef(null);
+  const countries = [...new Map(games.map(g=>[g.country,{name:g.country,latitude:g.latitude,longitude:g.longitude}])).values()];
+  const country = countries.find(c=>c.name===selected);
+  const countryGames = games.filter(g=>g.country===country?.name);
+  const longitude = country?.longitude;
+  const initialLongitude = countries[0]?.longitude;
+  useEffect(()=>{const target=Number.isFinite(longitude)?longitude:initialLongitude;if(Number.isFinite(target)){setRotation(-target);setPlaying(false);}},[selected,longitude,initialLongitude]);
+  useEffect(()=>{
+    if(!playing)return;
+    const timer=setInterval(()=>setRotation(r=>(r+.35)%360),40);
+    return ()=>clearInterval(timer);
+  },[playing]);
+  const tilt = country?.latitude || 0;
+  const width = country ? 300 : 720, height = width*550/720;
+  const left = 360-width/2, top = 270-height/2;
+  const reset = ()=>{onSelect('');setRotation(15);setPlaying(false);};
+  return <div>
+    <div className="flex flex-wrap justify-between gap-3 items-center px-5 pt-4 font-mono text-[10px] text-platinum/50">
+      <span>{country ? `${country.name.toUpperCase()} · COUNTRY VIEW · 2.4×` : 'DRAG TO EXPLORE · CLICK A COUNTRY DOT'}</span>
+      <div className="flex gap-2">
+        {country && <button onClick={reset} className="px-3 border border-moss/40 text-moss">Back to world</button>}
+        <button aria-label={playing?'Pause globe':'Rotate globe'} onClick={()=>setPlaying(!playing)} className="p-2 border border-white/15 hover:text-moss">{playing?<Pause size={13}/>:<Play size={13}/>}</button>
+        <button aria-label="Reset globe" onClick={reset} className="p-2 border border-white/15 hover:text-moss"><RotateCcw size={13}/></button>
+      </div>
+    </div>
+    <div className="relative w-full aspect-[720/550] overflow-hidden" role="group" aria-label={`Audience country map for ${gameName}`}>
+      <svg viewBox={`${left} ${top} ${width} ${height}`} className="absolute inset-0 w-full h-full touch-none select-none" aria-hidden="true"
+        onPointerDown={e=>{drag.current={x:e.clientX,rotation};e.currentTarget.setPointerCapture(e.pointerId);setPlaying(false);}}
+        onPointerMove={e=>{if(drag.current)setRotation(drag.current.rotation+(e.clientX-drag.current.x)*.45);}}
+        onPointerUp={()=>{drag.current=null;}} onPointerCancel={()=>{drag.current=null;}}>
+        <defs><radialGradient id="competition-ocean" cx="35%" cy="30%"><stop offset="0" stopColor="#182c29"/><stop offset=".75" stopColor="#0c171b"/><stop offset="1" stopColor="#08090c"/></radialGradient></defs>
+        <circle cx="360" cy="270" r="226" fill="url(#competition-ocean)" stroke="#8FB3FF" strokeOpacity=".3"/>
+        {GRID.map((p,i)=><path key={i} d={line(p,rotation,tilt)} fill="none" stroke="#8FB3FF" strokeOpacity=".12" strokeWidth=".7"/>)}
+        {LAND.map((p,i)=><path key={i} d={line([...p,p[0]],rotation,tilt)} fill="none" stroke="#B4FF39" strokeOpacity=".4" strokeWidth="1.3"/>)}
+      </svg>
+      {countries.map(c=>{
+        const point=project(c.longitude,c.latitude,rotation,tilt);
+        const x=(point.x-left)/width*100,y=(point.y-top)/height*100;
+        if(point.z<0 || x<0 || x>100 || y<0 || y>100)return null;
+        const active=c.name===selected;
+        const count=new Set(games.filter(g=>g.country===c.name).map(g=>g.competitor)).size;
+        return <button key={c.name} type="button" aria-label={`Explore ${c.name}, ${count} ${count===1?'game':'games'}`} aria-pressed={active}
+          onClick={()=>{setRotation(-c.longitude);setPlaying(false);onSelect(c.name);}}
+          className="absolute z-10 w-11 h-11 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-moss group"
+          style={{left:`${x}%`,top:`${y}%`}}>
+          <span className={`pointer-events-none absolute w-7 h-7 rounded-full border motion-safe:animate-pulse ${active?'border-pulse bg-pulse/20':'border-moss bg-moss/10 group-hover:bg-moss/30'}`}/>
+          <span className={`pointer-events-none w-2 h-2 rounded-full ${active?'bg-pulse':'bg-moss'}`}/>
+          <span className={`pointer-events-none absolute bottom-10 whitespace-nowrap bg-ink/90 px-2 py-1 font-mono text-[10px] ${active?'text-pulse':'text-platinum'}`}>{c.name} · {count}</span>
+        </button>;
+      })}
+    </div>
+    {country && <section aria-live="polite" aria-label={`Games in ${country.name}`} className="mx-5 mb-5 p-4 border border-moss/30 bg-ink">
+      <h3 className="font-pixel text-sm text-moss mb-3">Games in {country.name}</h3>
+      <p className="font-mono text-[10px] text-platinum/50 mb-4">Competitors with a sourced regional observation here. Missing games are not evidence of no audience.</p>
+      <div className="space-y-3">{countryGames.map(g=><div key={g.competitor} className="border-t border-white/10 pt-3">
+        <p className="font-mono text-xs text-platinum">{g.competitor}</p>
+        <p className="font-mono text-xs text-moss mt-1">Search interest: {g.value ?? 'Unavailable'} / 100</p>
+        <p className="font-mono text-[10px] text-platinum/40 mt-1">{g.period}</p>
+        {g.sourceUrl && <a className="font-mono text-[10px] text-platinum/60 underline" href={g.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a>}
+      </div>)}</div>
+    </section>}
+    <div className="px-5 pb-5"><label className="flex items-center gap-4 text-[10px] font-mono text-platinum/50">ROTATE<input aria-label="Globe rotation" type="range" min="-180" max="180" value={((rotation+180)%360+360)%360-180} onChange={e=>{setPlaying(false);setRotation(Number(e.target.value));}} className="flex-1 accent-[#B4FF39]"/></label></div>
+  </div>;
+}
