@@ -23,11 +23,14 @@ GUEST_EXPIRES = datetime.fromisoformat(
 ADMIN_PASSWORD = os.getenv("LORE_ADMIN_PASSWORD", "redtailadmin@2026")
 DAKOTA_PASSWORD = os.getenv("LORE_DAKOTA_PASSWORD", "dakotaredtail@2026")
 ANDRES_PASSWORD = os.getenv("LORE_ANDRES_PASSWORD", "andresredtail@2026")
+# External partner account (Caravela Capital) — same full access, own
+# credential, own isolated per-user portfolio/reports (see user_ok below).
+CARAVELA_PASSWORD = os.getenv("LORE_CARAVELA_PASSWORD", "7ghlZU1IB9hOo1JzyveK")
 
 
 def ok(pw: str) -> bool:
     pw = pw or ""
-    if pw in (LORE_PASSWORD, ADMIN_PASSWORD, DAKOTA_PASSWORD, ANDRES_PASSWORD):
+    if pw in (LORE_PASSWORD, ADMIN_PASSWORD, DAKOTA_PASSWORD, ANDRES_PASSWORD, CARAVELA_PASSWORD):
         return True
     if pw == GUEST_PASSWORD:
         return datetime.now(timezone.utc) < GUEST_EXPIRES
@@ -47,6 +50,8 @@ def user_ok(username: str, password: str) -> bool:
         return password == DAKOTA_PASSWORD
     if username == "andres":
         return password == ANDRES_PASSWORD
+    if username == "caravelacapital":
+        return password == CARAVELA_PASSWORD
     if username == "guest":
         return password == GUEST_PASSWORD and datetime.now(timezone.utc) < GUEST_EXPIRES
     return False
