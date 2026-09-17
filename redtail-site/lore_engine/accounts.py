@@ -27,7 +27,7 @@ ANDRES_PASSWORD = os.getenv("LORE_ANDRES_PASSWORD", "andresredtail@2026")
 # credential, own isolated per-user portfolio/reports (see user_ok below).
 CARAVELA_PASSWORD = os.getenv("LORE_CARAVELA_PASSWORD", "7ghlZU1IB9hOo1JzyveK")
 # Personal demo/preview account (Amritha) — same full access, own credential.
-AMRITHA_PASSWORD = os.getenv("LORE_AMRITHA_PASSWORD", "8UKQuObuuohYaS7VqDce")
+AMRITHA_PASSWORD = os.getenv("LORE_AMRITHA_PASSWORD", "amritha")
 
 
 def ok(pw: str) -> bool:

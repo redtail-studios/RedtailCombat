@@ -24,7 +24,7 @@ const CARAVELA_PASSWORD = '7ghlZU1IB9hOo1JzyveK';
 // Personal demo/preview account (Amritha) — mirrors server.py's
 // AMRITHA_PASSWORD. Same full access, own credential, own isolated data.
 const AMRITHA_USERNAME = 'amritha';
-const AMRITHA_PASSWORD = '8UKQuObuuohYaS7VqDce';
+const AMRITHA_PASSWORD = 'amritha';
 // Time-boxed guest login — mirrors server.py's GUEST_PASSWORD/GUEST_EXPIRES
 // (LORE_GUEST_EXPIRES in .env). Keep these two in sync — the server is the
 // real gate, this just avoids a round-trip for an obviously-expired guess.
