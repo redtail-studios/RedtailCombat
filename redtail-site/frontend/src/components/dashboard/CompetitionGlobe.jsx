@@ -103,10 +103,10 @@ export default function CompetitionGlobe({ games, selected, onSelect, gameName }
     </div>
     {country && <section aria-live="polite" aria-label={`Games in ${country.name}`} className="mx-5 mb-5 p-4 border border-moss/30 bg-ink">
       <h3 className="font-pixel text-sm text-moss mb-3">Games in {country.name}</h3>
-      <p className="font-mono text-[10px] text-platinum/50 mb-4">Competitors with a sourced regional observation here. Missing games are not evidence of no audience.</p>
+      <p className="font-mono text-[10px] text-platinum/50 mb-4">These competitor games peak in search interest here. Missing games are not evidence of no audience — and this is about the competitor's own audience, not yours.</p>
       <div className="space-y-3">{countryGames.map(g=><div key={g.competitor} className="border-t border-white/10 pt-3">
         <p className="font-mono text-xs text-platinum">{g.competitor}</p>
-        <p className="font-mono text-xs text-moss mt-1">Search interest: {g.value ?? 'Unavailable'} / 100</p>
+        <p className="font-mono text-xs text-moss mt-1">Search interest here: {g.value ?? 'Unavailable'} / 100 of its own worldwide peak</p>
         <p className="font-mono text-[10px] text-platinum/40 mt-1">{g.period}</p>
         {g.sourceUrl && <a className="font-mono text-[10px] text-platinum/60 underline" href={g.sourceUrl} target="_blank" rel="noreferrer">View source ↗</a>}
       </div>)}</div>
