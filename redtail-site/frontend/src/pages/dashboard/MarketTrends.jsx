@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-import { Newspaper, TrendingUp, ExternalLink, Search, Lock, Rocket, BarChart3 } from 'lucide-react';
+import { Newspaper, TrendingUp, ExternalLink, Search, Lock, Rocket, BarChart3, RefreshCw } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip,
 } from 'recharts';
@@ -43,6 +43,7 @@ export default function MarketTrends() {
   const [snapshot, setSnapshot] = useState(null);
   const [error, setError] = useState(null);
   const [tab, setTab] = useState('news');
+  const [refreshing, setRefreshing] = useState(false);
 
   // Only games analysed against a specific genre can drive the Signal
   // Simulator/Competitor Radar — older games analysed before genre-scoped
@@ -51,8 +52,22 @@ export default function MarketTrends() {
   const [selectedGameId, setSelectedGameId] = useState('');
   const selectedGame = gamesWithGenre.find((g) => g.id === selectedGameId) || null;
 
+  const loadSnapshot = () => {
+    setRefreshing(true);
+    return fetch('/api/lore/market-snapshot')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.error) throw new Error(d.error);
+        setSnapshot(d);
+        setError(null);
+      })
+      .catch((e) => setError(e.message))
+      .finally(() => setRefreshing(false));
+  };
+
   useEffect(() => {
     let cancelled = false;
+    setRefreshing(true);
     fetch('/api/lore/market-snapshot')
       .then((r) => r.json())
       .then((d) => {
@@ -60,7 +75,8 @@ export default function MarketTrends() {
         if (d.error) throw new Error(d.error);
         setSnapshot(d);
       })
-      .catch((e) => { if (!cancelled) setError(e.message); });
+      .catch((e) => { if (!cancelled) setError(e.message); })
+      .finally(() => { if (!cancelled) setRefreshing(false); });
     return () => { cancelled = true; };
   }, []);
 
@@ -118,6 +134,15 @@ export default function MarketTrends() {
                 <br /><br />
                 The colored tag (POSITIVE / NEGATIVE / NEUTRAL) is automated sentiment scoring of the headline + summary text, not an editorial judgment about the game itself.
               </InfoTooltip>
+              <button
+                onClick={loadSnapshot}
+                disabled={refreshing}
+                title="Refresh news"
+                aria-label="Refresh news"
+                className="ml-auto flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-platinum/50 hover:text-platinum disabled:opacity-40 transition-colors"
+              >
+                <RefreshCw className={`w-3 h-3 ${refreshing ? 'animate-spin' : ''}`} /> Refresh
+              </button>
             </div>
             {news.length > 0 ? (
               <div className="space-y-3">
