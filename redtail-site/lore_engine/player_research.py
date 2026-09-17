@@ -40,7 +40,20 @@ def exact_quote(quote, text):
     if len(quote) < 8:
         return None
     match = re.search(re.escape(quote), text, re.IGNORECASE)
-    return match.group(0) if match else None
+    if match:
+        return match.group(0)
+    # Models sometimes join two real excerpts with an ellipsis. Validate every
+    # excerpt independently, then preserve the source's own order and case —
+    # same tolerance workspace.py's verified_quote() already gives genre
+    # evidence, just missing here before (a frequent, needless validation
+    # failure that forced a full, slow regeneration for one bad topic).
+    parts = [clean(p) for p in re.split(r'\.{3}|…', quote) if p.strip()]
+    if len(parts) < 2 or any(len(p) < 8 for p in parts):
+        return None
+    matches = [re.search(re.escape(p), text, re.IGNORECASE) for p in parts]
+    if not all(matches):
+        return None
+    return ' … '.join(m.group(0) for m in sorted(matches, key=lambda m: m.start()))
 
 
 def store_url(source, app_id):
@@ -125,8 +138,49 @@ def build_prompt(document, filename, reviews):
 Identify 3–5 distinct player-experience topics supported by the supplied reviews AND useful to the uploaded game's designer. Do not assume a genre, platform, characters or monetisation model. Use the full document. A game may already address a concern: preserve that feature and suggest validating or refining it, not adding it as if missing. Do not claim that player opinions prove a defect in the uploaded game.
 
 Schema: {"topics":[{"label":"short plain-language topic, max 28 characters", "question":"a concrete question to test for this game", "documentQuote":"one exact continuous excerpt from the DOCUMENT, 20–400 characters, grounding this topic", "designConnection":"one short sentence describing how this topic relates to that excerpt", "steps":["three short, concrete test steps"], "cells":[{"competitorId":"supplied competitorId", "kind":"concern|praise|mixed", "evidence":[{"reviewId":"supplied review ID", "quote":"exact continuous excerpt from that supplied review, 15–350 characters", "kind":"concern|praise"}]}]}]}
-Rules: every topic needs a verified document quote and review evidence. Give at most two review examples per competitor per topic. Include a cell only when a relevant review was supplied for that competitor. Mixed means the supplied examples contain BOTH praise and concern about this topic. A star rating alone does not establish sentiment about a topic. Do not infer sentiment from precomputed sentiment scores. Do not return topic frequencies, popularity, impact scores, causal claims, sales or financial estimates. Missing evidence must remain missing. Use plain language suitable for nontechnical game creators. Never invent review IDs or quotes.
+Rules: every topic needs a verified document quote and review evidence. documentQuote and every evidence quote must be copied verbatim, character-for-character, from the source (DOCUMENT or that review) — never paraphrase, summarize, reword, or blend wording from two different sentences into one quote. Give at most two review examples per competitor per topic. Include a cell only when a relevant review was supplied for that competitor. Mixed means the supplied examples contain BOTH praise and concern about this topic. A star rating alone does not establish sentiment about a topic. Do not infer sentiment from precomputed sentiment scores. Do not return topic frequencies, popularity, impact scores, causal claims, sales or financial estimates. Missing evidence must remain missing. Use plain language suitable for nontechnical game creators. Never invent review IDs or quotes.
 DOCUMENT_FILENAME: ''' + filename + '\nDOCUMENT:\n' + document + '\nREVIEWS:\n' + json.dumps(reviews, ensure_ascii=False)
+
+
+def _validate_topic(topic, document, lookup, game_ids, seen_labels):
+    """One topic's worth of validation. Returns None (never raises) when this
+    particular topic can't be verified — a single unverifiable topic out of
+    3-5 no longer discards the whole batch and forces a full, slow
+    regeneration; it's just dropped, the same way an unsupported cell/review
+    within a topic is already dropped rather than failing the topic."""
+    label = clean(topic.get('label'))[:50]
+    quote = exact_quote(topic.get('documentQuote'), document)
+    steps = topic.get('steps')
+    if not label or label.casefold() in seen_labels or not quote or not isinstance(steps, list) or len(steps) != 3:
+        return None
+    cells, used_games = [], set()
+    for cell in topic.get('cells', []):
+        cid = cell.get('competitorId')
+        if cid not in game_ids or cid in used_games:
+            continue
+        evidence, used_reviews = [], set()
+        for item in cell.get('evidence', [])[:2]:
+            review = lookup.get(item.get('reviewId'))
+            if not review or review['competitorId'] != cid or review['id'] in used_reviews:
+                continue
+            verified = exact_quote(item.get('quote'), review['text'])
+            if not verified or item.get('kind') not in ('concern', 'praise'):
+                continue
+            used_reviews.add(review['id'])
+            evidence.append({'reviewId': review['id'], 'quote': verified, 'kind': item['kind']})
+        if evidence:
+            kinds = {e['kind'] for e in evidence}
+            kind = 'mixed' if len(kinds) == 2 else next(iter(kinds))
+            cells.append({'competitorId': cid, 'kind': kind, 'evidence': evidence})
+            used_games.add(cid)
+    if not cells:
+        return None
+    question, connection = clean(topic.get('question')), clean(topic.get('designConnection'))
+    if not question or not connection or any(not isinstance(s, str) or not s.strip() for s in steps):
+        return None
+    return {'id': stable_id(label.casefold()), 'label': label, 'question': question[:300],
+            'documentQuote': quote, 'designConnection': connection[:500],
+            'steps': [clean(s)[:250] for s in steps], 'cells': cells}
 
 
 def validate_topics(raw, document, reviews, competitors):
@@ -138,38 +192,11 @@ def validate_topics(raw, document, reviews, competitors):
     game_ids = {g['id'] for g in competitors}
     output, labels = [], set()
     for topic in topics:
-        label = clean(topic.get('label'))[:50]
-        quote = exact_quote(topic.get('documentQuote'), document)
-        steps = topic.get('steps')
-        if not label or label.casefold() in labels or not quote or not isinstance(steps, list) or len(steps) != 3:
-            raise ValueError('The review analysis could not verify its connection to your document. Retry.')
-        labels.add(label.casefold())
-        cells, used_games = [], set()
-        for cell in topic.get('cells', []):
-            cid = cell.get('competitorId')
-            if cid not in game_ids or cid in used_games:
-                raise ValueError('The review analysis included an unverified comparable.')
-            evidence, used_reviews = [], set()
-            for item in cell.get('evidence', [])[:2]:
-                review = lookup.get(item.get('reviewId'))
-                if not review or review['competitorId'] != cid or review['id'] in used_reviews:
-                    raise ValueError('The review analysis could not verify a review reference. Retry.')
-                verified = exact_quote(item.get('quote'), review['text'])
-                if not verified or item.get('kind') not in ('concern', 'praise'):
-                    raise ValueError('The review analysis could not verify its quoted evidence. Retry.')
-                used_reviews.add(review['id'])
-                evidence.append({'reviewId': review['id'], 'quote': verified, 'kind': item['kind']})
-            if evidence:
-                kinds = {e['kind'] for e in evidence}
-                kind = 'mixed' if len(kinds) == 2 else next(iter(kinds))
-                cells.append({'competitorId': cid, 'kind': kind, 'evidence': evidence})
-                used_games.add(cid)
-        if not cells:
-            raise ValueError('A proposed topic has no verified player evidence. Retry.')
-        question, connection = clean(topic.get('question')), clean(topic.get('designConnection'))
-        if not question or not connection or any(not isinstance(s, str) or not s.strip() for s in steps):
-            raise ValueError('The review analysis returned an incomplete suggested test. Retry.')
-        output.append({'id': stable_id(label.casefold()), 'label': label, 'question': question[:300],
-                       'documentQuote': quote, 'designConnection': connection[:500],
-                       'steps': [clean(s)[:250] for s in steps], 'cells': cells})
+        result = _validate_topic(topic, document, lookup, game_ids, labels)
+        if result is None:
+            continue
+        labels.add(result['label'].casefold())
+        output.append(result)
+    if not output:
+        raise ValueError('The review analysis could not verify any topic against your document. Retry.')
     return output
