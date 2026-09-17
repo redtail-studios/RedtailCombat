@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useLoreReports } from '@/lib/LoreReportsContext';
 import { useLoreConsole } from '@/lib/useLoreConsole';
 import ReportPanel from '@/components/dashboard/analyze/ReportPanel';
@@ -17,7 +16,6 @@ export default function Analyze() {
         Real market analysis, live via Claude — pick years or upload your game, then redesign it from the findings.
       </p>
 
-      {savedGame && <Link to={`/dashboard/games/${encodeURIComponent(savedGame.id)}`} className="block mb-6 p-4 bg-moss text-ink font-mono text-sm pixel-clip-sm">Your game is ready. Open Competition ↗</Link>}
       {c.view === 'redesign' ? (
         <RedesignPanel
           year={c.rdYear}
@@ -58,8 +56,7 @@ export default function Analyze() {
           gameRepDisabled={c.gameRepDisabled}
           gameReportState={c.gameReportState}
           onGenerateGameReport={c.genGameReport}
-          onDownloadGameReport={c.downloadGameReport}
-          onContinueToRedesignFromGame={c.goRedesignFromGame}
+          savedGame={savedGame}
         />
       )}
     </div>
