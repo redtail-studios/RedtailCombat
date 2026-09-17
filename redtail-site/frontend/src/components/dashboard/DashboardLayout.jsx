@@ -4,6 +4,7 @@ import { useDashboardAuth } from '@/lib/DashboardAuthContext';
 import { useLoreReports } from '@/lib/LoreReportsContext';
 import { TrendingUp, Briefcase, Bell, FileText, CreditCard, Settings, LogOut, ChevronDown, User, Menu, X } from 'lucide-react';
 import { LOGO_URL } from '@/lib/teamData';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel, DropdownMenuSeparator,
@@ -221,7 +222,9 @@ export default function DashboardLayout() {
 
         {/* Page content */}
         <main key={location.pathname} className="flex-1 overflow-y-auto bg-ink scanlines">
-          <Outlet />
+          <ErrorBoundary key={location.pathname}>
+            <Outlet />
+          </ErrorBoundary>
         </main>
       </div>
     </div>

@@ -20,8 +20,8 @@ export default function CompetitorSphere({ model, selected, pinned, onPreview, o
         if (!node || callbacks.current.pinned) return;
         if (node.type === 'comparable') {
           setFeature(null);
-          callbacks.current.onPreview(model.comparables.find(game => game.id === node.id).name);
-          graph.setFocus(node.id);
+          const found = model.comparables.find(game => game.id === node.id);
+          if (found) { callbacks.current.onPreview(found.name); graph.setFocus(node.id); }
         } else if (node.type === 'feature') {
           setFeature(model.features.find(item => item.id === node.id));
           graph.setFocus(node.id);
@@ -30,7 +30,8 @@ export default function CompetitorSphere({ model, selected, pinned, onPreview, o
       onSelect: node => {
         if (node.type === 'comparable') {
           setFeature(null);
-          callbacks.current.onSelect(model.comparables.find(game => game.id === node.id).name);
+          const found = model.comparables.find(game => game.id === node.id);
+          if (found) callbacks.current.onSelect(found.name);
         } else if (node.type === 'feature') setFeature(model.features.find(item => item.id === node.id));
       },
     });

@@ -9,6 +9,7 @@ import { LoreReportsProvider } from '@/lib/LoreReportsContext';
 import ScrollToTop from './components/ScrollToTop';
 import Layout from '@/components/Layout';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Route-level code splitting — each page (and its own dependencies, e.g.
 // recharts/framer-motion) only downloads when its route is actually visited,
@@ -87,7 +88,9 @@ function App() {
         <QueryClientProvider client={queryClientInstance}>
           <Router>
             <ScrollToTop />
-            <AuthenticatedApp />
+            <ErrorBoundary>
+              <AuthenticatedApp />
+            </ErrorBoundary>
           </Router>
           <Toaster />
         </QueryClientProvider>
