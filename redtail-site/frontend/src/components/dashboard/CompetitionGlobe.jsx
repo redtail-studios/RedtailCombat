@@ -1,16 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pause, Play, RotateCcw } from 'lucide-react';
+import WORLD_COUNTRIES from '@/lib/competition/worldCountries.json';
 
-// Stylized coastlines. Regional markers use country centroid coordinates.
-const LAND = [
-  [[-168,65],[-140,70],[-125,58],[-110,52],[-90,50],[-65,55],[-55,45],[-78,28],[-88,20],[-100,25],[-115,32],[-125,48],[-150,58]],
-  [[-81,12],[-65,8],[-48,-3],[-35,-10],[-44,-25],[-60,-52],[-72,-55],[-77,-30],[-80,-5]],
-  [[-52,60],[-42,62],[-20,78],[-45,83],[-62,76]],
-  [[-17,35],[8,37],[32,31],[44,12],[50,10],[40,-15],[20,-35],[10,-25],[-2,4],[-16,12]],
-  [[-10,36],[-10,58],[10,71],[30,60],[50,70],[100,75],[150,65],[180,55],[150,45],[140,35],[120,20],[105,0],[95,18],[78,8],[65,25],[45,30],[30,42],[10,40]],
-  [[112,-12],[135,-10],[153,-25],[145,-40],[120,-35],[112,-22]],
-  [[46,-13],[50,-18],[47,-26],[44,-20]], [[130,32],[142,44],[146,40],[136,30]],
-];
+// Real 110m-resolution country borders (Natural Earth via world-atlas,
+// simplified with Ramer-Douglas-Peucker) instead of a handful of hand-drawn
+// continent blobs — every country reads as an actual bordered shape, not a
+// rough outline. A curated subset gets a label so the world view reads like
+// an annotated blueprint even before any regional data has been fetched.
+const MAJOR_COUNTRIES = new Set([
+  'United States of America', 'Canada', 'Brazil', 'Argentina', 'United Kingdom',
+  'France', 'Germany', 'Spain', 'Italy', 'Russia', 'China', 'Japan',
+  'South Korea', 'India', 'Australia', 'Indonesia', 'Mexico', 'Nigeria',
+  'Egypt', 'South Africa', 'Saudi Arabia', 'Turkey', 'Sweden', 'Poland',
+  'Ukraine', 'New Zealand', 'Vietnam', 'Thailand', 'Philippines',
+]);
+const LABELED = WORLD_COUNTRIES.filter(c => MAJOR_COUNTRIES.has(c.name));
+
 const rad = Math.PI / 180;
 function project(lon, lat, rotation, tilt = 0) {
   const a = (lon + rotation) * rad, b = lat * rad, t = tilt * rad;
@@ -32,7 +37,7 @@ const GRID = [
 
 export default function CompetitionGlobe({ games, selected, onSelect, gameName }) {
   const [rotation, setRotation] = useState(15);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
   const drag = useRef(null);
   const countries = [...new Map(games.map(g=>[g.country,{name:g.country,latitude:g.latitude,longitude:g.longitude}])).values()];
   const country = countries.find(c=>c.name===selected);
@@ -48,7 +53,11 @@ export default function CompetitionGlobe({ games, selected, onSelect, gameName }
   const tilt = country?.latitude || 0;
   const width = country ? 300 : 720, height = width*550/720;
   const left = 360-width/2, top = 270-height/2;
-  const reset = ()=>{onSelect('');setRotation(15);setPlaying(false);};
+  const reset = ()=>{onSelect('');setRotation(15);setPlaying(true);};
+  const borders = useMemo(() => WORLD_COUNTRIES.map(c => ({
+    name: c.name,
+    d: c.rings.map(ring => line([...ring, ring[0]], rotation, tilt)).join(' '),
+  })), [rotation, tilt]);
   return <div>
     <div className="flex flex-wrap justify-between gap-3 items-center px-5 pt-4 font-mono text-[10px] text-platinum/50">
       <span>{country ? `${country.name.toUpperCase()} · COUNTRY VIEW · 2.4×` : 'DRAG TO EXPLORE · CLICK A COUNTRY DOT'}</span>
@@ -63,11 +72,19 @@ export default function CompetitionGlobe({ games, selected, onSelect, gameName }
         onPointerDown={e=>{drag.current={x:e.clientX,rotation};e.currentTarget.setPointerCapture(e.pointerId);setPlaying(false);}}
         onPointerMove={e=>{if(drag.current)setRotation(drag.current.rotation+(e.clientX-drag.current.x)*.45);}}
         onPointerUp={()=>{drag.current=null;}} onPointerCancel={()=>{drag.current=null;}}>
-        <defs><radialGradient id="competition-ocean" cx="35%" cy="30%"><stop offset="0" stopColor="#182c29"/><stop offset=".75" stopColor="#0c171b"/><stop offset="1" stopColor="#08090c"/></radialGradient></defs>
+        <defs>
+          <radialGradient id="competition-ocean" cx="35%" cy="30%"><stop offset="0" stopColor="#0f2436"/><stop offset=".75" stopColor="#081420"/><stop offset="1" stopColor="#04080d"/></radialGradient>
+        </defs>
         <circle cx="360" cy="270" r="226" fill="url(#competition-ocean)" stroke="#8FB3FF" strokeOpacity=".3"/>
-        {GRID.map((p,i)=><path key={i} d={line(p,rotation,tilt)} fill="none" stroke="#8FB3FF" strokeOpacity=".12" strokeWidth=".7"/>)}
-        {LAND.map((p,i)=><path key={i} d={line([...p,p[0]],rotation,tilt)} fill="none" stroke="#B4FF39" strokeOpacity=".4" strokeWidth="1.3"/>)}
+        {GRID.map((p,i)=><path key={i} d={line(p,rotation,tilt)} fill="none" stroke="#8FB3FF" strokeOpacity=".08" strokeWidth=".6"/>)}
+        {borders.map(b=><path key={b.name} d={b.d} fill="none" stroke="#BFE3FF" strokeOpacity=".5" strokeWidth=".85" strokeLinejoin="round"/>)}
       </svg>
+      {!country && LABELED.map(c=>{
+        const point=project(c.centroid[0],c.centroid[1],rotation,tilt);
+        const x=(point.x-left)/width*100,y=(point.y-top)/height*100;
+        if(point.z<0.08 || x<2 || x>98 || y<2 || y>98)return null;
+        return <span key={c.name} className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 font-mono text-[8px] uppercase tracking-wider text-[#BFE3FF]/50 whitespace-nowrap" style={{left:`${x}%`,top:`${y}%`}}>{c.name}</span>;
+      })}
       {countries.map(c=>{
         const point=project(c.longitude,c.latitude,rotation,tilt);
         const x=(point.x-left)/width*100,y=(point.y-top)/height*100;

@@ -5,8 +5,8 @@ import CompetitionGlobe from './CompetitionGlobe';
 import CompetitorSphere from './CompetitorSphere';
 
 const tabLabels=['Genre','Competition','Demographics'];
-export default function CompetitionTabs({game,comparables,year,query,snapshot,regionalQuery}) {
-  const [tab,setTab]=useState('Genre');
+export default function CompetitionTabs({game,comparables,year,query,snapshot,regionalQuery,initialTab='Genre'}) {
+  const [tab,setTab]=useState(initialTab);
   const [selectedGenre,setSelectedGenre]=useState('');
   const [selectedGame,setSelectedGame]=useState('');
   const [gamePinned,setGamePinned]=useState(false);
