@@ -31,6 +31,17 @@ function shortName(name) {
   const title = name.split(/\s*:\s*|\s+[–—-]\s+/)[0];
   return title.length > 23 ? `${title.slice(0, 21).trim()}…` : title;
 }
+function iconFor(game) {
+  // Steam's CDN serves a header image at a predictable URL from the app id
+  // alone — no scraper change or extra fetch needed, and it works
+  // retroactively for every already-scraped Steam/Steam-trending record.
+  // Google Play/App Store/RAWG icons aren't captured by the scrapers yet, so
+  // there's no real image to show for those sources today.
+  if ((game.source === 'steam' || game.source === 'steamtrending') && game.appId) {
+    return `https://cdn.akamai.steamstatic.com/steam/apps/${game.appId}/header.jpg`;
+  }
+  return game.icon || null;
+}
 
 export function createComparisonMap(games, gameName) {
   const comparisons = games.slice(0, 5).map(game => ({ game, shared: sharedComparison(game) }));
@@ -43,6 +54,7 @@ export function createComparisonMap(games, gameName) {
     features,
     comparables: comparisons.map(({ game }, i) => ({
       id: `game-${i}`, name: game.name, label: game.name.toUpperCase(), shortLabel: shortName(game.name).toUpperCase(), p: GAME_PLACES[i],
+      icon: iconFor(game),
       links: features.filter(trait => trait.evidence.some(item => item.game === game.name)).map(trait => trait.id),
     })),
   };

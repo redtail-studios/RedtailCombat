@@ -3,6 +3,17 @@ import { ArrowLeft, ArrowRight, Pause, Play, RotateCcw } from 'lucide-react';
 import { createLoreTopology } from '@/lib/competition/loreTopology';
 import './competitor-sphere.css';
 
+// Real Steam header art loads for most comparables; anything without a known
+// icon URL (Google Play/App Store/RAWG aren't captured by the scrapers yet)
+// falls back to a plain initial so the row still looks complete.
+function GameIcon({ game }) {
+  const [failed, setFailed] = useState(false);
+  if (!game.icon || failed) {
+    return <span className="cs-game-icon cs-game-icon-fallback" aria-hidden="true">{game.name.charAt(0).toUpperCase()}</span>;
+  }
+  return <img className="cs-game-icon" src={game.icon} alt="" aria-hidden="true" loading="lazy" onError={() => setFailed(true)} />;
+}
+
 export default function CompetitorSphere({ model, selected, pinned, onPreview, onSelect, onUnpin }) {
   const canvas = useRef(null);
   const renderer = useRef(null);
@@ -62,7 +73,7 @@ export default function CompetitorSphere({ model, selected, pinned, onPreview, o
     <div className="cs-legend"><span><i className="cs-core-key"/> Your game</span><span><i className="cs-trait-key"/> Shared trait</span><span><i className="cs-game-key"/> Comparable</span><span><i className="cs-selected-key"/> Selected</span></div>
     {feature && <div className="cs-feature-info"><strong>{feature.label}</strong><span>Connected in {feature.evidence.length} saved {feature.evidence.length === 1 ? 'comparison' : 'comparisons'}.</span><button onClick={() => setFeature(null)} aria-label="Close shared trait">×</button></div>}
     <div className="cs-bottom"><div className="cs-rotate"><button className="cs-tool" aria-label="Rotate competitor globe left" onClick={() => renderer.current?.rotate(-.2)}><ArrowLeft size={14}/></button><button className="cs-tool" aria-label="Rotate competitor globe right" onClick={() => renderer.current?.rotate(.2)}><ArrowRight size={14}/></button></div><span className="cs-interaction-hint">{pinned ? 'DETAIL PINNED · SELECT ANOTHER GAME TO SWITCH' : 'SELECT A GAME TO KEEP ITS DETAILS OPEN'}</span></div>
-    <div className="cs-game-selectors" role="group" aria-label="Choose a comparable game">{model.comparables.map((game, index) => <button key={game.id} title={game.name} aria-label={`Explore ${game.name}`} aria-pressed={selected === game.name} onFocus={() => preview(game.name)} onPointerEnter={event => { if (event.pointerType !== 'touch') preview(game.name); }} onClick={() => select(game.name)}><span>{String(index + 1).padStart(2, '0')}</span>{game.name}</button>)}</div>
+    <div className="cs-game-selectors" role="group" aria-label="Choose a comparable game">{model.comparables.map((game, index) => <button key={game.id} title={game.name} aria-label={`Explore ${game.name}`} aria-pressed={selected === game.name} onFocus={() => preview(game.name)} onPointerEnter={event => { if (event.pointerType !== 'touch') preview(game.name); }} onClick={() => select(game.name)}><GameIcon game={game}/><span>{String(index + 1).padStart(2, '0')}</span>{game.name}</button>)}</div>
     <p id="competitor-map-help" className="cs-help">Connections summarize shared traits in your saved AI comparisons. Hover a game for its evidence; click to keep the detail open.</p>
   </div>;
 }
