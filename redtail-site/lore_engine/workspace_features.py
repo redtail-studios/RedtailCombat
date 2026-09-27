@@ -233,14 +233,28 @@ class Features:
             bid = self.w.digest(self.scope(req, text) + key)
             prompt = redesign.brief_prompt(text, filename, game['name'], topics, evidence)
             stored = storage.workspace_get_json('brief-provider', bid)
-            raw = stored['raw'] if stored else self.w.llm.generate(prompt, max_tokens=6500)
-            storage.workspace_put_json('brief-provider', bid, {'raw': raw})
+            rejected_before = storage.workspace_get_json('brief-provider-rejected', bid)
+            # A 'brief-provider' entry that was already rejected on a prior
+            # attempt must not be reused as if it were a good cached response
+            # — production has no delete permission on this bucket, so a
+            # rejected response can't be cleared; it has to be recognised and
+            # skipped instead (see analyse()'s identical pattern for genres).
+            if stored is not None and (rejected_before is None or rejected_before.get('raw') != stored.get('raw')):
+                raw = stored['raw']
+            else:
+                raw = self.w.llm.generate(prompt, max_tokens=6500)
+                storage.workspace_put_json('brief-provider', bid, {'raw': raw})
             try:
                 brief = redesign.validate_brief(raw, text, topics, evidence)
             except ValueError as exc:
+                storage.workspace_put_json('brief-provider-rejected', bid, {'raw': raw})
                 raw = self.w.llm.generate(prompt + '\nCorrect this prior response. Validation error: ' + str(exc) + '\nEvery documentExcerptId must name a supplied doc-N excerpt supporting that claim. Respect all text length limits. Return one change per supplied topic and only that topic’s review IDs. Return complete JSON.\nPRIOR_RESPONSE:\n' + raw, max_tokens=6500)
                 storage.workspace_put_json('brief-provider', bid, {'raw': raw})
-                brief = redesign.validate_brief(raw, text, topics, evidence)
+                try:
+                    brief = redesign.validate_brief(raw, text, topics, evidence)
+                except ValueError:
+                    storage.workspace_put_json('brief-provider-rejected', bid, {'raw': raw})
+                    raise
             brief.update({'id': bid, 'scope': self.scope(req, text), 'gameId': req.gameId, 'gameName': game['name'],
                           'version': redesign.VERSION,
                           'document': filename, 'documentHash': self.w.digest(text), 'fingerprint': req.fingerprint,

@@ -42,12 +42,12 @@ def exact_quote(quote, text):
     match = re.search(re.escape(quote), text, re.IGNORECASE)
     if match:
         return match.group(0)
-    # Models sometimes join two real excerpts with an ellipsis. Validate every
-    # excerpt independently, then preserve the source's own order and case —
-    # same tolerance workspace.py's verified_quote() already gives genre
-    # evidence, just missing here before (a frequent, needless validation
-    # failure that forced a full, slow regeneration for one bad topic).
-    parts = [clean(p) for p in re.split(r'\.{3}|…', quote) if p.strip()]
+    # Models sometimes cite several real, independently-exact phrases as one
+    # quote — either explicitly ellipsis-joined, or just concatenated as
+    # complete sentences with no marker at all. Validate every part
+    # independently, then preserve the source's own order and case — same
+    # tolerance workspace.py's verified_quote() gives genre evidence.
+    parts = [clean(p) for p in re.split(r'\.{3}|…|(?<=[.!?])\s+', quote) if p.strip()]
     if len(parts) < 2 or any(len(p) < 8 for p in parts):
         return None
     matches = [re.search(re.escape(p), text, re.IGNORECASE) for p in parts]

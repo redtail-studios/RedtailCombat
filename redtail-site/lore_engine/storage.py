@@ -428,6 +428,7 @@ def workspace_put_json(kind: str, key: str, data) -> None:
     )
 
 
+
 def workspace_list_json(kind: str) -> list:
     """Every JSON document currently stored under one kind — used for the
     small per-installation scan history() does over persisted briefs/jobs.
