@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { createComparisonMap } from '@/lib/competition/comparisonMap';
-import GenreSphere from './GenreSphere';
+import { createGenreMap } from '@/lib/competition/genreMap';
+import GenreGlobe from './GenreGlobe';
 import CompetitionGlobe from './CompetitionGlobe';
 import CompetitorSphere from './CompetitorSphere';
 
@@ -13,6 +14,7 @@ export default function CompetitionTabs({game,comparables,year,query,snapshot,re
   const [selectedCountry,setSelectedCountry]=useState('');
   const genres=(game.genreFit?.genres||[]);
   const chosenGenre=genres.find(g=>g.name===selectedGenre)||genres[0];
+  const genreMap=useMemo(()=>createGenreMap(genres,game.name),[genres,game.name]);
   const competitors=useMemo(()=>comparables.slice(0,5),[comparables]);
   const comparisonMap=useMemo(()=>createComparisonMap(competitors,game.name),[competitors,game.name]);
   const chosenGame=competitors.find(g=>g.name===selectedGame)||competitors[0];
@@ -22,7 +24,7 @@ export default function CompetitionTabs({game,comparables,year,query,snapshot,re
     <div className="flex flex-wrap justify-between items-center gap-4 mb-5"><div role="tablist" aria-label="Competition views" className="flex border border-white/15 max-w-full">{tabLabels.map((label,i)=><button key={label} id={`tab-${label}`} role="tab" aria-selected={tab===label} aria-controls="competition-panel" tabIndex={tab===label?0:-1} onKeyDown={e=>{if(['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){e.preventDefault();const next=e.key==='Home'?0:e.key==='End'?2:(i+(e.key==='ArrowRight'?1:2))%3;setTab(tabLabels[next]);document.getElementById(`tab-${tabLabels[next]}`)?.focus();}}} onClick={()=>{setTab(label);if(label==='Demographics'&&!regionalQuery.data&&!regionalQuery.isFetching)regionalQuery.refetch();}} className={`px-3 sm:px-5 py-4 font-mono text-xs border-b-2 ${tab===label?'text-moss border-moss bg-moss/5':'text-platinum/50 border-transparent hover:text-platinum'}`}>{label}</button>)}</div></div>
     <div id="competition-panel" role="tabpanel" aria-labelledby={`tab-${tab}`} className={`grid ${tab==='Competition'?'lg:grid-cols-[minmax(0,1fr)_280px]':'lg:grid-cols-[minmax(0,1.65fr)_minmax(260px,1fr)]'} gap-5`}>
       <section className="bg-panel border border-white/10 pixel-clip overflow-hidden"><div className="p-5 sm:p-6 border-b border-white/10"><p className="font-mono text-[10px] text-moss tracking-widest mb-3">01 / {tab.toUpperCase()}</p><h2 className="font-pixel text-base sm:text-xl leading-relaxed">{title}</h2><p className="font-mono text-xs text-platinum/50 mt-3 leading-relaxed">{tab==='Genre'?'Your game, connected to its five closest genres. Shorter lines indicate stronger similarity.':tab==='Competition'?'Explore the shared traits connecting your game to its closest comparables.':'Where each of your five closest competitor games is searched the most — not where your own game would do well, and not where those games were made.'}</p></div>
-        {tab==='Genre' && <><GenreSphere name={game.name} genres={genres} selected={chosenGenre?.name} onSelect={setSelectedGenre}/><p className="px-5 pb-5 font-mono text-[10px] text-platinum/40">Distance = inferred genre similarity, not demand or likelihood of success.</p></>}
+        {tab==='Genre' && (genres.length ? <GenreGlobe model={genreMap} selected={chosenGenre?.name} onSelect={setSelectedGenre}/> : <p className="font-mono text-sm text-platinum/50 py-16 text-center">Analyse your document to place five genres.</p>)}
         {tab==='Competition' && <>
           {query.isFetching && <p role="status" className="px-5 pt-5 font-mono text-xs text-moss">Loading comparisons…</p>}
           {(query.isError||snapshot?.error)&&<p role="alert" className="p-5 font-mono text-xs text-pulse">Comparison data unavailable. Retry the analysis to load comparisons.</p>}
