@@ -4,6 +4,7 @@ import { Sparkles, Loader2, ArrowRight } from "lucide-react";
 import YearChips from "@/components/lore/console/YearChips";
 import ToggleGroup from "@/components/lore/console/ToggleGroup";
 import ConsoleStatusPanel from "@/components/lore/console/ConsoleStatusPanel";
+import { useAnalysisFlavor } from "@/lib/useAnalysisFlavor";
 
 const dashBtn = "flex items-center gap-2 px-4 py-2.5 font-mono text-xs font-medium bg-pulse text-ink hover:opacity-90 disabled:opacity-30 disabled:pointer-events-none transition-opacity pixel-clip-sm";
 const ghostBtn = "flex items-center gap-2 px-4 py-2.5 font-mono text-xs border border-white/10 text-platinum/60 hover:text-platinum hover:border-white/20 transition-colors pixel-clip-sm";
@@ -15,6 +16,7 @@ export default function ReportPanel({
   gameFile, onGameFileChange, gameSel, onToggleGame, gameRepMeta, gameRepDisabled,
   gameReportState, onGenerateGameReport, savedGame,
 }) {
+  const gameFlavor = useAnalysisFlavor(gameReportState.status === "loading");
   return (
     <div className="bg-panel border border-white/5 p-5 pixel-clip">
       <div className="flex items-center gap-2 mb-1">
@@ -96,7 +98,7 @@ export default function ReportPanel({
           </div>
 
           {gameReportState.status === "idle" && <ConsoleStatusPanel icon="🎮" title="No report yet" subtitle="Runs live via Claude — ~3–5 min" />}
-          {gameReportState.status === "loading" && <ConsoleStatusPanel icon="🎮" blink title={`Analysing your game against ${gameReportState.label}…`} subtitle={`${gameReportState.elapsed}s elapsed…`} />}
+          {gameReportState.status === "loading" && <ConsoleStatusPanel icon="🎮" blink title={`Analysing your game against ${gameReportState.label}…`} subtitle={gameFlavor} />}
           {gameReportState.status === "error" && <ConsoleStatusPanel icon="⚠" error title="Report failed" subtitle={gameReportState.error} />}
           {gameReportState.status === "done" && (
             savedGame ? (

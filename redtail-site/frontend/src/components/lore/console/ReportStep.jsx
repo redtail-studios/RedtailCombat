@@ -4,6 +4,7 @@ import PixelButton from "@/components/PixelButton";
 import YearChips from "@/components/lore/console/YearChips";
 import ToggleGroup from "@/components/lore/console/ToggleGroup";
 import ConsoleStatusPanel from "@/components/lore/console/ConsoleStatusPanel";
+import { useAnalysisFlavor } from "@/lib/useAnalysisFlavor";
 import { Loader2 } from "lucide-react";
 
 export default function ReportStep({
@@ -13,6 +14,7 @@ export default function ReportStep({
   gameFile, onGameFileChange, gameSel, onToggleGame, gameRepMeta, gameRepDisabled,
   gameReportState, onGenerateGameReport, onDownloadGameReport, onContinueToRedesignFromGame,
 }) {
+  const gameFlavor = useAnalysisFlavor(gameReportState.status === "loading");
   return (
     <PixelFrame tone="dim" inner="p-6 sm:p-8">
       <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-pulse mb-3">▸ Step 2 — Intelligence report (live)</p>
@@ -104,7 +106,7 @@ export default function ReportStep({
             <ConsoleStatusPanel icon="🎮" title="No report yet" subtitle="Runs live via Claude — ~3–5 min" />
           )}
           {gameReportState.status === "loading" && (
-            <ConsoleStatusPanel icon="🎮" blink title={`Lore is analysing your game against ${gameReportState.label}…`} subtitle={`${gameReportState.elapsed}s elapsed…`} />
+            <ConsoleStatusPanel icon="🎮" blink title={`Lore is analysing your game against ${gameReportState.label}…`} subtitle={gameFlavor} />
           )}
           {gameReportState.status === "error" && (
             <ConsoleStatusPanel icon="⚠" error title="Report failed" subtitle={gameReportState.error} />

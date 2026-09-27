@@ -368,6 +368,10 @@ def _userdata_key(username: str) -> str:
     return f"{USERDATA_PREFIX}/{username}.json"
 
 
+def _userdata_backup_key(username: str) -> str:
+    return f"{USERDATA_PREFIX}-backup/{username}.json"
+
+
 def get_user_data(username: str) -> dict | None:
     try:
         resp = _s3_client().get_object(Bucket=BUCKET, Key=_userdata_key(username))
@@ -379,7 +383,25 @@ def get_user_data(username: str) -> dict | None:
 
 
 def save_user_data(username: str, payload: dict) -> None:
-    _s3_client().put_object(
+    # put_object is a full overwrite with no history — a client that saves
+    # before it's finished loading (a fresh tab racing its own GET) would
+    # otherwise silently replace real, non-empty data with an empty object,
+    # permanently, with no way back. Refuse that specific shape of write
+    # instead of accepting it quietly, and keep a rolling backup of whatever
+    # was there before every real write so a bad save is always recoverable.
+    s3 = _s3_client()
+    existing = get_user_data(username)
+    existing_has_data = bool(existing and (existing.get("reports") or existing.get("portfolio")))
+    payload_is_empty = not (payload.get("reports") or payload.get("portfolio"))
+    if existing_has_data and payload_is_empty:
+        raise ValueError("Refusing to replace saved reports/portfolio with an empty save.")
+    if existing_has_data:
+        s3.put_object(
+            Bucket=BUCKET, Key=_userdata_backup_key(username),
+            Body=json.dumps(existing, ensure_ascii=False).encode("utf-8"),
+            ContentType="application/json",
+        )
+    s3.put_object(
         Bucket=BUCKET, Key=_userdata_key(username),
         Body=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
         ContentType="application/json",
