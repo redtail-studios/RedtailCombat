@@ -28,11 +28,15 @@ ANDRES_PASSWORD = os.getenv("LORE_ANDRES_PASSWORD", "andresredtail@2026")
 CARAVELA_PASSWORD = os.getenv("LORE_CARAVELA_PASSWORD", "7ghlZU1IB9hOo1JzyveK")
 # Personal demo/preview account (Amritha) — same full access, own credential.
 AMRITHA_PASSWORD = os.getenv("LORE_AMRITHA_PASSWORD", "amritha")
+# External partner accounts (Cometa, Newtopia) — same full access, own
+# credential, own isolated per-user portfolio/reports (see user_ok below).
+COMETA_PASSWORD = os.getenv("LORE_COMETA_PASSWORD", "redt@ilcometa2026")
+NEWTOPIA_PASSWORD = os.getenv("LORE_NEWTOPIA_PASSWORD", "redt@ilnewtopia2026")
 
 
 def ok(pw: str) -> bool:
     pw = pw or ""
-    if pw in (LORE_PASSWORD, ADMIN_PASSWORD, DAKOTA_PASSWORD, ANDRES_PASSWORD, CARAVELA_PASSWORD, AMRITHA_PASSWORD):
+    if pw in (LORE_PASSWORD, ADMIN_PASSWORD, DAKOTA_PASSWORD, ANDRES_PASSWORD, CARAVELA_PASSWORD, AMRITHA_PASSWORD, COMETA_PASSWORD, NEWTOPIA_PASSWORD):
         return True
     if pw == GUEST_PASSWORD:
         return datetime.now(timezone.utc) < GUEST_EXPIRES
@@ -56,6 +60,10 @@ def user_ok(username: str, password: str) -> bool:
         return password == CARAVELA_PASSWORD
     if username == "amritha":
         return password == AMRITHA_PASSWORD
+    if username == "cometa":
+        return password == COMETA_PASSWORD
+    if username == "newtopia":
+        return password == NEWTOPIA_PASSWORD
     if username == "guest":
         return password == GUEST_PASSWORD and datetime.now(timezone.utc) < GUEST_EXPIRES
     return False
