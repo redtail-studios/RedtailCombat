@@ -55,11 +55,25 @@ def normalize(text):
     return re.sub(r'\s+', ' ', text).strip()
 
 
+def _find_quote(text, source):
+    """Exact substring search, tolerant of a model truncating a longer
+    sentence and terminating its truncated copy with a period where the real
+    source just continues with a comma (or another mark) — the words are
+    still genuinely real, only the model's own closing punctuation isn't."""
+    match = re.search(re.escape(text), source, flags=re.IGNORECASE)
+    if match:
+        return match
+    stripped = text.rstrip('.,!?;:')
+    if stripped and stripped != text and len(stripped) >= 20:
+        return re.search(re.escape(stripped), source, flags=re.IGNORECASE)
+    return None
+
+
 def verified_quote(quote, source):
     if not isinstance(quote, str) or not quote.strip():
         return None
     source = normalize(source)
-    match = re.search(re.escape(normalize(quote)), source, flags=re.IGNORECASE)
+    match = _find_quote(normalize(quote), source)
     if match:
         return match.group(0)
     # Models sometimes cite several real, independently-exact phrases from
@@ -72,7 +86,7 @@ def verified_quote(quote, source):
     parts = [normalize(p) for p in re.split(r'\.{3}|…|(?<=[.!?])\s+', quote) if p.strip()]
     if len(parts) < 2 or any(len(p) < 20 for p in parts):
         return None
-    matches = [re.search(re.escape(p), source, flags=re.IGNORECASE) for p in parts]
+    matches = [_find_quote(p, source) for p in parts]
     if not all(matches):
         return None
     return ' … '.join(m.group(0) for m in sorted(matches, key=lambda m: m.start()))

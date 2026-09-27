@@ -35,11 +35,25 @@ def review_date(review):
         return None
 
 
+def _find_quote(part, text):
+    """Exact substring search, tolerant of a model truncating a longer
+    sentence and terminating its truncated copy with a period where the real
+    source just continues with a comma (or another mark) — the words are
+    still genuinely real, only the model's own closing punctuation isn't."""
+    match = re.search(re.escape(part), text, re.IGNORECASE)
+    if match:
+        return match
+    stripped = part.rstrip('.,!?;:')
+    if stripped and stripped != part and len(stripped) >= 8:
+        return re.search(re.escape(stripped), text, re.IGNORECASE)
+    return None
+
+
 def exact_quote(quote, text):
     quote, text = clean(quote), clean(text)
     if len(quote) < 8:
         return None
-    match = re.search(re.escape(quote), text, re.IGNORECASE)
+    match = _find_quote(quote, text)
     if match:
         return match.group(0)
     # Models sometimes cite several real, independently-exact phrases as one
@@ -50,7 +64,7 @@ def exact_quote(quote, text):
     parts = [clean(p) for p in re.split(r'\.{3}|…|(?<=[.!?])\s+', quote) if p.strip()]
     if len(parts) < 2 or any(len(p) < 8 for p in parts):
         return None
-    matches = [re.search(re.escape(p), text, re.IGNORECASE) for p in parts]
+    matches = [_find_quote(p, text) for p in parts]
     if not all(matches):
         return None
     return ' … '.join(m.group(0) for m in sorted(matches, key=lambda m: m.start()))
