@@ -55,6 +55,15 @@ def _canon(text):
     return unicodedata.normalize('NFKC', text).translate(_QUOTE_CANON)
 
 
+def _quote_pattern(text):
+    """A regex for `text` where every hyphen may be followed by a stray
+    space in the source. PDF/text extraction routinely turns a word
+    hyphenated across a line-wrap ("combat-based") into "combat- based" —
+    the hyphen is real, the space is purely a layout artifact the model
+    never sees, so it always writes the word back without it."""
+    return r'-\s?'.join(re.escape(part) for part in text.split('-'))
+
+
 def _find_quote(part, canon_text):
     """Exact substring search against a canonicalized text (see _canon),
     tolerant of a model truncating a longer sentence and terminating its
@@ -62,12 +71,12 @@ def _find_quote(part, canon_text):
     comma (or another mark) — the words are still genuinely real, only the
     model's own closing punctuation isn't."""
     part = _canon(part)
-    match = re.search(re.escape(part), canon_text, re.IGNORECASE)
+    match = re.search(_quote_pattern(part), canon_text, re.IGNORECASE)
     if match:
         return match
     stripped = part.rstrip('.,!?;:')
     if stripped and stripped != part and len(stripped) >= 8:
-        return re.search(re.escape(stripped), canon_text, re.IGNORECASE)
+        return re.search(_quote_pattern(stripped), canon_text, re.IGNORECASE)
     return None
 
 
