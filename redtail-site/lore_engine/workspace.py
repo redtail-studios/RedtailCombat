@@ -15,6 +15,7 @@ import re
 import sys
 import threading
 import time
+import unicodedata
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
@@ -55,25 +56,50 @@ def normalize(text):
     return re.sub(r'\s+', ' ', text).strip()
 
 
-def _find_quote(text, source):
-    """Exact substring search, tolerant of a model truncating a longer
-    sentence and terminating its truncated copy with a period where the real
-    source just continues with a comma (or another mark) — the words are
-    still genuinely real, only the model's own closing punctuation isn't."""
-    match = re.search(re.escape(text), source, flags=re.IGNORECASE)
+# Quote verification's job is to prove a claimed excerpt is genuinely real,
+# not hallucinated — that guarantee only needs every WORD to be real. Two
+# real-but-differently-typed documents (or a PDF's own text extraction vs.
+# how a model re-types a quote) routinely differ in ways that have nothing
+# to do with meaning: curly vs. straight quotes, en/em dash vs. hyphen,
+# ligature glyphs (ﬁ/ﬂ) a PDF extractor may emit for "fi"/"fl", full-width
+# character variants, etc. Requiring a byte-exact match on those was
+# rejecting genuine quotes for cosmetic reasons — this canonicalizes both
+# sides identically before comparing, so only real wording differences (the
+# thing this check exists to catch) can still fail it. It does NOT loosen
+# what counts as a match otherwise: every character of the actual words
+# still has to line up.
+_QUOTE_CANON = str.maketrans({
+    '‘': "'", '’': "'", '‚': "'", '‛': "'", '′': "'",
+    '“': '"', '”': '"', '„': '"', '‟': '"', '″': '"',
+    '–': '-', '—': '-', '−': '-',
+})
+
+
+def _canon(text):
+    return unicodedata.normalize('NFKC', text).translate(_QUOTE_CANON)
+
+
+def _find_quote(text, canon_source):
+    """Exact substring search against a canonicalized source (see _canon),
+    tolerant of a model truncating a longer sentence and terminating its
+    truncated copy with a period where the real source just continues with a
+    comma (or another mark) — the words are still genuinely real, only the
+    model's own closing punctuation isn't."""
+    text = _canon(text)
+    match = re.search(re.escape(text), canon_source, flags=re.IGNORECASE)
     if match:
         return match
     stripped = text.rstrip('.,!?;:')
     if stripped and stripped != text and len(stripped) >= 20:
-        return re.search(re.escape(stripped), source, flags=re.IGNORECASE)
+        return re.search(re.escape(stripped), canon_source, flags=re.IGNORECASE)
     return None
 
 
 def verified_quote(quote, source):
     if not isinstance(quote, str) or not quote.strip():
         return None
-    source = normalize(source)
-    match = _find_quote(normalize(quote), source)
+    canon_source = _canon(normalize(source))
+    match = _find_quote(normalize(quote), canon_source)
     if match:
         return match.group(0)
     # Models sometimes cite several real, independently-exact phrases from
@@ -86,7 +112,7 @@ def verified_quote(quote, source):
     parts = [normalize(p) for p in re.split(r'\.{3}|…|(?<=[.!?])\s+', quote) if p.strip()]
     if len(parts) < 2 or any(len(p) < 20 for p in parts):
         return None
-    matches = [_find_quote(p, source) for p in parts]
+    matches = [_find_quote(p, canon_source) for p in parts]
     if not all(matches):
         return None
     return ' … '.join(m.group(0) for m in sorted(matches, key=lambda m: m.start()))

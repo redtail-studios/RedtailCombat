@@ -2,6 +2,7 @@
 import hashlib
 import json
 import re
+import unicodedata
 from datetime import datetime, timezone
 
 VERSION = 'player-research-v1'
@@ -35,17 +36,38 @@ def review_date(review):
         return None
 
 
-def _find_quote(part, text):
-    """Exact substring search, tolerant of a model truncating a longer
-    sentence and terminating its truncated copy with a period where the real
-    source just continues with a comma (or another mark) — the words are
-    still genuinely real, only the model's own closing punctuation isn't."""
-    match = re.search(re.escape(part), text, re.IGNORECASE)
+# Quote verification's job is to prove a claimed excerpt is genuinely real,
+# not hallucinated — that guarantee only needs every WORD to be real. A
+# review's own source text and a model's re-typed quote of it routinely
+# differ in ways that have nothing to do with meaning: curly vs. straight
+# quotes, en/em dash vs. hyphen, ligature glyphs, full-width variants, etc.
+# Canonicalizing both sides identically before comparing means only real
+# wording differences (the thing this check exists to catch) can still fail
+# it — see workspace.py's verified_quote() for the same reasoning.
+_QUOTE_CANON = str.maketrans({
+    '‘': "'", '’': "'", '‚': "'", '‛': "'", '′': "'",
+    '“': '"', '”': '"', '„': '"', '‟': '"', '″': '"',
+    '–': '-', '—': '-', '−': '-',
+})
+
+
+def _canon(text):
+    return unicodedata.normalize('NFKC', text).translate(_QUOTE_CANON)
+
+
+def _find_quote(part, canon_text):
+    """Exact substring search against a canonicalized text (see _canon),
+    tolerant of a model truncating a longer sentence and terminating its
+    truncated copy with a period where the real source just continues with a
+    comma (or another mark) — the words are still genuinely real, only the
+    model's own closing punctuation isn't."""
+    part = _canon(part)
+    match = re.search(re.escape(part), canon_text, re.IGNORECASE)
     if match:
         return match
     stripped = part.rstrip('.,!?;:')
     if stripped and stripped != part and len(stripped) >= 8:
-        return re.search(re.escape(stripped), text, re.IGNORECASE)
+        return re.search(re.escape(stripped), canon_text, re.IGNORECASE)
     return None
 
 
@@ -53,7 +75,8 @@ def exact_quote(quote, text):
     quote, text = clean(quote), clean(text)
     if len(quote) < 8:
         return None
-    match = _find_quote(quote, text)
+    canon_text = _canon(text)
+    match = _find_quote(quote, canon_text)
     if match:
         return match.group(0)
     # Models sometimes cite several real, independently-exact phrases as one
@@ -64,7 +87,7 @@ def exact_quote(quote, text):
     parts = [clean(p) for p in re.split(r'\.{3}|…|(?<=[.!?])\s+', quote) if p.strip()]
     if len(parts) < 2 or any(len(p) < 8 for p in parts):
         return None
-    matches = [_find_quote(p, text) for p in parts]
+    matches = [_find_quote(p, canon_text) for p in parts]
     if not all(matches):
         return None
     return ' … '.join(m.group(0) for m in sorted(matches, key=lambda m: m.start()))
