@@ -10,6 +10,21 @@ function toggleYear(list, y) {
   return list.includes(y) ? list.filter((v) => v !== y) : [...list, y].sort((a, b) => a - b);
 }
 
+// A response body isn't guaranteed to be JSON — a platform-level error (a
+// gateway timeout, a size-limit rejection) returns plain text or an HTML
+// error page instead. Calling .json() on that throws a native parser error
+// ("Unexpected token", "The string did not match the expected pattern" in
+// Safari) straight into the UI instead of a readable message. Parse
+// defensively and always fall back to something the customer can act on.
+async function readJsonSafely(r) {
+  try { return await r.json(); } catch { return null; }
+}
+function friendlyStatusMessage(status) {
+  if (status === 413) return 'This file is too large to upload. Try a smaller document.';
+  if (status === 504 || status === 502) return 'The server took too long to respond. Please try again.';
+  return `Something went wrong (status ${status}). Please try again.`;
+}
+
 function useElapsed(active) {
   const [elapsed, setElapsed] = useState(0);
   useEffect(() => {
@@ -135,8 +150,8 @@ export function useLoreConsole() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ backtest_years: bt, validation_years: val, password: dashboardPassword }),
       });
-      const d = await r.json();
-      if (!r.ok || d.error) setReportState({ status: "error", html: null, error: d.error || "error", label });
+      const d = await readJsonSafely(r);
+      if (!r.ok || !d || d.error) setReportState({ status: "error", html: null, error: d?.error || friendlyStatusMessage(r.status), label });
       else {
         setReportState({ status: "done", html: d.html, error: null, label });
         addReport({ type: "market", label, html: d.html, gameName: null });
@@ -165,13 +180,34 @@ export function useLoreConsole() {
     const label = gameSel.join(", ");
     const genreAtSubmit = gameGenre;
     setGameReportState({ status: "loading", html: null, gameName: null, error: null, label });
+    if (gameFile.size > 60_000_000) {
+      setGameReportState({ status: "error", html: null, gameName: null, error: "This file is too large to upload. Documents must be under 60 MB.", label });
+      return;
+    }
     try {
-      const fd = new FormData();
-      fd.append("file", gameFile); fd.append("years", gameSel.join(","));
-      fd.append("genre", genreAtSubmit || ""); fd.append("password", dashboardPassword); fd.append("username", dashboardUser.username);
-      const r = await fetch("/api/lore/game-report", { method: "POST", body: fd });
-      const d = await r.json();
-      if (!r.ok || d.error) setGameReportState({ status: "error", html: null, gameName: null, error: d.error || "error", label });
+      // Uploaded straight to S3 from the browser instead of through this
+      // request — a game design doc with screenshots routinely exceeds the
+      // ~4.5 MB body limit the hosting platform enforces on this endpoint.
+      const urlReq = await fetch("/api/lore/game-report-upload-url", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: dashboardUser.username, password: dashboardPassword, filename: gameFile.name }),
+      });
+      const urlRes = await readJsonSafely(urlReq);
+      if (!urlReq.ok || !urlRes || urlRes.error) {
+        setGameReportState({ status: "error", html: null, gameName: null, error: urlRes?.error || friendlyStatusMessage(urlReq.status), label });
+        return;
+      }
+      const put = await fetch(urlRes.uploadUrl, { method: "PUT", headers: { "Content-Type": urlRes.contentType }, body: gameFile });
+      if (!put.ok) {
+        setGameReportState({ status: "error", html: null, gameName: null, error: "The upload could not complete. Please try again.", label });
+        return;
+      }
+      const r = await fetch("/api/lore/game-report-s3", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: urlRes.key, filename: gameFile.name, years: gameSel.join(","), genre: genreAtSubmit || "", password: dashboardPassword, username: dashboardUser.username }),
+      });
+      const d = await readJsonSafely(r);
+      if (!r.ok || !d || d.error) setGameReportState({ status: "error", html: null, gameName: null, error: d?.error || friendlyStatusMessage(r.status), label });
       else {
         setRedesignFile(gameFile);
         const reportId = addReport({ type: "game", label, html: d.html, gameName: d.game, genre: d.genre || genreAtSubmit });
@@ -179,7 +215,7 @@ export function useLoreConsole() {
         setGameReportState({ status: "done", html: d.html, gameName: d.game, error: null, label });
       }
     } catch (e) {
-      setGameReportState({ status: "error", html: null, gameName: null, error: e.message, label });
+      setGameReportState({ status: "error", html: null, gameName: null, error: "Something went wrong uploading this document. Please try again.", label });
     }
   };
 
@@ -196,11 +232,11 @@ export function useLoreConsole() {
       const fd = new FormData();
       fd.append("file", redesignFile); fd.append("year", rdYear); fd.append("password", dashboardPassword);
       const r = await fetch("/api/lore/snapshot", { method: "POST", body: fd });
-      const d = await r.json();
-      if (!r.ok || d.error) setRedesignState({ status: "error", headline: null, modifications: [], error: d.error || "error" });
+      const d = await readJsonSafely(r);
+      if (!r.ok || !d || d.error) setRedesignState({ status: "error", headline: null, modifications: [], error: d?.error || friendlyStatusMessage(r.status) });
       else setRedesignState({ status: "done", headline: d.headline || "", modifications: d.modifications || [], error: null });
     } catch (e) {
-      setRedesignState({ status: "error", headline: null, modifications: [], error: e.message });
+      setRedesignState({ status: "error", headline: null, modifications: [], error: "Something went wrong. Please try again." });
     }
   };
 

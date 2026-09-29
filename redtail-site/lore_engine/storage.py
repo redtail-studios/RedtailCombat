@@ -432,6 +432,31 @@ def _workspace_key(kind: str, key: str) -> str:
     return f"{WORKSPACE_PREFIX}/{kind}/{key}.json"
 
 
+# ── Direct-to-S3 raw uploads ────────────────────────────────────────────────
+# Vercel Serverless Functions hard-cap a request body around 4.5 MB — well
+# under a real game design doc with screenshots/mockups, and well under our
+# own advertised 20 MB limit (see workspace.extract). Routing the raw file
+# bytes through a presigned S3 PUT instead of the function's own request body
+# means the browser uploads straight to S3 (multi-GB capable) and the
+# function only ever handles a small JSON pointer to that object — so our
+# stated 20 MB limit becomes real instead of aspirational.
+RAW_UPLOAD_PREFIX = f"{_ROOT_PREFIX}/raw-uploads"  # <prefix>/raw-uploads/<username>/<id><ext>
+
+
+def raw_upload_key(username: str, upload_id: str, ext: str) -> str:
+    return f"{RAW_UPLOAD_PREFIX}/{username}/{upload_id}{ext}"
+
+
+def presigned_upload_url(key: str, content_type: str, expires_in: int = 900) -> str:
+    return _s3_client().generate_presigned_url(
+        "put_object", Params={"Bucket": BUCKET, "Key": key, "ContentType": content_type}, ExpiresIn=expires_in,
+    )
+
+
+def read_raw_upload(key: str) -> bytes:
+    return _s3_client().get_object(Bucket=BUCKET, Key=key)["Body"].read()
+
+
 def workspace_get_json(kind: str, key: str):
     try:
         resp = _s3_client().get_object(Bucket=BUCKET, Key=_workspace_key(kind, key))

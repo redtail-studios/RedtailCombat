@@ -128,8 +128,8 @@ def verified_quote(quote, source):
 
 
 def extract(data, name):
-    if len(data) > 20_000_000:
-        raise ValueError('Document exceeds 20 MB.')
+    if len(data) > 60_000_000:
+        raise ValueError('Document exceeds 60 MB.')
     if name.lower().endswith('.pdf'):
         text = '\n'.join(p.extract_text() or '' for p in PdfReader(io.BytesIO(data)).pages)
     elif name.lower().endswith(('.txt', '.md')):
@@ -356,33 +356,85 @@ def _workspace_analysis(req: WorkspaceRequest):
         return JSONResponse({'error': msg}, status_code=502)
 
 
+def _process_game_upload(raw, filename, username, years):
+    """Shared by both upload paths below — the only difference between them
+    is where `raw` bytes came from (the request body directly, or a fetch
+    from S3 after a direct-to-S3 browser upload)."""
+    selected = [int(y) for y in years.split(',')]
+    if not selected or any(y not in config.SUPPORTED_YEARS for y in selected):
+        raise ValueError('Select a supported year.')
+    text = extract(raw, filename or 'game.pdf')
+    docid = retain(text, filename, username)
+    import game_redesign
+    try:
+        references = game_redesign.extract_references(raw, filename, docid)
+        storage.workspace_put_json('asset-meta', docid, references)
+    except Exception:
+        # Text analysis remains usable when a PDF's artwork cannot be decoded.
+        storage.workspace_put_json('asset-error', docid, {'error': 'The document artwork could not be extracted.'})
+    result = analyse(text, filename, max(selected))
+    name = Path(filename).stem
+    # Keep the existing downloadable report flow using verified structured findings.
+    import html
+    esc = html.escape
+    report = ('<html><body><h1>' + esc(name) + '</h1><p>' + esc(result['positioning']) + '</p><h2>Genre fit</h2>'
+              + ''.join('<h3>' + esc(g['name']) + '</h3><p>' + esc(g['reason']) + '</p><blockquote>' + esc(g['evidence']) + '</blockquote>' for g in result['genreFit']['genres'])
+              + '<h2>Competition</h2>' + ''.join('<h3>' + esc(c['name']) + '</h3><p>' + esc(c['reason']) + '</p>' for c in result['competitors'])
+              + '<p>AI-inferred similarity; source metrics come from S3. Regional audience data requires separate evidence.</p></body></html>')
+    return {'html': report, 'game': name, 'genre': result['genre'], 'documentId': docid, 'analysis': result}
+
+
 async def _upload_game(file: UploadFile = File(...), years: str = Form(...), genre: str = Form(''), password: str = Form(''), username: str = Form(...)):
     if not accounts.user_ok(username, password):
         return JSONResponse({'error': 'Unauthorized'}, status_code=401)
     try:
-        selected = [int(y) for y in years.split(',')]
-        if not selected or any(y not in config.SUPPORTED_YEARS for y in selected):
-            raise ValueError('Select a supported year.')
         raw = await file.read()
-        text = extract(raw, file.filename or 'game.pdf')
-        docid = retain(text, file.filename, username)
-        import game_redesign
-        try:
-            references = game_redesign.extract_references(raw, file.filename, docid)
-            storage.workspace_put_json('asset-meta', docid, references)
-        except Exception:
-            # Text analysis remains usable when a PDF's artwork cannot be decoded.
-            storage.workspace_put_json('asset-error', docid, {'error': 'The document artwork could not be extracted.'})
-        result = analyse(text, file.filename, max(selected))
-        name = Path(file.filename).stem
-        # Keep the existing downloadable report flow using verified structured findings.
-        import html
-        esc = html.escape
-        report = ('<html><body><h1>' + esc(name) + '</h1><p>' + esc(result['positioning']) + '</p><h2>Genre fit</h2>'
-                  + ''.join('<h3>' + esc(g['name']) + '</h3><p>' + esc(g['reason']) + '</p><blockquote>' + esc(g['evidence']) + '</blockquote>' for g in result['genreFit']['genres'])
-                  + '<h2>Competition</h2>' + ''.join('<h3>' + esc(c['name']) + '</h3><p>' + esc(c['reason']) + '</p>' for c in result['competitors'])
-                  + '<p>AI-inferred similarity; source metrics come from S3. Regional audience data requires separate evidence.</p></body></html>')
-        return {'html': report, 'game': name, 'genre': result['genre'], 'documentId': docid, 'analysis': result}
+        return _process_game_upload(raw, file.filename, username, years)
+    except Exception as e:
+        return JSONResponse({'error': str(e) if isinstance(e, ValueError) else f'Upload analysis failed ({type(e).__name__}). Retry.'}, status_code=502)
+
+
+class UploadUrlRequest(BaseModel):
+    username: str
+    password: str = ''
+    filename: str
+
+
+_UPLOAD_CONTENT_TYPES = {'.pdf': 'application/pdf', '.txt': 'text/plain', '.md': 'text/markdown'}
+
+
+def _upload_url(req: UploadUrlRequest):
+    """Mints a short-lived presigned S3 PUT URL so the browser can upload a
+    large game document directly to S3, bypassing the ~4.5 MB request-body
+    cap Vercel enforces on Serverless Functions — a real game design doc with
+    screenshots routinely exceeds that. The function itself never sees these
+    bytes; game_report_from_s3 below fetches them from S3 by key instead."""
+    if not accounts.user_ok(req.username, req.password):
+        return JSONResponse({'error': 'Unauthorized'}, status_code=401)
+    ext = Path(req.filename).suffix.lower()
+    if ext not in _UPLOAD_CONTENT_TYPES:
+        return JSONResponse({'error': 'Upload a PDF, TXT or Markdown document.'}, status_code=400)
+    upload_id = digest(req.username + req.filename + str(time.time()))[:24]
+    key = storage.raw_upload_key(accounts.safe_username(req.username), upload_id, ext)
+    content_type = _UPLOAD_CONTENT_TYPES[ext]
+    return {'uploadUrl': storage.presigned_upload_url(key, content_type), 'key': key, 'contentType': content_type}
+
+
+class GameReportS3Request(BaseModel):
+    key: str
+    filename: str
+    years: str
+    genre: str = ''
+    password: str = ''
+    username: str
+
+
+def _upload_game_from_s3(req: GameReportS3Request):
+    if not accounts.user_ok(req.username, req.password):
+        return JSONResponse({'error': 'Unauthorized'}, status_code=401)
+    try:
+        raw = storage.read_raw_upload(req.key)
+        return _process_game_upload(raw, req.filename, req.username, req.years)
     except Exception as e:
         return JSONResponse({'error': str(e) if isinstance(e, ValueError) else f'Upload analysis failed ({type(e).__name__}). Retry.'}, status_code=502)
 
@@ -450,6 +502,8 @@ def _workspace_regions(req: WorkspaceRequest):
 def install(app):
     app.post('/api/lore/workspace-analysis')(_workspace_analysis)
     app.post('/api/lore/game-report')(_upload_game)
+    app.post('/api/lore/game-report-upload-url')(_upload_url)
+    app.post('/api/lore/game-report-s3')(_upload_game_from_s3)
     app.post('/api/lore/workspace-regions')(_workspace_regions)
 
     import market_discovery

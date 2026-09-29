@@ -13,6 +13,9 @@ Serves the static site (locally) + the Lore API:
   GET  /api/lore/scrape/status — poll a scrape job's per-source progress
   POST /api/lore/report        — LIVE Claude intelligence report (password-gated)
   POST /api/lore/game-report   — grounded genre/competitor analysis of an UPLOADED game doc (username+password-gated; see lore_engine/workspace.py)
+  POST /api/lore/game-report-upload-url — mint a presigned S3 PUT URL for a large game doc, so the browser
+                                 uploads straight to S3 instead of through this function's ~4.5 MB body cap
+  POST /api/lore/game-report-s3 — same as /game-report, but reads the file from S3 by key instead of the request body
   POST /api/lore/snapshot      — redesign from an UPLOADED game PDF (password-gated)
   POST /api/lore/waitlist      — collect name+email from non-members (public, no password)
   GET  /api/lore/waitlist/export — pull a local backup of the waitlist (password-gated, json or csv)
