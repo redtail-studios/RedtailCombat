@@ -20,6 +20,10 @@ Serves the static site (locally) + the Lore API:
   POST /api/lore/waitlist      — collect name+email from non-members (public, no password)
   GET  /api/lore/waitlist/export — pull a local backup of the waitlist (password-gated, json or csv)
 
+  Admin-only account management (see lore_engine/admin_accounts.py):
+  POST /api/lore/admin/accounts/list    — every account, built-in + created (admin-tier only: lore, admin)
+  POST /api/lore/admin/accounts/create  — create a new account, no redeploy needed (admin-tier only)
+
   Competition workspace (per-user, per-game — see lore_engine/workspace.py +
   workspace_features.py, installed at the bottom of this file):
   POST /api/lore/workspace-analysis         — genre fit + competitors for one saved game
@@ -456,6 +460,9 @@ async def make_snapshot(file: UploadFile = File(...), year: int = Form(2026),
 
 import workspace  # noqa: E402  (from lore_engine/) — Competition/Player experience/Redesign
 workspace.install(app)
+
+import admin_accounts  # noqa: E402
+admin_accounts.install(app)
 
 # Static site (local dev; on Vercel the HTML/images are served directly).
 app.mount("/", StaticFiles(directory=str(HERE), html=True), name="static")

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDashboardAuth } from '@/lib/DashboardAuthContext';
 import { useLoreReports } from '@/lib/LoreReportsContext';
-import { TrendingUp, Briefcase, Bell, FileText, CreditCard, Settings, LogOut, ChevronDown, User, Menu, X } from 'lucide-react';
+import { TrendingUp, Briefcase, Bell, FileText, CreditCard, Settings, LogOut, ChevronDown, User, Menu, X, ShieldCheck } from 'lucide-react';
 import { LOGO_URL } from '@/lib/teamData';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import {
@@ -33,12 +33,13 @@ const NAV_SECTIONS = [
     items: [
       { to: '/dashboard/billing', label: 'Billing', icon: CreditCard, badge: null },
       { to: '/dashboard/settings', label: 'Settings', icon: Settings, badge: null },
+      { to: '/dashboard/admin', label: 'Team logins', icon: ShieldCheck, badge: null, adminOnly: true },
     ],
   },
 ];
 
 export default function DashboardLayout() {
-  const { dashboardUser, dashboardLogout } = useDashboardAuth();
+  const { dashboardUser, dashboardLogout, isAdminUser } = useDashboardAuth();
   const { portfolio } = useLoreReports();
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,7 +99,7 @@ export default function DashboardLayout() {
               <div className="px-4 mb-2 font-pixel text-[7px] uppercase tracking-widest text-platinum/30">
                 {section.label}
               </div>
-              {section.items.map((item) => {
+              {section.items.filter(item => !item.adminOnly || isAdminUser).map((item) => {
                 const Icon = item.icon;
                 return (
                   <NavLink

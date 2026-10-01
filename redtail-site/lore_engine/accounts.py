@@ -9,6 +9,7 @@ import json
 import os
 import re
 import threading
+import time
 from datetime import datetime, timezone
 
 import config
@@ -84,7 +85,84 @@ def user_ok(username: str, password: str) -> bool:
         return password == ANDRESSEVILLA_PASSWORD
     if username == "guest":
         return password == GUEST_PASSWORD and datetime.now(timezone.utc) < GUEST_EXPIRES
+    dynamic = _dynamic_accounts().get(username)
+    if dynamic:
+        return password == dynamic.get("password")
     return False
+
+
+# ── Admin-panel account management ──────────────────────────────────────────
+# Everything above is a fixed, hardcoded account (credentials come from code
+# or env vars) — adding one has always meant a code change + redeploy. The
+# accounts below are created at runtime through the admin panel and persisted
+# in S3, so admin-tier users (lore, admin) can onboard teammates themselves.
+# LEGACY_ACCOUNTS exists purely so the admin panel can *display* the
+# hardcoded accounts above alongside the dynamic ones in one list — it has no
+# bearing on auth, which is still exactly the user_ok() chain above.
+LEGACY_ACCOUNTS = [
+    {"username": "lore", "password": LORE_PASSWORD, "displayName": "Lore (Owner)", "tier": "admin"},
+    {"username": "admin", "password": ADMIN_PASSWORD, "displayName": "Admin (Co-founder)", "tier": "admin"},
+    {"username": "dakota", "password": DAKOTA_PASSWORD, "displayName": "Dakota", "tier": "member"},
+    {"username": "andres", "password": ANDRES_PASSWORD, "displayName": "Andres Sevilla", "tier": "member"},
+    {"username": "caravelacapital", "password": CARAVELA_PASSWORD, "displayName": "Caravela Capital", "tier": "member"},
+    {"username": "amritha", "password": AMRITHA_PASSWORD, "displayName": "Amritha", "tier": "member"},
+    {"username": "cometa", "password": COMETA_PASSWORD, "displayName": "Cometa", "tier": "member"},
+    {"username": "newtopia", "password": NEWTOPIA_PASSWORD, "displayName": "Newtopia", "tier": "member"},
+    {"username": "mauricio", "password": MAURICIO_PASSWORD, "displayName": "Mauricio", "tier": "member"},
+    {"username": "santi", "password": SANTI_PASSWORD, "displayName": "Santi", "tier": "member"},
+    {"username": "danielstein", "password": DANIELSTEIN_PASSWORD, "displayName": "Daniel Stein", "tier": "member"},
+    {"username": "andressevilla", "password": ANDRESSEVILLA_PASSWORD, "displayName": "Andres Sevilla (second login)", "tier": "member"},
+]
+_LEGACY_USERNAMES = {row["username"] for row in LEGACY_ACCOUNTS}
+
+_DYNAMIC_CACHE = {"at": 0.0, "data": {}}
+_DYNAMIC_TTL = 30  # seconds — matches workspace.py's market() cache pattern
+
+
+def _dynamic_accounts() -> dict:
+    if time.time() - _DYNAMIC_CACHE["at"] > _DYNAMIC_TTL:
+        rows = storage.workspace_list_json("account")
+        _DYNAMIC_CACHE["data"] = {row["username"]: row for row in rows if isinstance(row, dict) and row.get("username")}
+        _DYNAMIC_CACHE["at"] = time.time()
+    return _DYNAMIC_CACHE["data"]
+
+
+def is_admin(username: str, password: str) -> bool:
+    username = (username or "").strip().lower()
+    for row in LEGACY_ACCOUNTS:
+        if row["username"] == username:
+            return row["tier"] == "admin" and password == row["password"]
+    dynamic = _dynamic_accounts().get(username)
+    return bool(dynamic and dynamic.get("tier") == "admin" and password == dynamic.get("password"))
+
+
+def list_all_accounts() -> list:
+    """Every account, legacy (hardcoded) and dynamic (created via the admin
+    panel) — for the admin panel's own listing. Dynamic accounts always win
+    a username collision (can't happen in practice; create_account() already
+    refuses a username that's taken)."""
+    merged = {row["username"]: {**row, "source": "built-in"} for row in LEGACY_ACCOUNTS}
+    merged.update({username: {**row, "source": "created"} for username, row in _dynamic_accounts().items()})
+    return sorted(merged.values(), key=lambda r: r["username"])
+
+
+def create_account(username: str, password: str, display_name: str, tier: str = "member") -> dict:
+    username = safe_username(username)
+    if not username or username == "anon":
+        raise ValueError("Enter a valid username.")
+    if username in _LEGACY_USERNAMES or username in _dynamic_accounts():
+        raise ValueError(f'The username "{username}" is already taken.')
+    if not password or len(password) < 6:
+        raise ValueError("Password must be at least 6 characters.")
+    if tier not in ("admin", "member"):
+        tier = "member"
+    row = {
+        "username": username, "password": password, "displayName": (display_name or username).strip()[:80],
+        "tier": tier, "createdAt": datetime.now(timezone.utc).isoformat(),
+    }
+    storage.workspace_put_json("account", username, row)
+    _DYNAMIC_CACHE["at"] = 0.0  # force the next read to pick this up immediately
+    return row
 
 
 def safe_username(username: str) -> str:

@@ -26,6 +26,7 @@ const Competition = lazy(() => import('@/pages/dashboard/Competition'));
 const Portfolio = lazy(() => import('@/pages/dashboard/Portfolio'));
 const Analyze = lazy(() => import('@/pages/dashboard/Analyze'));
 const Reports = lazy(() => import('@/pages/dashboard/Reports'));
+const Admin = lazy(() => import('@/pages/dashboard/Admin'));
 const DashboardPlaceholder = lazy(() => import('@/pages/dashboard/DashboardPlaceholder'));
 
 const RouteFallback = () => (
@@ -70,6 +71,7 @@ const AuthenticatedApp = () => {
         <Route path="/dashboard/analyze" element={<Analyze />} />
         <Route path="/dashboard/updates" element={<DashboardPlaceholder title="Updates" />} />
         <Route path="/dashboard/reports" element={<Reports />} />
+        <Route path="/dashboard/admin" element={<Admin />} />
         <Route path="/dashboard/billing" element={<DashboardPlaceholder title="Billing" />} />
         <Route path="/dashboard/settings" element={<DashboardPlaceholder title="Settings" />} />
       </Route>

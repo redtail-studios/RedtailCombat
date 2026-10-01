@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 
 const DashboardAuthContext = createContext();
 
@@ -77,6 +77,23 @@ export const DashboardAuthProvider = ({ children }) => {
   // on reload, same trust level as the plaintext password already sent with
   // every request).
   const [dashboardPassword, setDashboardPassword] = useState(initial.password);
+  // Whether this account can see the admin panel (manage every account).
+  // Determined by asking the backend — the real admin-tier check lives there
+  // (lore, admin only, see accounts.is_admin) — rather than hardcoding a
+  // username list here, so a future admin-tier account created through the
+  // panel itself gets the nav link with no frontend change needed.
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  useEffect(() => {
+    if (!dashboardUser?.username || !dashboardPassword) { setIsAdminUser(false); return; }
+    let cancelled = false;
+    fetch('/api/lore/admin/accounts/list', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: dashboardUser.username, password: dashboardPassword }),
+    })
+      .then(r => { if (!cancelled) setIsAdminUser(r.ok); })
+      .catch(() => { if (!cancelled) setIsAdminUser(false); });
+    return () => { cancelled = true; };
+  }, [dashboardUser?.username, dashboardPassword]);
 
   const dashboardLogin = (username, password) => {
     const isOwner = username === VALID_USERNAME && password === VALID_PASSWORD;
@@ -115,7 +132,7 @@ export const DashboardAuthProvider = ({ children }) => {
 
   return (
     <DashboardAuthContext.Provider
-      value={{ dashboardUser, isDashboardAuthenticated, dashboardPassword, dashboardLogin, dashboardLogout }}
+      value={{ dashboardUser, isDashboardAuthenticated, dashboardPassword, dashboardLogin, dashboardLogout, isAdminUser }}
     >
       {children}
     </DashboardAuthContext.Provider>
