@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { Plus, Gamepad2, FileText, Sparkles, Clock, ChevronDown, RefreshCw, Trash2 } from 'lucide-react';
 import { useLoreReports } from '@/lib/LoreReportsContext';
-import MarketWelcome from '@/components/dashboard/MarketWelcome';
 
 function GameCard({ game, report, onReanalyse, onDelete }) {
   const [expanded, setExpanded] = useState(false);
@@ -90,7 +89,6 @@ export default function Portfolio() {
   ];
 
   if (!loaded) return <p role="status" className="p-8 font-mono text-xs text-platinum/60">Loading your games…</p>;
-  if (!portfolio.length) return <div className="max-w-[1500px] mx-auto p-4 sm:p-8"><MarketWelcome/></div>;
 
   return (
     <div className="px-6 py-6 max-w-5xl mx-auto">

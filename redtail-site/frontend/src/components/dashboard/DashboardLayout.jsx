@@ -10,13 +10,6 @@ import {
   DropdownMenuLabel, DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 
-// Market trends (real Google Trends + news, /api/lore/market-snapshot),
-// Analyze (the real Lore console — market/game report + redesign), Portfolio
-// (real, per-user, backend-persisted), and Reports (real generated Lore
-// reports) are wired to real data now — only Updates/Billing/Settings are
-// still Base44's fabricated-data scaffolding.
-const REAL_DATA_PATHS = ['/dashboard', '/dashboard/analyze', '/dashboard/portfolio', '/dashboard/reports'];
-
 const NAV_SECTIONS = [
   {
     label: 'STUDIO',
@@ -43,7 +36,6 @@ export default function DashboardLayout() {
   const { portfolio } = useLoreReports();
   const navigate = useNavigate();
   const location = useLocation();
-  const isRealDataPage = REAL_DATA_PATHS.includes(location.pathname) || location.pathname.startsWith('/dashboard/games/') || location.pathname === '/dashboard/competition';
   const badgeFor = (item) => (item.to === '/dashboard/portfolio' ? String(portfolio.length) : item.badge);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -174,13 +166,6 @@ export default function DashboardLayout() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top header */}
         <header className="flex-shrink-0">
-          {/* Alert banner */}
-          {!isRealDataPage && (
-            <div className="px-6 py-1.5 font-mono text-[10px] text-center text-moss/70 border-b border-moss/10 bg-moss/5">
-              Mockup only — all data below is fabricated for preview. Nothing here is real market data.
-            </div>
-          )}
-
           {/* Header row */}
           <div className="flex items-center justify-between gap-3 px-6 py-3 border-b border-white/5 bg-ink">
             <div className="flex items-center gap-3 min-w-0">
