@@ -473,18 +473,37 @@ def _workspace_regions(req: WorkspaceRequest):
                 pt.build_payload([term], timeframe=period, cat=8)
                 frame = pt.interest_by_region(resolution='COUNTRY', inc_low_vol=False, inc_geo_code=True)
                 found = []
+                us_included = False
+                metric = 'Relative Google search interest (0–100, normalized within this game)'
+                source = 'Google Trends · Games category · ' + query_label
+                source_url = 'https://trends.google.com/trends/explore?' + urlencode({'q': term, 'date': period, 'cat': 8})
                 if term in frame:
                     for country, row in frame.sort_values(term, ascending=False).iterrows():
                         code = row.get('geoCode')
                         value = int(row[term])
                         if value <= 0 or code not in countries:
                             continue
-                        found.append({**countries[code], 'competitor': c['name'], 'value': value, 'metric': 'Relative Google search interest (0–100, normalized within this game)',
-                                      'source': 'Google Trends · Games category · ' + query_label,
-                                      'sourceUrl': 'https://trends.google.com/trends/explore?' + urlencode({'q': term, 'date': period, 'cat': 8}),
-                                      'period': period, 'retrievedAt': now()})
+                        found.append({**countries[code], 'competitor': c['name'], 'value': value, 'metric': metric,
+                                      'source': source, 'sourceUrl': source_url, 'period': period, 'retrievedAt': now()})
+                        if code == 'US':
+                            us_included = True
                         if len(found) == 5:
                             break
+                    # Google Trends' score is relative search interest, normalized
+                    # against each region's OWN total search volume — a market as
+                    # huge and diverse as the US routinely scores lower than a
+                    # small country where this one term is a bigger share of
+                    # everything searched there, even though the US almost
+                    # certainly has far more real interest in absolute terms.
+                    # Leaving the single most obvious market silently out of a
+                    # "top 5" reads as a glaring gap, so it's always shown
+                    # (flagged, if it didn't rank) rather than only sometimes.
+                    if not us_included and 'US' in countries:
+                        us_row = next((row for _, row in frame.iterrows() if row.get('geoCode') == 'US'), None)
+                        if us_row is not None:
+                            found.append({**countries['US'], 'competitor': c['name'], 'value': int(us_row[term]), 'metric': metric,
+                                          'source': source, 'sourceUrl': source_url, 'period': period, 'retrievedAt': now(),
+                                          'reference': True})
                 storage.workspace_put_json('regions', key, found)
                 regions.extend(found)
                 coverage.append({'competitor': c['name'], 'status': 'available' if found else 'insufficient volume'})
