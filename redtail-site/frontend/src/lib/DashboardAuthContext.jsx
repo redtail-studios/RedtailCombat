@@ -39,6 +39,14 @@ const MAURICIO_USERNAME = 'mauricio';
 const MAURICIO_PASSWORD = 'redt@ilmauricio2026';
 const SANTI_USERNAME = 'santi';
 const SANTI_PASSWORD = 'redt@ilsanti2026';
+// Personal demo/preview accounts (Daniel Stein, Andres Sevilla) — mirror
+// server.py's DANIELSTEIN_PASSWORD/ANDRESSEVILLA_PASSWORD. Same full access,
+// own credential, own isolated data. 'andressevilla' is a second, separate
+// login for Andres Sevilla alongside the existing 'andres' account above.
+const DANIELSTEIN_USERNAME = 'danielstein';
+const DANIELSTEIN_PASSWORD = 'redt@ildanielstein@2026';
+const ANDRESSEVILLA_USERNAME = 'andressevilla';
+const ANDRESSEVILLA_PASSWORD = 'redt@ilandressevilla@2026';
 // Time-boxed guest login — mirrors server.py's GUEST_PASSWORD/GUEST_EXPIRES
 // (LORE_GUEST_EXPIRES in .env). Keep these two in sync — the server is the
 // real gate, this just avoids a round-trip for an obviously-expired guess.
@@ -81,8 +89,10 @@ export const DashboardAuthProvider = ({ children }) => {
     const isNewtopia = username === NEWTOPIA_USERNAME && password === NEWTOPIA_PASSWORD;
     const isMauricio = username === MAURICIO_USERNAME && password === MAURICIO_PASSWORD;
     const isSanti = username === SANTI_USERNAME && password === SANTI_PASSWORD;
+    const isDanielStein = username === DANIELSTEIN_USERNAME && password === DANIELSTEIN_PASSWORD;
+    const isAndresSevilla = username === ANDRESSEVILLA_USERNAME && password === ANDRESSEVILLA_PASSWORD;
     const isGuest = username === GUEST_USERNAME && password === GUEST_PASSWORD && Date.now() < GUEST_EXPIRES;
-    if (isOwner || isAdmin || isDakota || isAndres || isCaravela || isAmritha || isCometa || isNewtopia || isMauricio || isSanti || isGuest) {
+    if (isOwner || isAdmin || isDakota || isAndres || isCaravela || isAmritha || isCometa || isNewtopia || isMauricio || isSanti || isDanielStein || isAndresSevilla || isGuest) {
       localStorage.setItem('dashboard_auth', 'true');
       localStorage.setItem('dashboard_auth_user', username);
       localStorage.setItem('dashboard_auth_pw', password);
