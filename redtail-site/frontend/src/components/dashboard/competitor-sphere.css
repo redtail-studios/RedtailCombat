@@ -19,7 +19,7 @@
 .cs-game-icon-fallback{display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-size:11px;color:#83bcf5;background:#83bcf51a}
 .cs-help{padding:0 18px 18px;font-size:9px;line-height:1.8;color:#84978e}
 .cs-feature-info{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:12px 18px 0;padding:10px 12px;border:1px solid #b4ed6830;font-size:9px;color:#a5b4b0}.cs-feature-info strong{color:#b4ed68;font-weight:400}.cs-feature-info button{margin-left:auto;font-size:17px;line-height:1}
-.cs-detail-traits{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}.cs-detail-traits span{font-size:8px;padding:5px 7px;color:#abc595;border:1px solid #b4ed682a}
+.cs-detail-traits{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}.cs-detail-traits span{font-size:8px;padding:5px 7px;color:#abc595;border:1px solid #b4ed682a}.cs-matched-tags span{color:#83bcf5;border-color:#83bcf52a}.cs-leader-badge{font-size:8px;padding:5px 7px;color:#ff9293;border:1px solid #ff5c6030}
 .cs-detail{position:sticky;top:20px;border-top:2px solid #b4ff3970!important}
 .cs-detail-state{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}
 .cs-detail-state>span{font-size:9px;color:#929a96}

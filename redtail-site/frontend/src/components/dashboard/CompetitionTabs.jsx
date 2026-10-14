@@ -6,7 +6,7 @@ import CompetitionGlobe from './CompetitionGlobe';
 import CompetitorSphere from './CompetitorSphere';
 
 const tabLabels=['Genre','Competition','Demographics'];
-export default function CompetitionTabs({game,comparables,year,query,snapshot,regionalQuery,initialTab='Genre'}) {
+export default function CompetitionTabs({game,comparables,marketLeaders=[],year,query,snapshot,regionalQuery,initialTab='Genre'}) {
   const [tab,setTab]=useState(initialTab);
   const [selectedGenre,setSelectedGenre]=useState('');
   const [selectedGame,setSelectedGame]=useState('');
@@ -40,12 +40,15 @@ export default function CompetitionTabs({game,comparables,year,query,snapshot,re
             <div className="cs-detail-state"><span>{gamePinned?'PINNED FOR READING':'HOVER A GAME TO EXPLORE'}</span>{gamePinned&&<button onClick={()=>setGamePinned(false)}>Unpin details</button>}</div>
             <h3 className="cs-detail-title font-pixel text-sm text-moss">{chosenGame.name}</h3>
             <div className="cs-detail-metrics"><div><strong>0{competitors.indexOf(chosenGame)+1}</strong><span>AI-ranked match</span></div><div><strong>{chosenGame.reviewCount ?? chosenGame.mentions ?? '—'}</strong><span>Reviews in the dataset</span></div></div>
-            <div className="cs-detail-traits">{comparisonMap.features.filter(trait=>trait.evidence.some(item=>item.game===chosenGame.name)).map(trait=><span key={trait.id} title={trait.evidence.find(item=>item.game===chosenGame.name)?.quote}>{trait.label}</span>)}</div><p className="cs-detail-label">WHY THIS GAME IS COMPARABLE</p><p className="cs-detail-reason">{chosenGame.reason}</p>
+            <div className="cs-detail-traits">{comparisonMap.features.filter(trait=>trait.evidence.some(item=>item.game===chosenGame.name)).map(trait=><span key={trait.id} title={trait.evidence.find(item=>item.game===chosenGame.name)?.quote}>{trait.label}</span>)}</div>
+            {!!chosenGame.matchedNicheTags?.length && <><p className="cs-detail-label">MATCHED STEAM TAGS</p><div className="cs-detail-traits cs-matched-tags">{chosenGame.matchedNicheTags.map(tag=><span key={tag}>{tag}</span>)}{chosenGame.marketTier==='leader' && <span className="cs-leader-badge">MARKET LEADER</span>}</div></>}
+            <p className="cs-detail-label">WHY THIS GAME IS COMPARABLE</p><p className="cs-detail-reason">{chosenGame.reason}</p>
             {chosenGame.quote && <details key={chosenGame.name}><summary>Read the source excerpt ↗</summary><blockquote>{chosenGame.quote}</blockquote></details>}
             <p className="text-[10px] text-platinum/40 mt-5">{({googleplay:'Google Play',steam:'Steam',steamtrending:'Steam',appstore:'App Store',rawg:'RAWG'})[chosenGame.source]||chosenGame.source} · {year}</p>
             <p className="text-[9px] text-platinum/35 mt-2 leading-relaxed">Matches are inferred from your game document. Saved reviews are not total players or sales.</p>
           </>:<p className="font-mono text-xs text-platinum/50">Competitor details appear when source records are available.</p>)}
         </section>}
+        {tab==='Competition' && !!marketLeaders.length && <section className="p-5 bg-panel border border-white/10"><p className="font-mono text-[10px] text-platinum/40 tracking-widest mb-3">MARKET LEADERS — SHOWN FOR CONTEXT</p><p className="font-mono text-[10px] text-platinum/35 mb-4 leading-relaxed">Bigger, better-known titles that also share traits with your game — not ranked alongside your closest comparables above.</p><div className="space-y-3">{marketLeaders.map(leader=><div key={leader.name} className="font-mono text-xs"><span className="text-platinum">{leader.name}</span><p className="text-platinum/40 text-[10px] mt-1">{leader.reason}</p></div>)}</div></section>}
         {tab==='Genre'&&genres.map((g,i)=><button key={g.name} onClick={()=>setSelectedGenre(g.name)} aria-pressed={chosenGenre?.name===g.name} className={`w-full p-4 text-left border font-mono text-xs ${chosenGenre?.name===g.name?'border-moss/50 text-moss':'border-white/10 text-platinum/60'}`}><div className="flex items-center justify-between gap-2"><span><span className="mr-3 text-platinum/30">0{i+1}</span>{g.name}</span>{i===0 && <span className="font-pixel text-[10px] text-pulse tracking-wider flex-shrink-0">CLOSEST</span>}</div><span className="block mt-2 text-platinum/40 text-[10px]">Relative fit {typeof g.fit === 'number' ? g.fit.toFixed(2) : '—'} / 1</span></button>)}
         {tab==='Demographics' && <p className="font-mono text-xs text-platinum/60">{regions.length?'Select a country to see which competitors peak there, and by how much (relative to each one\'s own worldwide high).':regionalQuery.isFetching?'Loading regional data…':'No regional measurements available for these games.'}</p>}
         {tab==='Demographics'&&[...new Set(regions.map(r=>r.country))].map(country=><button key={country} aria-pressed={selectedCountry===country} onClick={()=>setSelectedCountry(country)} className="w-full text-left p-3 border border-white/10 font-mono text-xs text-platinum/60 hover:border-moss/40">{country} · {new Set(regions.filter(r=>r.country===country).map(r=>r.competitor)).size} games</button>)}

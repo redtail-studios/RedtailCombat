@@ -97,7 +97,7 @@ class Features:
             if not re.fullmatch('[a-f0-9]{64}', req.analysisId):
                 raise ValueError('Open the current competition analysis first.')
             analysis = storage.workspace_get_json('analysis', req.analysisId)
-            expected = self.w.digest('grounded-v2' + text + str(req.year) + json.dumps(analysis.get('sources', []), sort_keys=True)) if analysis else None
+            expected = self.w.digest('grounded-v3' + text + str(req.year) + json.dumps(analysis.get('sources', []), sort_keys=True)) if analysis else None
             if expected != req.analysisId:
                 raise ValueError('This competition analysis belongs to another document. Refresh the workspace.')
         else:

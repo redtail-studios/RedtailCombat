@@ -21,7 +21,7 @@ def _week_of() -> str:
 
 
 def run(year: int | None = None, log=print, since=None) -> list:
-    app_genre = discover_apps()
+    app_genre, _ = discover_apps()
     week_of = _week_of()
     log(f"[steamplayertrend] snapshotting {len(app_genre)} apps for week of {week_of}")
     records = []

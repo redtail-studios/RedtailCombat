@@ -20,6 +20,25 @@ def _top_games(tag: str, n: int = 10) -> dict:
         return {}
 
 
+def _niche_discovery(combos: list, n: int = 150) -> dict:
+    """app_id -> sorted list of which combo's tags matched. Each combo is a
+    list of tags that must ALL match (set intersection); an app can satisfy
+    more than one combo. A courtesy sleep between SteamSpy calls — this is
+    only ever called from the weekly cron, never from a live request."""
+    matched = {}
+    for combo in combos:
+        app_sets = []
+        for tag in combo:
+            app_sets.append(set(_top_games(tag, n)))
+            time.sleep(0.3)
+        if not app_sets:
+            continue
+        hits = set.intersection(*app_sets)
+        for app_id in hits:
+            matched.setdefault(app_id, set()).update(combo)
+    return {app_id: sorted(tags) for app_id, tags in matched.items()}
+
+
 def _details(app_id: str) -> dict:
     try:
         r = requests.get(STEAMSPY, params={"request": "appdetails", "appid": app_id}, timeout=10)
@@ -68,27 +87,43 @@ def _reviews(app_id: str, count: int, year: int | None, since=None) -> list:
     return out[:count]
 
 
-def discover_apps() -> dict:
-    """app_id -> first genre that claimed it. Shared by this scraper and
+def discover_apps() -> tuple:
+    """(app_genre, matched_tags) — app_genre maps app_id -> first genre that
+    claimed it; matched_tags maps app_id -> which specific niche tags
+    matched (empty for apps found via the plain single steam_tag or a
+    static steam_app_ids entry). Shared by this scraper and
     steamplayertrend.py, so the latter automatically gets any future
-    discovery upgrade (e.g. niche tag combinations) made here."""
-    # Not every genre has a meaningful Steam/PC analog (e.g. gacha,
-    # hybrid-casual are mobile-only monetization models) — those set
-    # steam_tag=None and are skipped here, same as twitch.py/youtube.py skip
-    # cleanly without a key.
-    app_genre = {}
+    discovery upgrade made here.
+
+    A genre with steam_tag_combos configured uses ONLY those (unioned
+    across combos) instead of the single broad steam_tag — see fighting's
+    config comment for why: a single broad tag included an unrelated game
+    (Guacamelee) that a verified niche-tag intersection correctly excludes.
+    Combining the combos with the old broad tag would just let it back in."""
+    app_genre, matched_tags = {}, {}
     for g in ACTIVE_GENRES:
         cfg = GENRES[g]
-        if not cfg["steam_tag"]:
-            continue
-        ids = list(_top_games(cfg["steam_tag"])) + cfg["steam_app_ids"]
-        for app_id in dict.fromkeys(ids):
-            app_genre.setdefault(app_id, g)
-    return app_genre
+        combos = cfg.get("steam_tag_combos")
+        if combos:
+            niche = _niche_discovery(combos)
+            ids = list(niche) + cfg["steam_app_ids"]
+            for app_id in dict.fromkeys(ids):
+                app_genre.setdefault(app_id, g)
+                if app_id in niche:
+                    matched_tags.setdefault(app_id, niche[app_id])
+        elif cfg["steam_tag"]:
+            # Not every genre has a meaningful Steam/PC analog (e.g. gacha,
+            # hybrid-casual are mobile-only monetization models) — those set
+            # steam_tag=None and are skipped here, same as
+            # twitch.py/youtube.py skip cleanly without a key.
+            ids = list(_top_games(cfg["steam_tag"])) + cfg["steam_app_ids"]
+            for app_id in dict.fromkeys(ids):
+                app_genre.setdefault(app_id, g)
+    return app_genre, matched_tags
 
 
 def run(year: int | None = None, log=print, since=None) -> list:
-    app_genre = discover_apps()
+    app_genre, matched_tags = discover_apps()
     log(f"[steam] scraping {len(app_genre)} apps across genres={ACTIVE_GENRES} "
         f"(year={year}, since={since})")
 
@@ -110,6 +145,7 @@ def run(year: int | None = None, log=print, since=None) -> list:
                         "owners": d.get("owners", ""),
                         "ccu": d.get("ccu", 0),
                         "tags": list(d.get("tags", {}).keys())[:12],
+                        "matchedNicheTags": matched_tags.get(app_id, []),
                         "positive": d.get("positive", 0), "negative": d.get("negative", 0),
                         "avg_playtime_forever": d.get("average_forever", 0),
                         "avg_playtime_2weeks": d.get("average_2weeks", 0),

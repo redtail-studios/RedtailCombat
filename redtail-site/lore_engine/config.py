@@ -171,6 +171,20 @@ GENRES = {
         "reddit_keywords":  ["fighting game", "brawler", "combo", "tier list",
                              "frame data", "versus"],
         "steam_tag":        "Fighting",
+        # Customer feedback (Mikael, Olympians dev, Oct 2026): SteamSpy's
+        # single "Fighting" tag-browse pulled unrelated games — verified live
+        # that it literally includes Guacamelee (a metroidvania/platformer;
+        # its own top tags are Platformer/Metroidvania/Beat 'em up, no
+        # "Fighting" among them — SteamSpy's tag-browse is looser than an
+        # app's own top-tag list). Intersecting "Fighting" with a second,
+        # also-verified-live niche tag excludes it while keeping genuine
+        # niche arena fighters: Fighting∩"2D Fighter" = 43 apps (no
+        # Guacamelee), Fighting∩"PvP" = 12 apps (no Guacamelee), vs. 1325
+        # for "Fighting" alone. steam.py's discover_apps() uses these COMBOS
+        # INSTEAD OF the single tag above when present — unioned across
+        # combos, not merged with the single broad tag (that would just
+        # let Guacamelee back in via the broad tag).
+        "steam_tag_combos": [["Fighting", "2D Fighter"], ["Fighting", "PvP"]],
         # Verified live against SteamSpy — the previous IDs here (1716740,
         # 2358720) actually resolved to Starfield and Black Myth: Wukong, not
         # Brawlhalla/SF6, silently polluting fighting-genre signal with

@@ -45,8 +45,11 @@ def review_date(review):
 # wording differences (the thing this check exists to catch) can still fail
 # it — see workspace.py's verified_quote() for the same reasoning.
 _QUOTE_CANON = str.maketrans({
-    '‘': "'", '’': "'", '‚': "'", '‛': "'", '′': "'",
-    '“': '"', '”': '"', '„': '"', '‟': '"', '″': '"',
+    # Quote marks are removed entirely, not just curly-to-straight mapped —
+    # see workspace.py's identical table for why (a model quoting a nested
+    # double-quoted phrase often re-types it with single quotes instead).
+    '‘': None, '’': None, '‚': None, '‛': None, '′': None, "'": None,
+    '“': None, '”': None, '„': None, '‟': None, '″': None, '"': None,
     '–': '-', '—': '-', '−': '-',
 })
 
