@@ -129,7 +129,10 @@ class Features:
                           'analysedAt': self.w.now(), 'model': self.w.llm.active_model(),
                           'sources': sources}
                 storage.workspace_put_json('feedback', fingerprint, result)
-        return {**result, 'focus': self.focus(req, text)}
+        # Computed at read time, not stored in the cached blob, so it applies
+        # uniformly to old and new cached results with no VERSION bump — pure
+        # arithmetic over evidence already verified by validate_topics().
+        return {**result, 'loveHate': research.aggregate_love_hate(result['topics']), 'focus': self.focus(req, text)}
 
     def cached_feedback(self, req, fingerprint, text):
         if not re.fullmatch('[a-f0-9]{64}', fingerprint):

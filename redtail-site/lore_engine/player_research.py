@@ -246,3 +246,26 @@ def validate_topics(raw, document, reviews, competitors):
     if not output:
         raise ValueError('The review analysis could not verify any topic against your document. Retry.')
     return output
+
+
+def aggregate_love_hate(topics):
+    """A genre-level summary, computed purely from evidence _validate_topic()
+    already verified — not a new AI judgment, just counting what's already
+    there. A topic can genuinely appear in both lists (praised for one
+    competitor, a concern for another); that's real signal, not forced into
+    false exclusivity."""
+    rows = []
+    for topic in topics:
+        kinds = [item['kind'] for cell in topic['cells'] for item in cell['evidence']]
+        competitor_count = len(topic['cells'])
+        rows.append({
+            'topicId': topic['id'], 'label': topic['label'],
+            'praiseCount': kinds.count('praise'), 'concernCount': kinds.count('concern'),
+            'competitorCount': competitor_count,
+        })
+    love = sorted((r for r in rows if r['praiseCount'] > 0), key=lambda r: -r['praiseCount'])
+    hate = sorted((r for r in rows if r['concernCount'] > 0), key=lambda r: -r['concernCount'])
+    return {
+        'love': [{'topicId': r['topicId'], 'label': r['label'], 'count': r['praiseCount'], 'competitorCount': r['competitorCount']} for r in love],
+        'hate': [{'topicId': r['topicId'], 'label': r['label'], 'count': r['concernCount'], 'competitorCount': r['competitorCount']} for r in hate],
+    }
