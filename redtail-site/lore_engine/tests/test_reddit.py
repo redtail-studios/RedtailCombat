@@ -290,26 +290,19 @@ def test_post_limit_truncates_before_any_filtering(config, monkeypatch, requests
     assert action_records[0]["title"] == "First Post"
 
 
-def test_year_filter_only_applies_to_past_years(config, requests_mock):
-    old_year = reddit.NOW_YEAR - 3
-    xml = _atom(_entry("t3_a", "An old post", published=f"{old_year}-01-01T00:00:00Z"))
+def test_past_year_is_delegated_to_reddit_history(config, monkeypatch):
+    import scrapers.reddit_history as history
+    calls = []
+    monkeypatch.setattr(history, "run", lambda year, log: calls.append(year) or ["archived"])
+
+    assert reddit.run(year=reddit.NOW_YEAR - 3, log=lambda *a: None) == ["archived"]
+    assert calls == [reddit.NOW_YEAR - 3]
+
+
+def test_current_year_still_uses_rss(config, requests_mock):
+    xml = _atom(_entry("t3_a", "A post", published=f"{reddit.NOW_YEAR}-01-01T00:00:00Z"))
     requests_mock.get(FEED_URL_RE, status_code=403)
     requests_mock.get(_feed_url("actionsub"), text=xml)
 
-    # Requesting the current year (or None) never filters on post year.
     records = reddit.run(year=reddit.NOW_YEAR, log=lambda *a: None)
-    assert len([r for r in records if r["subreddit"] == "actionsub"]) == 1
-
-    # Requesting a specific past year that doesn't match the post's year drops it.
-    records = reddit.run(year=old_year - 1, log=lambda *a: None)
-    assert [r for r in records if r["subreddit"] == "actionsub"] == []
-
-
-def test_year_filter_keeps_posts_with_unparseable_year(config, requests_mock):
-    xml = _atom('<entry><id>t3_a</id><title>No Date Post</title></entry>')  # no published/updated -> year=None
-    requests_mock.get(FEED_URL_RE, status_code=403)
-    requests_mock.get(_feed_url("actionsub"), text=xml)
-
-    records = reddit.run(year=reddit.NOW_YEAR - 5, log=lambda *a: None)
-
     assert len([r for r in records if r["subreddit"] == "actionsub"]) == 1

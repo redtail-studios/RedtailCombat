@@ -14,11 +14,9 @@ duplicated "hot" for the current year anyway. Polite delays + 429 backoff
 keep Reddit happy.
 
 Consequence worth knowing: "hot" only reflects what's active right now, so
-scraping any year other than the current one (see NOW_YEAR below) reliably
-comes back with zero records — run()'s year filter has nothing years-old to
-keep, since "hot" almost never surfaces a post that old. There's no fix for
-this without a different endpoint (Reddit's RSS has no date-range query;
-only the OAuth search API does) — see SCRAPING_ARCHITECTURE.md §5.
+this module can't produce past years. run() hands any year before the current
+one (NOW_YEAR below) to scrapers/reddit_history.py, which queries the Arctic
+Shift archive by date range instead.
 """
 import html
 import re
@@ -120,6 +118,11 @@ def _parse(xml_text: str) -> list:
 
 
 def run(year: int | None = None, log=print) -> list:
+    if year and year < NOW_YEAR:
+        # "hot" RSS can't see past years — use the Arctic Shift archive instead.
+        from scrapers import reddit_history
+        return reddit_history.run(year=year, log=log)
+
     # Niche subs: common ones (genre="general") plus each active genre's own
     # subreddits (genre=<that genre>). A sub only ever belongs to one genre
     # here — later entries in ACTIVE_GENRES win on the rare overlap.
@@ -165,11 +168,6 @@ def run(year: int | None = None, log=print) -> list:
         broad = sub in SUBREDDITS_BROAD
         kept = 0
         for p in posts[:REDDIT_POST_LIMIT]:
-            # Year filter only for past years (RSS is freshest-first; current year ok).
-            # For any year < NOW_YEAR this drops nearly everything, by design
-            # of what "hot" is — see the module docstring above.
-            if year and year < NOW_YEAR and p["year"] and p["year"] != year:
-                continue
             text_low = f"{p['title']} {p['text']}".lower()
             if broad:
                 genre = next((g for g, kws in genre_kws.items()
