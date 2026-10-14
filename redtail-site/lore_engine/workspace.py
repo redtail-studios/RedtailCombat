@@ -366,7 +366,7 @@ def discover_dynamic(tags):
     re-trigger live calls."""
     if not tags:
         return []
-    cache_key = digest('dynamic-discovery-v1' + json.dumps(sorted(t.lower() for t in tags)))
+    cache_key = digest('dynamic-discovery-v3' + json.dumps(sorted(t.lower() for t in tags)))
     cached = _cached_with_ttl('dynamic-discovery', cache_key, _DISCOVERY_TTL_SECONDS)
     if cached is not None:
         return cached['entries']
@@ -384,16 +384,40 @@ def discover_dynamic(tags):
                 continue  # looks like SteamSpy's generic invalid-tag fallback, not a real match
             tag_apps[tag] = apps
         trusted = list(tag_apps)
-        combos = [[t] for t in trusted] + [list(c) for c in itertools.combinations(trusted, 2)]
+        # Pairs ONLY — never a bare single tag. Confirmed live this matters:
+        # a single broad classify-tag like "RPG" or "PvP" alone can mean
+        # tens of thousands of apps with zero narrowing, which blew up a
+        # real request into an API-level BadRequestError (the prompt became
+        # too large). Intersection is specifically what keeps this focused
+        # (same reasoning as config.py's static fighting combos, which were
+        # never single tags either) — if fewer than 2 tags survive the
+        # garbage filter, there's nothing safe to intersect, so Steam
+        # discovery is skipped for this document rather than falling back
+        # to one huge unfiltered tag.
+        combos = [list(c) for c in itertools.combinations(trusted, 2)]
         niche = steam_scraper._niche_discovery(combos) if combos else {}
+        steam_entries = []
         for app_id, matched in niche.items():
             # Every field needed is already in the tag-browse response
             # fetched above — no separate per-app detail call needed.
             d = next((tag_apps[t][app_id] for t in matched if app_id in tag_apps.get(t, {})), {})
-            entries.append({'name': d.get('name', app_id), 'source': 'steam', 'app_id': app_id,
+            steam_entries.append({'name': d.get('name', app_id), 'source': 'steam', 'app_id': app_id,
                             'genre': None, 'tags': [], 'description': '',
                             'positive': d.get('positive', 0), 'negative': d.get('negative', 0),
                             'ccu': d.get('ccu'), 'owners': d.get('owners'), 'matchedNicheTags': matched})
+        # Even restricted to real pairwise intersections (never a bare
+        # single tag — see above), a broad enough tag set can still produce
+        # over a thousand genuine matches (confirmed live: a 5-tag MMORPG
+        # classification found 1,225). Merged with the static catalog, that
+        # can exceed the model's actual context window — a hard technical
+        # ceiling, not a cost choice, so SOME cap is unavoidable here. Keep
+        # the strongest matches: more matched tags first (a stronger
+        # relevance signal), then higher concurrent players. 400 is sized
+        # from real measurement (static catalog alone is ~775 entries at
+        # ~97 tokens each; this keeps the combined total comfortably under
+        # budget with room for the document text and instructions too).
+        steam_entries.sort(key=lambda e: (-len(e['matchedNicheTags']), -(e.get('ccu') or 0)))
+        entries.extend(steam_entries[:400])
     except Exception:
         pass
     try:
