@@ -121,3 +121,38 @@ def test_fetch_does_not_retry_client_errors(requests_mock):
 
 def test_requested_fields_exclude_ones_the_api_rejects():
     assert "permalink" not in rh.FIELDS.split(",")
+
+
+def test_num_parts_groups_subreddits(monkeypatch):
+    monkeypatch.setattr(rh, "GROUP_SIZE", 1)
+    assert rh.num_parts() == 2  # actionsub + broadsub
+    monkeypatch.setattr(rh, "GROUP_SIZE", 5)
+    assert rh.num_parts() == 1
+
+
+def test_run_part_only_queries_its_group(requests_mock, monkeypatch):
+    monkeypatch.setattr(rh, "GROUP_SIZE", 1)
+    seen = set()
+    def respond(request, context):
+        seen.add(request.qs["subreddit"][0])
+        return {"data": []}
+    requests_mock.get(API_RE, json=respond)
+
+    rh.run(year=2023, log=lambda *a: None, part=1)
+
+    assert seen == {"broadsub"}  # part 0 would be actionsub
+
+
+def test_run_part_raises_when_out_of_time(requests_mock, monkeypatch):
+    monkeypatch.setattr(rh, "TIME_BUDGET_SECONDS", -1)
+    requests_mock.get(API_RE, json={"data": []})
+
+    with pytest.raises(rh.BudgetExceeded):
+        rh.run(year=2023, log=lambda *a: None, part=0)
+
+
+def test_run_without_part_stops_quietly_at_budget(requests_mock, monkeypatch):
+    monkeypatch.setattr(rh, "TIME_BUDGET_SECONDS", -1)
+    requests_mock.get(API_RE, json={"data": []})
+
+    assert rh.run(year=2023, log=lambda *a: None) == []

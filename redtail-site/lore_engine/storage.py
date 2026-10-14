@@ -1,7 +1,19 @@
-"""storage.py — S3-backed cache for scraped platform data + per-platform job
-status, and an SQS enqueue helper for the scrape worker. Used in place of the
-local lore_data/ + manifest.json flow when DEPLOYED (or when running as the
-Lambda scrape worker).
+"""storage.py — S3-backed cache for scraped platform data (only — status,
+waitlist, userdata, and workspace all moved to DynamoDB, see below), and an
+SQS enqueue helper for the scrape worker. Used in place of the local
+lore_data/ + manifest.json flow when DEPLOYED (or when running as the Lambda
+scrape worker).
+
+Status markers / waitlist signups / per-user dashboard data / the workspace
+JSON store used to all live as S3 blobs under this same bucket. They moved to
+four DynamoDB tables (see infra/lore/dynamodb.tf) because every one of them is
+a small, frequently read/written record — the S3 version was paying for that
+in extra round trips (get_all_statuses() used to fan out 15 parallel S3 GETs
+per poll; it's now one Query) and, for the waitlist specifically, an actually
+unsafe unlocked read-modify-write on a single growing JSON array. Scraped
+platform data stays on S3 on purpose: some platforms (Twitch) run 18k+
+records per year, well past DynamoDB's 400KB item cap — that's blob storage,
+not a database's job.
 """
 import json
 import os
@@ -9,6 +21,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
 import boto3
+from boto3.dynamodb.conditions import Key
 from botocore.config import Config
 from botocore.exceptions import ClientError
 
@@ -19,11 +32,15 @@ BUCKET = os.getenv("AWS_BUCKET")
 QUEUE_URL = os.getenv("LORE_SCRAPE_QUEUE_URL")  # only needed on the enqueue (API) side
 TTL_SECONDS = int(os.getenv("LORE_CACHE_TTL_SECONDS", str(7 * 24 * 3600)))  # 7 days
 
+STATUS_TABLE = os.getenv("LORE_DDB_STATUS_TABLE")
+WAITLIST_TABLE = os.getenv("LORE_DDB_WAITLIST_TABLE")
+USERDATA_TABLE = os.getenv("LORE_DDB_USERDATA_TABLE")
+WORKSPACE_TABLE = os.getenv("LORE_DDB_WORKSPACE_TABLE")
+
 _ROOT_PREFIX = os.getenv("LORE_S3_PREFIX", "lore")  # override in test deployments so a
                                                      # test project's data can never
                                                      # collide with production's keyspace
 DATA_PREFIX = f"{_ROOT_PREFIX}/data"      # <prefix>/data/<year>/<platform>.json   -> records list
-STATUS_PREFIX = f"{_ROOT_PREFIX}/status"  # <prefix>/status/<year>/<platform>.json -> status marker
 
 # boto3's default urllib3 pool is 10 connections. A single report request can
 # now make up to len(PLATFORM_IDS) * len(ACTIVE_GENRES) sequential S3 reads
@@ -38,6 +55,7 @@ _S3_CONFIG = Config(max_pool_connections=50)
 
 _s3 = None
 _sqs = None
+_ddb = None
 
 
 def _s3_client():
@@ -54,12 +72,15 @@ def _sqs_client():
     return _sqs
 
 
+def _ddb_resource():
+    global _ddb
+    if _ddb is None:
+        _ddb = boto3.resource("dynamodb", region_name=REGION)
+    return _ddb
+
+
 def _data_key(year, platform):
     return f"{DATA_PREFIX}/{year}/{platform}.json"
-
-
-def _status_key(year, platform):
-    return f"{STATUS_PREFIX}/{year}/{platform}.json"
 
 
 def _not_found(e: ClientError) -> bool:
@@ -188,30 +209,27 @@ def merge_nested_by_key(existing: list, new: list, record_key: str,
     return merged
 
 
-# ── Status markers ───────────────────────────────────────────────────────────
+# ── Status markers (DynamoDB: PK year (N), SK platform (S)) ─────────────────
 def put_status(year: int, platform: str, status: str, error: str = None) -> None:
-    doc = {"status": status, "updated_at": datetime.now(timezone.utc).isoformat()}
+    item = {"year": year, "platform": platform, "status": status,
+            "updated_at": datetime.now(timezone.utc).isoformat()}
     if error:
-        doc["error"] = str(error)[:500]
-    _s3_client().put_object(
-        Bucket=BUCKET, Key=_status_key(year, platform),
-        Body=json.dumps(doc).encode("utf-8"), ContentType="application/json",
-    )
+        item["error"] = str(error)[:500]
+    _ddb_resource().Table(STATUS_TABLE).put_item(Item=item)
 
 
 def get_status(year: int, platform: str) -> dict:
-    try:
-        resp = _s3_client().get_object(Bucket=BUCKET, Key=_status_key(year, platform))
-    except ClientError as e:
-        if _not_found(e):
-            return {"status": "idle"}
-        raise
-    return json.loads(resp["Body"].read())
+    resp = _ddb_resource().Table(STATUS_TABLE).get_item(Key={"year": year, "platform": platform})
+    item = resp.get("Item")
+    if not item:
+        return {"status": "idle"}
+    return {k: v for k, v in item.items() if k not in ("year", "platform")}
 
 
 def get_all_statuses(year: int) -> dict:
-    """{platform_id: status_str} for every known platform, fanned out in
-    parallel (15 small GETs) so a status poll every 1.5s stays fast.
+    """{platform_id: status_str} for every known platform — a single
+    DynamoDB Query on the year partition key (replaces what used to be 15
+    parallel S3 GETs per poll).
 
     For past years (never expiring — see _is_fresh), a platform reported
     "idle" here just means no scrape *job* was ever run through this app's
@@ -222,12 +240,10 @@ def get_all_statuses(year: int) -> dict:
     the Step 1 grid as "needs scraping" for years that are already loaded.
     The current year is left exactly as before: real job status, since
     that's what "does this actually need a re-scrape" depends on there."""
-    with ThreadPoolExecutor(max_workers=8) as ex:
-        pairs = list(ex.map(
-            lambda pid: (pid, get_status(year, pid).get("status", "idle")),
-            PLATFORM_IDS,
-        ))
-    statuses = dict(pairs)
+    resp = _ddb_resource().Table(STATUS_TABLE).query(KeyConditionExpression=Key("year").eq(year))
+    statuses = {pid: "idle" for pid in PLATFORM_IDS}
+    for item in resp.get("Items", []):
+        statuses[item["platform"]] = item.get("status", "idle")
 
     if year != current_year():
         idle_pids = [pid for pid, s in statuses.items() if s == "idle"]
@@ -309,46 +325,35 @@ def scrape_status_snapshot(year: int) -> dict:
     return out
 
 
-# ── Waitlist signups (public, unauthenticated — see server.py /api/lore/waitlist) ──
-WAITLIST_KEY = f"{_ROOT_PREFIX}/waitlist.json"
-
-
+# ── Waitlist signups (DynamoDB: PK email (S), SK submitted_at (S)) ──────────
+# public, unauthenticated — see server.py /api/lore/waitlist
 def add_waitlist_entry(first_name: str, last_name: str, email: str) -> None:
-    """Append-only signup log for people without Lore credentials. Low
-    volume (a signup form), so a plain read-modify-write is fine — no
-    locking, no dedup beyond what's visible when the file is reviewed."""
-    entry = {
-        "first_name": first_name.strip(),
-        "last_name": last_name.strip(),
+    """One item per signup — email+submitted_at as the composite key rather
+    than email alone, because this never deduped (the same person signing up
+    twice is meant to produce two records, not overwrite one). PutItem is a
+    single atomic write, replacing what used to be an unlocked S3
+    read-modify-write on one growing JSON array."""
+    _ddb_resource().Table(WAITLIST_TABLE).put_item(Item={
         "email": email.strip().lower(),
         "submitted_at": datetime.now(timezone.utc).isoformat(),
-    }
-    try:
-        resp = _s3_client().get_object(Bucket=BUCKET, Key=WAITLIST_KEY)
-        entries = json.loads(resp["Body"].read())
-    except ClientError as e:
-        if _not_found(e):
-            entries = []
-        else:
-            raise
-    entries.append(entry)
-    _s3_client().put_object(
-        Bucket=BUCKET, Key=WAITLIST_KEY,
-        Body=json.dumps(entries, ensure_ascii=False, indent=2).encode("utf-8"),
-        ContentType="application/json",
-    )
+        "first_name": first_name.strip(),
+        "last_name": last_name.strip(),
+    })
 
 
 def get_waitlist_entries() -> list:
     """Read-path counterpart to add_waitlist_entry() — lets an admin pull a
-    local backup of the signup list on demand (see /api/lore/waitlist/export)."""
-    try:
-        resp = _s3_client().get_object(Bucket=BUCKET, Key=WAITLIST_KEY)
-        return json.loads(resp["Body"].read())
-    except ClientError as e:
-        if _not_found(e):
-            return []
-        raise
+    backup of the signup list on demand (see /api/lore/waitlist/export).
+    A full-table Scan is fine here: this is an occasional admin export, not
+    a hot path, and the table is small (signup volume)."""
+    table = _ddb_resource().Table(WAITLIST_TABLE)
+    items = []
+    resp = table.scan()
+    items.extend(resp.get("Items", []))
+    while "LastEvaluatedKey" in resp:
+        resp = table.scan(ExclusiveStartKey=resp["LastEvaluatedKey"])
+        items.extend(resp.get("Items", []))
+    return items
 
 
 # ── Per-user dashboard data (reports + portfolio) ───────────────────────────
@@ -356,101 +361,80 @@ def get_waitlist_entries() -> list:
 # local-dev path (server.py writing straight to lore_data/users/<u>.json)
 # silently fails there — every save threw OSError: Read-only file system,
 # meaning portfolio/report data never actually persisted in production, only
-# in that tab's in-memory React state. S3 fixes both problems at once: it's
-# writable from a serverless function, and put_object replaces the whole
-# object in one call, so there's no read-modify-write window for two
-# near-simultaneous saves to interleave and corrupt the file (the same class
-# of bug the local path's os.replace() fix addresses).
-USERDATA_PREFIX = f"{_ROOT_PREFIX}/userdata"  # <prefix>/userdata/<username>.json
-
-
-def _userdata_key(username: str) -> str:
-    return f"{USERDATA_PREFIX}/{username}.json"
-
-
+# in that tab's in-memory React state. DynamoDB fixes both problems at once:
+# it's writable from a serverless function, and PutItem replaces the whole
+# item in one call, so there's no read-modify-write window for two
+# near-simultaneous saves to interleave and corrupt the record (the same
+# class of bug the local path's os.replace() fix addresses). The payload is
+# stored as a single opaque JSON string attribute rather than native
+# DynamoDB attributes — it's arbitrary, evolving app data (reports/portfolio
+# shape isn't this module's concern), and this sidesteps DynamoDB decoding
+# numbers as Decimal on the way back out.
 def get_user_data(username: str) -> dict | None:
-    try:
-        resp = _s3_client().get_object(Bucket=BUCKET, Key=_userdata_key(username))
-    except ClientError as e:
-        if _not_found(e):
-            return None
-        raise
-    return json.loads(resp["Body"].read())
+    resp = _ddb_resource().Table(USERDATA_TABLE).get_item(Key={"username": username})
+    item = resp.get("Item")
+    if not item:
+        return None
+    return json.loads(item["payload"])
 
 
 def save_user_data(username: str, payload: dict) -> None:
-    _s3_client().put_object(
-        Bucket=BUCKET, Key=_userdata_key(username),
-        Body=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
-        ContentType="application/json",
-    )
+    _ddb_resource().Table(USERDATA_TABLE).put_item(Item={
+        "username": username,
+        "payload": json.dumps(payload, ensure_ascii=False),
+    })
 
 
 # ── SQS enqueue (producer side; the worker is invoked by the SQS trigger
 #    itself, so there is no matching dequeue function here) ─────────────────
-def enqueue_scrape(year: int, platform: str) -> None:
-    _sqs_client().send_message(
-        QueueUrl=QUEUE_URL,
-        MessageBody=json.dumps({"year": year, "platform": platform}),
-    )
+def enqueue_scrape(year: int, platform: str, part: int = None) -> None:
+    body = {"year": year, "platform": platform}
+    if part is not None:  # multi-part job (see worker._process_reddit_history)
+        body["part"] = part
+    _sqs_client().send_message(QueueUrl=QUEUE_URL, MessageBody=json.dumps(body))
 
 
-# ── Workspace blob store (Competition / Player experience / Redesign) ───────
+# ── Workspace JSON store (DynamoDB: PK kind (S), SK key (S)) ────────────────
 # A generic key-value store standing in for what the dashboard-preview build
-# kept as local JSON/PNG files under workspace_data/ — Vercel's Python
-# functions have a read-only filesystem outside /tmp, so that state has to
-# live in S3 instead, exactly like userdata above. Documents/analyses/briefs/
-# jobs/etc. are namespaced by `kind` (one S3 prefix per kind) so a "list every
-# brief" scan (see workspace_features.history()) only has to page one prefix
-# instead of every object in the bucket.
-WORKSPACE_PREFIX = f"{_ROOT_PREFIX}/workspace"
-
-
-def _workspace_key(kind: str, key: str) -> str:
-    return f"{WORKSPACE_PREFIX}/{kind}/{key}.json"
-
-
+# kept as local JSON/PNG files under workspace_data/. Documents/analyses/
+# briefs/jobs/etc. are namespaced by `kind` (one partition per kind) so a
+# "list every brief" scan (see workspace_features.history()) is a single
+# Query instead of paging every object in an S3 prefix. Like userdata above,
+# the value is stored as an opaque JSON string attribute — this table holds
+# several unrelated document shapes (one per `kind`), so there's no single
+# native attribute schema that would fit all of them anyway.
 def workspace_get_json(kind: str, key: str):
-    try:
-        resp = _s3_client().get_object(Bucket=BUCKET, Key=_workspace_key(kind, key))
-    except ClientError as e:
-        if _not_found(e):
-            return None
-        raise
-    return json.loads(resp["Body"].read())
+    resp = _ddb_resource().Table(WORKSPACE_TABLE).get_item(Key={"kind": kind, "key": key})
+    item = resp.get("Item")
+    if not item:
+        return None
+    return json.loads(item["payload"])
 
 
 def workspace_put_json(kind: str, key: str, data) -> None:
-    _s3_client().put_object(
-        Bucket=BUCKET, Key=_workspace_key(kind, key),
-        Body=json.dumps(data, ensure_ascii=False).encode("utf-8"),
-        ContentType="application/json",
-    )
+    _ddb_resource().Table(WORKSPACE_TABLE).put_item(Item={
+        "kind": kind, "key": key,
+        "payload": json.dumps(data, ensure_ascii=False),
+    })
 
 
 def workspace_list_json(kind: str) -> list:
     """Every JSON document currently stored under one kind — used for the
-    small per-installation scan history() does over persisted briefs/jobs.
-    Lists the prefix (cheap) then fans the bodies out in parallel."""
-    prefix = f"{WORKSPACE_PREFIX}/{kind}/"
-    keys = []
-    paginator = _s3_client().get_paginator("list_objects_v2")
-    for page in paginator.paginate(Bucket=BUCKET, Prefix=prefix):
-        keys.extend(obj["Key"] for obj in page.get("Contents", []))
-    if not keys:
-        return []
+    small per-installation scan history() does over persisted briefs/jobs."""
+    table = _ddb_resource().Table(WORKSPACE_TABLE)
+    items = []
+    resp = table.query(KeyConditionExpression=Key("kind").eq(kind))
+    items.extend(resp.get("Items", []))
+    while "LastEvaluatedKey" in resp:
+        resp = table.query(KeyConditionExpression=Key("kind").eq(kind),
+                            ExclusiveStartKey=resp["LastEvaluatedKey"])
+        items.extend(resp.get("Items", []))
+    return [json.loads(i["payload"]) for i in items]
 
-    def read(key):
-        try:
-            resp = _s3_client().get_object(Bucket=BUCKET, Key=key)
-            return json.loads(resp["Body"].read())
-        except ClientError as e:
-            if _not_found(e):
-                return None
-            raise
 
-    with ThreadPoolExecutor(max_workers=8) as ex:
-        return [r for r in ex.map(read, keys) if r is not None]
+# ── Workspace binary blobs (S3 — DynamoDB items cap at 400KB, not a fit for
+#    generated images etc.) ──────────────────────────────────────────────────
+WORKSPACE_PREFIX = f"{_ROOT_PREFIX}/workspace"
 
 
 def _workspace_blob_key(kind: str, key: str, ext: str) -> str:

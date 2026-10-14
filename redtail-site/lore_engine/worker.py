@@ -49,9 +49,28 @@ INCREMENTAL_NESTED_MERGE_KEYS = {
 }
 
 
-def _process_one(year: int, platform: str) -> None:
+def _process_reddit_history(year: int, part: int) -> None:
+    """Past-year reddit is too big for one invocation, so it runs as a chain:
+    each part scrapes a group of subreddits, merges into what's stored, and
+    queues the next part. Only the last part marks the job done, so a status
+    of "running" means more parts are still coming (or one failed)."""
+    from scrapers import reddit_history
+    records = reddit_history.run(year=year, log=print, part=part)
+    if part > 0:
+        records = storage.merge_by_key(storage.get_raw_records(year, "reddit") or [],
+                                       records, "url")
+    storage.put_records(year, "reddit", records)
+    if part + 1 < reddit_history.num_parts():
+        storage.enqueue_scrape(year, "reddit", part=part + 1)
+    else:
+        storage.put_status(year, "reddit", "done" if records else "empty")
+
+
+def _process_one(year: int, platform: str, part: int = None) -> None:
     try:
         storage.put_status(year, platform, "running")
+        if platform == "reddit" and year < storage.current_year():
+            return _process_reddit_history(year, part or 0)
         mod = importlib.import_module(f"scrapers.{platform}")
         merge_key = INCREMENTAL_MERGE_KEYS.get(platform)
         nested = INCREMENTAL_NESTED_MERGE_KEYS.get(platform)
@@ -84,4 +103,4 @@ def _process_one(year: int, platform: str) -> None:
 def handler(event, context):
     for rec in event.get("Records", []):
         body = json.loads(rec["body"])
-        _process_one(int(body["year"]), body["platform"])
+        _process_one(int(body["year"]), body["platform"], body.get("part"))

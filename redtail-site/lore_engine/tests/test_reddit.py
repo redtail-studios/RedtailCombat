@@ -293,10 +293,10 @@ def test_post_limit_truncates_before_any_filtering(config, monkeypatch, requests
 def test_past_year_is_delegated_to_reddit_history(config, monkeypatch):
     import scrapers.reddit_history as history
     calls = []
-    monkeypatch.setattr(history, "run", lambda year, log: calls.append(year) or ["archived"])
+    monkeypatch.setattr(history, "run", lambda year, log, part=None: calls.append((year, part)) or ["archived"])
 
-    assert reddit.run(year=reddit.NOW_YEAR - 3, log=lambda *a: None) == ["archived"]
-    assert calls == [reddit.NOW_YEAR - 3]
+    assert reddit.run(year=reddit.NOW_YEAR - 3, log=lambda *a: None, part=2) == ["archived"]
+    assert calls == [(reddit.NOW_YEAR - 3, 2)]
 
 
 def test_current_year_still_uses_rss(config, requests_mock):

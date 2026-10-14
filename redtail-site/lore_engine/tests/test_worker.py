@@ -129,7 +129,7 @@ def test_process_one_nested_merge_key_platform(storage_spy, monkeypatch):
 
 def test_handler_processes_every_record_in_the_event(monkeypatch):
     processed = []
-    monkeypatch.setattr(worker, "_process_one", lambda year, platform: processed.append((year, platform)))
+    monkeypatch.setattr(worker, "_process_one", lambda year, platform, part=None: processed.append((year, platform)))
     event = {"Records": [
         {"body": json.dumps({"year": 2024, "platform": "steamcharts"})},
         {"body": json.dumps({"year": 2023, "platform": "hackernews"})},
@@ -138,3 +138,57 @@ def test_handler_processes_every_record_in_the_event(monkeypatch):
     worker.handler(event, None)
 
     assert processed == [(2024, "steamcharts"), (2023, "hackernews")]
+
+
+# ---------------------------------------------------------------------------
+# past-year reddit: chained parts
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def chain(monkeypatch):
+    import scrapers.reddit_history as rh
+    calls = {"enqueued": [], "put": None, "status": [], "ran": []}
+    store = {}
+    monkeypatch.setattr(worker.storage, "current_year", lambda: 2026)
+    monkeypatch.setattr(worker.storage, "put_status", lambda y, p, s, error=None: calls["status"].append(s))
+    monkeypatch.setattr(worker.storage, "get_raw_records", lambda y, p: store.get("r"))
+    monkeypatch.setattr(worker.storage, "put_records", lambda y, p, recs: store.__setitem__("r", recs))
+    monkeypatch.setattr(worker.storage, "enqueue_scrape",
+                        lambda y, p, part=None: calls["enqueued"].append((y, p, part)))
+    monkeypatch.setattr(rh, "num_parts", lambda: 3)
+    monkeypatch.setattr(rh, "run", lambda year, log, part: calls["ran"].append(part) or
+                        [{"url": f"u{part}a"}, {"url": "shared"}])
+    calls["store"] = store
+    return calls
+
+
+def test_reddit_history_first_part_chains_to_next(chain):
+    worker._process_one(2023, "reddit")  # no part -> starts the chain at 0
+
+    assert chain["ran"] == [0]
+    assert chain["enqueued"] == [(2023, "reddit", 1)]
+    assert chain["status"] == ["running"]  # not done until the last part
+
+
+def test_reddit_history_middle_part_merges_by_url(chain):
+    chain["store"]["r"] = [{"url": "u0a"}, {"url": "shared"}]
+
+    worker._process_one(2023, "reddit", part=1)
+
+    assert [r["url"] for r in chain["store"]["r"]] == ["u0a", "shared", "u1a"]
+    assert chain["enqueued"] == [(2023, "reddit", 2)]
+
+
+def test_reddit_history_last_part_marks_done_and_stops(chain):
+    worker._process_one(2023, "reddit", part=2)
+
+    assert chain["enqueued"] == []
+    assert chain["status"] == ["running", "done"]
+
+
+def test_reddit_current_year_does_not_use_history_chain(chain, monkeypatch):
+    monkeypatch.setattr(worker.importlib, "import_module",
+                        lambda name: type("M", (), {"run": staticmethod(lambda year, log: [{"x": 1}])}))
+    worker._process_one(2026, "reddit")
+    assert chain["ran"] == []
+    assert chain["enqueued"] == []

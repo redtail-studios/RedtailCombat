@@ -117,11 +117,11 @@ def _parse(xml_text: str) -> list:
     return out
 
 
-def run(year: int | None = None, log=print) -> list:
+def run(year: int | None = None, log=print, part: int | None = None) -> list:
     if year and year < NOW_YEAR:
         # "hot" RSS can't see past years — use the Arctic Shift archive instead.
         from scrapers import reddit_history
-        return reddit_history.run(year=year, log=log)
+        return reddit_history.run(year=year, log=log, part=part)
 
     # Niche subs: common ones (genre="general") plus each active genre's own
     # subreddits (genre=<that genre>). A sub only ever belongs to one genre

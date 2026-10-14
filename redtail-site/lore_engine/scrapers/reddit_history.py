@@ -7,6 +7,11 @@ community-run archive of Reddit that can query a subreddit by date range:
     https://arctic-shift.photon-reddit.com/api/posts/search
 reddit.run() hands any year before the current one to this module.
 
+Splitting: a full year is ~25 subreddits x ~40s, far past one Lambda's time
+budget, so the worker runs it as a chain of parts of GROUP_SIZE subreddits each
+(worker.py enqueues part N+1 when part N finishes and merges results by url).
+run(part=N) does only group N; num_parts() says how many there are.
+
 How it samples: for each subreddit, one request per month (oldest 100 posts
 that month, so a busy sub's month is a sample, not complete), then keeps the
 REDDIT_POST_LIMIT highest-scoring posts for the year — same cap as the live
@@ -39,11 +44,32 @@ UA = "redtail-lore/1.0 (market research scraper)"
 # The API rejects unknown fields with HTTP 400 (e.g. "permalink" is not valid), so keep
 # this list to fields confirmed against the live API.
 FIELDS = "id,created_utc,subreddit,title,selftext,score,num_comments,author"
+GROUP_SIZE = 5  # subreddits per part: ~200s typical, well inside TIME_BUDGET_SECONDS
 PAGE_LIMIT = 100  # API max for a plain integer limit
 REQUEST_DELAY = 1.0
 MAX_RATE_LIMIT_WAIT = 65
 TIME_BUDGET_SECONDS = 720  # worker Lambda's hard timeout is 900s — same margin as reddit.py
 _REMOVED = {"[removed]", "[deleted]"}
+
+
+class BudgetExceeded(RuntimeError):
+    """A part ran out of time before finishing its subreddits. Raised (rather
+    than returning a short list) so the job shows as an error and retries
+    instead of looking complete."""
+
+
+def _all_subs() -> tuple:
+    """(ordered subreddit list, {sub: genre}) — niche subs first, broad last."""
+    niche_genre = {sub: "general" for sub in SUBREDDITS_COMMON}
+    for g in ACTIVE_GENRES:
+        for sub in GENRES[g]["subreddits"]:
+            niche_genre[sub] = g
+    return list(niche_genre) + list(SUBREDDITS_BROAD), niche_genre
+
+
+def num_parts() -> int:
+    subs, _ = _all_subs()
+    return -(-len(subs) // GROUP_SIZE)  # ceil
 
 
 def _month_windows(year: int) -> list:
@@ -100,24 +126,28 @@ def _sub_posts(sub: str, year: int, log) -> tuple:
     return posts, failed, empty
 
 
-def run(year: int | None = None, log=print) -> list:
+def run(year: int | None = None, log=print, part: int | None = None) -> list:
+    """part=None: every subreddit in one go, stopping quietly at the time
+    budget (direct/manual use). part=N: only group N, and raise BudgetExceeded
+    if time runs out before it's done."""
     if year is None:
         raise ValueError("reddit_history needs a specific past year")
 
-    niche_genre = {sub: "general" for sub in SUBREDDITS_COMMON}
-    for g in ACTIVE_GENRES:
-        for sub in GENRES[g]["subreddits"]:
-            niche_genre[sub] = g
+    all_subs, niche_genre = _all_subs()
     genre_kws = {g: [k.lower() for k in GENRES[g]["reddit_keywords"]] for g in ACTIVE_GENRES}
     common_kws = [k.lower() for k in REDDIT_KEYWORDS_COMMON]
 
-    all_subs = list(niche_genre) + list(SUBREDDITS_BROAD)
-    log(f"[reddit] {year}: querying Arctic Shift archive for {len(all_subs)} subreddits")
+    if part is not None:
+        all_subs = all_subs[part * GROUP_SIZE:(part + 1) * GROUP_SIZE]
+    log(f"[reddit] {year}: querying Arctic Shift archive for {len(all_subs)} subreddits"
+        + (f" (part {part + 1}/{num_parts()})" if part is not None else ""))
     records, no_coverage = [], []
     start = time.monotonic()
 
     for sub in all_subs:
         if time.monotonic() - start > TIME_BUDGET_SECONDS:
+            if part is not None:
+                raise BudgetExceeded(f"part {part} of {year} ran out of time at r/{sub}")
             log(f"  [reddit] time budget ({TIME_BUDGET_SECONDS}s) reached — "
                 f"returning {len(records)} records collected so far")
             break

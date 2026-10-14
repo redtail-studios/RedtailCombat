@@ -71,6 +71,48 @@ class FakeSQS:
         self.sent.append((QueueUrl, MessageBody))
 
 
+class FakeTable:
+    """Minimal stand-in for a boto3 DynamoDB Table resource — enough of
+    get_item/put_item/query/scan for storage.py's usage, keyed generically
+    off whatever attributes are actually present in each Item (real DynamoDB
+    requires a fixed key schema per table; this fake doesn't need to enforce
+    that to be a faithful test double for our read/write patterns)."""
+
+    def __init__(self):
+        self.items = []
+
+    def _matches(self, item, key: dict) -> bool:
+        return all(item.get(k) == v for k, v in key.items())
+
+    def put_item(self, Item):
+        key_fields = [k for k in Item if k in ("year", "platform", "email",
+                                                 "submitted_at", "username", "kind", "key")]
+        self.items = [i for i in self.items if not self._matches(i, {k: Item[k] for k in key_fields})]
+        self.items.append(dict(Item))
+
+    def get_item(self, Key):
+        for item in self.items:
+            if self._matches(item, Key):
+                return {"Item": dict(item)}
+        return {}
+
+    def query(self, KeyConditionExpression, ExclusiveStartKey=None):
+        name = KeyConditionExpression._values[0].name
+        value = KeyConditionExpression._values[1]
+        return {"Items": [dict(i) for i in self.items if i.get(name) == value]}
+
+    def scan(self, ExclusiveStartKey=None):
+        return {"Items": [dict(i) for i in self.items]}
+
+
+class FakeDynamoDB:
+    def __init__(self):
+        self.tables = {}
+
+    def Table(self, name):
+        return self.tables.setdefault(name, FakeTable())
+
+
 @pytest.fixture
 def s3(monkeypatch):
     fake = FakeS3()
@@ -86,6 +128,17 @@ def sqs(monkeypatch):
 
 
 @pytest.fixture
+def ddb(monkeypatch):
+    fake = FakeDynamoDB()
+    monkeypatch.setattr(storage, "_ddb_resource", lambda: fake)
+    monkeypatch.setattr(storage, "STATUS_TABLE", "status")
+    monkeypatch.setattr(storage, "WAITLIST_TABLE", "waitlist")
+    monkeypatch.setattr(storage, "USERDATA_TABLE", "userdata")
+    monkeypatch.setattr(storage, "WORKSPACE_TABLE", "workspace")
+    return fake
+
+
+@pytest.fixture
 def fixed_current_year(monkeypatch):
     monkeypatch.setattr(storage, "current_year", lambda: 2024)
     return 2024
@@ -95,9 +148,8 @@ def fixed_current_year(monkeypatch):
 # key helpers / _not_found / _is_fresh
 # ---------------------------------------------------------------------------
 
-def test_data_and_status_key_format():
+def test_data_key_format():
     assert storage._data_key(2024, "steam") == f"{storage.DATA_PREFIX}/2024/steam.json"
-    assert storage._status_key(2024, "steam") == f"{storage.STATUS_PREFIX}/2024/steam.json"
 
 
 def test_not_found_recognizes_404_and_nosuchkey():
@@ -253,24 +305,24 @@ def test_get_raw_records_ignores_staleness(s3, fixed_current_year, monkeypatch):
 # put_status / get_status / get_all_statuses
 # ---------------------------------------------------------------------------
 
-def test_put_status_truncates_error_to_500_chars(s3):
+def test_put_status_truncates_error_to_500_chars(ddb):
     storage.put_status(2024, "steam", "error", error="x" * 1000)
 
-    doc = json.loads(s3.objects[storage._status_key(2024, "steam")]["body"])
+    doc = storage.get_status(2024, "steam")
     assert doc["status"] == "error"
     assert len(doc["error"]) == 500
 
 
-def test_get_status_idle_on_miss(s3):
+def test_get_status_idle_on_miss(ddb):
     assert storage.get_status(2024, "steam") == {"status": "idle"}
 
 
-def test_get_status_returns_parsed_doc(s3):
+def test_get_status_returns_parsed_doc(ddb):
     storage.put_status(2024, "steam", "done")
     assert storage.get_status(2024, "steam")["status"] == "done"
 
 
-def test_get_all_statuses_fans_out_over_platform_ids(s3, monkeypatch):
+def test_get_all_statuses_fans_out_over_platform_ids(ddb, s3, monkeypatch):
     monkeypatch.setattr(storage, "PLATFORM_IDS", ["steam", "reddit"])
     storage.put_status(2024, "steam", "done")
 
@@ -337,7 +389,7 @@ def test_compute_manifest_no_data_returns_unknown_scraped_at(s3, monkeypatch):
 # scrape_status_snapshot
 # ---------------------------------------------------------------------------
 
-def test_snapshot_idle_when_every_platform_idle(s3, monkeypatch):
+def test_snapshot_idle_when_every_platform_idle(s3, ddb, monkeypatch):
     monkeypatch.setattr(storage, "PLATFORM_IDS", ["steam"])
     monkeypatch.setattr(storage, "SUPPORTED_YEARS", [2024])
 
@@ -346,7 +398,7 @@ def test_snapshot_idle_when_every_platform_idle(s3, monkeypatch):
     assert result["status"] == "idle"
 
 
-def test_snapshot_running_when_any_platform_in_progress(s3, monkeypatch):
+def test_snapshot_running_when_any_platform_in_progress(s3, ddb, monkeypatch):
     monkeypatch.setattr(storage, "PLATFORM_IDS", ["steam", "reddit"])
     monkeypatch.setattr(storage, "SUPPORTED_YEARS", [2024])
     storage.put_status(2024, "steam", "running")
@@ -356,7 +408,7 @@ def test_snapshot_running_when_any_platform_in_progress(s3, monkeypatch):
     assert result["status"] == "running"
 
 
-def test_snapshot_done_when_all_terminal_and_manifest_has_data(s3, monkeypatch):
+def test_snapshot_done_when_all_terminal_and_manifest_has_data(s3, ddb, monkeypatch):
     monkeypatch.setattr(storage, "PLATFORM_IDS", ["steam"])
     monkeypatch.setattr(storage, "SUPPORTED_YEARS", [2024])
     storage.put_status(2024, "steam", "done")
@@ -368,7 +420,7 @@ def test_snapshot_done_when_all_terminal_and_manifest_has_data(s3, monkeypatch):
     assert "error" not in result
 
 
-def test_snapshot_error_when_all_terminal_but_no_usable_data(s3, monkeypatch):
+def test_snapshot_error_when_all_terminal_but_no_usable_data(s3, ddb, monkeypatch):
     monkeypatch.setattr(storage, "PLATFORM_IDS", ["steam"])
     monkeypatch.setattr(storage, "SUPPORTED_YEARS", [2024])
     storage.put_status(2024, "steam", "empty")  # terminal, but never wrote any records
@@ -394,7 +446,7 @@ def test_enqueue_scrape_sends_sqs_message(sqs, monkeypatch):
     assert json.loads(body) == {"year": 2024, "platform": "steam"}
 
 
-def test_enqueue_missing_platforms_force_true_enqueues_everything(s3, sqs, fixed_current_year, monkeypatch):
+def test_enqueue_missing_platforms_force_true_enqueues_everything(s3, sqs, ddb, fixed_current_year, monkeypatch):
     monkeypatch.setattr(storage, "PLATFORM_IDS", ["steam", "reddit"])
     monkeypatch.setattr(storage, "TTL_SECONDS", 3600)
     # Even a fresh platform gets re-enqueued when force=True.
@@ -406,7 +458,7 @@ def test_enqueue_missing_platforms_force_true_enqueues_everything(s3, sqs, fixed
     assert len(sqs.sent) == 2
 
 
-def test_enqueue_missing_platforms_force_false_skips_fresh(s3, sqs, fixed_current_year, monkeypatch):
+def test_enqueue_missing_platforms_force_false_skips_fresh(s3, sqs, ddb, fixed_current_year, monkeypatch):
     monkeypatch.setattr(storage, "PLATFORM_IDS", ["steam", "reddit"])
     monkeypatch.setattr(storage, "TTL_SECONDS", 3600)
     s3.put(storage._data_key(2024, "steam"), b"[]")  # fresh -> skipped
@@ -415,3 +467,73 @@ def test_enqueue_missing_platforms_force_false_skips_fresh(s3, sqs, fixed_curren
 
     assert queued == ["reddit"]
     assert len(sqs.sent) == 1
+
+
+# ---------------------------------------------------------------------------
+# waitlist
+# ---------------------------------------------------------------------------
+
+def test_add_waitlist_entry_lowercases_and_strips_email(ddb):
+    storage.add_waitlist_entry(" Ada ", " Lovelace ", " ADA@Example.com ")
+
+    entries = storage.get_waitlist_entries()
+    assert len(entries) == 1
+    assert entries[0]["email"] == "ada@example.com"
+    assert entries[0]["first_name"] == "Ada"
+    assert entries[0]["last_name"] == "Lovelace"
+
+
+def test_add_waitlist_entry_does_not_dedupe_repeat_signups(ddb):
+    storage.add_waitlist_entry("Ada", "Lovelace", "ada@example.com")
+    storage.add_waitlist_entry("Ada", "Lovelace", "ada@example.com")
+
+    assert len(storage.get_waitlist_entries()) == 2
+
+
+def test_get_waitlist_entries_empty_when_no_signups(ddb):
+    assert storage.get_waitlist_entries() == []
+
+
+# ---------------------------------------------------------------------------
+# userdata
+# ---------------------------------------------------------------------------
+
+def test_get_user_data_none_on_miss(ddb):
+    assert storage.get_user_data("alice") is None
+
+
+def test_save_and_get_user_data_round_trips(ddb):
+    storage.save_user_data("alice", {"reports": [1, 2], "portfolio": []})
+
+    assert storage.get_user_data("alice") == {"reports": [1, 2], "portfolio": []}
+
+
+def test_save_user_data_overwrites_whole_item(ddb):
+    storage.save_user_data("alice", {"reports": [1]})
+    storage.save_user_data("alice", {"reports": [2]})
+
+    assert storage.get_user_data("alice") == {"reports": [2]}
+
+
+# ---------------------------------------------------------------------------
+# workspace JSON store
+# ---------------------------------------------------------------------------
+
+def test_workspace_get_json_none_on_miss(ddb):
+    assert storage.workspace_get_json("analysis", "abc123") is None
+
+
+def test_workspace_put_and_get_json_round_trips(ddb):
+    storage.workspace_put_json("analysis", "abc123", {"summary": "..."})
+
+    assert storage.workspace_get_json("analysis", "abc123") == {"summary": "..."}
+
+
+def test_workspace_list_json_scoped_to_one_kind(ddb):
+    storage.workspace_put_json("analysis", "a1", {"n": 1})
+    storage.workspace_put_json("analysis", "a2", {"n": 2})
+    storage.workspace_put_json("feedback", "f1", {"n": 3})  # different kind, excluded
+
+    results = storage.workspace_list_json("analysis")
+
+    assert sorted(r["n"] for r in results) == [1, 2]
