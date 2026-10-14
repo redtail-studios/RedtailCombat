@@ -68,12 +68,15 @@ def _reviews(app_id: str, count: int, year: int | None, since=None) -> list:
     return out[:count]
 
 
-def run(year: int | None = None, log=print, since=None) -> list:
+def discover_apps() -> dict:
+    """app_id -> first genre that claimed it. Shared by this scraper and
+    steamplayertrend.py, so the latter automatically gets any future
+    discovery upgrade (e.g. niche tag combinations) made here."""
     # Not every genre has a meaningful Steam/PC analog (e.g. gacha,
     # hybrid-casual are mobile-only monetization models) — those set
     # steam_tag=None and are skipped here, same as twitch.py/youtube.py skip
     # cleanly without a key.
-    app_genre = {}  # app_id -> first genre that claimed it
+    app_genre = {}
     for g in ACTIVE_GENRES:
         cfg = GENRES[g]
         if not cfg["steam_tag"]:
@@ -81,6 +84,11 @@ def run(year: int | None = None, log=print, since=None) -> list:
         ids = list(_top_games(cfg["steam_tag"])) + cfg["steam_app_ids"]
         for app_id in dict.fromkeys(ids):
             app_genre.setdefault(app_id, g)
+    return app_genre
+
+
+def run(year: int | None = None, log=print, since=None) -> list:
+    app_genre = discover_apps()
     log(f"[steam] scraping {len(app_genre)} apps across genres={ACTIVE_GENRES} "
         f"(year={year}, since={since})")
 
@@ -100,6 +108,7 @@ def run(year: int | None = None, log=print, since=None) -> list:
                         "name": d.get("name", app_id),
                         "developer": d.get("developer", ""),
                         "owners": d.get("owners", ""),
+                        "ccu": d.get("ccu", 0),
                         "tags": list(d.get("tags", {}).keys())[:12],
                         "positive": d.get("positive", 0), "negative": d.get("negative", 0),
                         "avg_playtime_forever": d.get("average_forever", 0),

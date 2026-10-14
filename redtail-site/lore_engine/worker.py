@@ -36,6 +36,11 @@ INCREMENTAL_MERGE_KEYS = {
     "hackernews": "id",
     "gamenews": "url",
     "gdelt": "url",
+    # Weekly player-count snapshots are immutable once captured (last
+    # week's ccu/owners for an app never changes retroactively) and must
+    # accumulate into a time series rather than be overwritten each run —
+    # see scrapers/steamplayertrend.py.
+    "steamplayertrend": "snapshotId",
 }
 
 # platform id -> (record_key, nested_field, nested_key) — see

@@ -197,7 +197,8 @@ def catalog(records):
             out.append({'id': len(out), 'name': name, 'source': source, 'genre': r.get('genre'), 'tags': r.get('tags', []),
                         'description': str(r.get('description') or r.get('text') or '')[:1200], 'reviewCount': len(reviews),
                         'positive': r.get('positive'), 'negative': r.get('negative'), 'rating': r.get('score', r.get('rating')),
-                        'appId': r.get('app_id'), 'excerpt': str((reviews[0].get('text') or reviews[0].get('body') or '') if reviews else '')[:400]})
+                        'appId': r.get('app_id'), 'excerpt': str((reviews[0].get('text') or reviews[0].get('body') or '') if reviews else '')[:400],
+                        'ccu': r.get('ccu'), 'owners': r.get('owners'), 'installs': r.get('installs')})
     return out[:180]
 
 

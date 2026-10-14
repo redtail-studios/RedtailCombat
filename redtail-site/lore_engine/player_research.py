@@ -116,6 +116,17 @@ def store_url(source, app_id):
     return None
 
 
+def player_trend_for(app_id, records):
+    """Weekly ccu/owners snapshots for one Steam app, oldest first. Empty for
+    anything not Steam-sourced (mobile has no equivalent data source) —
+    honest absence, not a fabricated value."""
+    if not app_id:
+        return []
+    rows = [r for r in records.get('steamplayertrend', []) if str(r.get('app_id')) == str(app_id)]
+    rows.sort(key=lambda r: r.get('weekOf', ''))
+    return [{'weekOf': r.get('weekOf'), 'ccu': r.get('ccu'), 'owners': r.get('owners')} for r in rows]
+
+
 def collect_competitors(analysis, records):
     """Join each current comparable to its source record, never by fuzzy title."""
     competitors = []
@@ -160,7 +171,9 @@ def collect_competitors(analysis, records):
         competitors.append({'id': cid, 'name': name, 'source': source, 'sourceUrl': url,
                             'reviewCount': len(reviews), 'rating': metric, 'reviews': reviews,
                             'from': min(dated) if dated else None, 'to': max(dated) if dated else None,
-                            'datedReviews': len(dated)})
+                            'datedReviews': len(dated), 'ccu': row.get('ccu'), 'owners': row.get('owners'),
+                            'installs': row.get('installs'),
+                            'playerTrend': player_trend_for(app_id, records) if source == 'steam' else []})
     return competitors
 
 
