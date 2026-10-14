@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 lore_snapshots/
 .DS_Store
+.env*
+venv/

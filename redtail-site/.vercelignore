@@ -9,3 +9,5 @@ lore_snapshots/
 frontend/node_modules
 frontend/dist
 redtail-site-aws
+venv/
+infra/
