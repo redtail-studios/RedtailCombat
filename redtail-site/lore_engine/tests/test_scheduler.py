@@ -11,7 +11,6 @@ import scheduler
 @pytest.fixture
 def calls(monkeypatch):
     monkeypatch.setattr(scheduler.storage, "current_year", lambda: 2024)
-    monkeypatch.setattr(scheduler.config, "SUPPORTED_YEARS", [2022, 2023, 2024])
     recorded = []
 
     def fake_enqueue(year, force=False):
@@ -24,28 +23,18 @@ def calls(monkeypatch):
 def test_current_year_is_force_enqueued(calls):
     scheduler.handler({}, None)
 
-    assert (2024, True) in calls
+    assert calls == [(2024, True)]
 
 
-def test_past_years_are_backfill_only(calls):
+def test_past_years_are_never_touched(calls):
+    # Past-year reddit is a multi-part job and most platforms' past years are
+    # frozen snapshots — backfills are manual, not part of the weekly run.
     scheduler.handler({}, None)
 
-    assert (2022, False) in calls
-    assert (2023, False) in calls
-
-
-def test_current_year_not_double_enqueued(calls):
-    scheduler.handler({}, None)
-
-    current_year_calls = [c for c in calls if c[0] == 2024]
-    assert len(current_year_calls) == 1
+    assert all(year == 2024 for year, _ in calls)
 
 
 def test_return_shape(calls):
     result = scheduler.handler({}, None)
 
-    assert result == {"queued_by_year": {
-        2024: ["platform-for-2024"],
-        2022: ["platform-for-2022"],
-        2023: ["platform-for-2023"],
-    }}
+    assert result == {"queued_by_year": {2024: ["platform-for-2024"]}}

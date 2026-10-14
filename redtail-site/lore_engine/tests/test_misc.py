@@ -17,9 +17,8 @@ def test_source_weight_id_check():
 
 
 def test_source_weights_normal():
-    """ Check that the source weight are normalized and sum up to 1
-    """
-    s = 0.0
+    """Weights are per-record multipliers in analysis.py (default 1.0 for a
+    source, so 1.0 everywhere = equal weighting) — NOT shares that sum to 1.
+    Every weight must be a positive number."""
     for key, val in SOURCE_WEIGHTS.items():
-        s += val
-    assert s == 1.0, "Source Weights DO NOT add up to 1.0, please modify the values."
+        assert isinstance(val, (int, float)) and val > 0, f"Bad source weight for {key}: {val!r}"
