@@ -18,6 +18,10 @@ load_dotenv()
 PROVIDER        = os.getenv("LLM_PROVIDER", "anthropic").lower()
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-opus-4-8")
 OPENAI_MODEL    = os.getenv("OPENAI_MODEL", "gpt-4o")
+# Optional override for small, cheap, latency-sensitive calls (e.g. a quick
+# genre classification) — defaults to the same model as everything else, so
+# this is zero behavior change until explicitly pointed at something smaller.
+CLASSIFY_MODEL  = os.getenv("ANTHROPIC_CLASSIFY_MODEL", ANTHROPIC_MODEL)
 
 if PROVIDER == "anthropic":
     # Imported once here, at module load (single-threaded) — report.py's
@@ -33,12 +37,12 @@ if PROVIDER == "anthropic":
     import anthropic
 
 
-def _via_anthropic(prompt: str, max_tokens: int) -> str:
+def _via_anthropic(prompt: str, max_tokens: int, model: str | None = None) -> str:
     client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env
     # Stream so a long report doesn't hit the SDK's non-streaming timeout guard.
     # Note: Opus 4.8 rejects temperature/top_p/top_k — do not pass them.
     with client.messages.stream(
-        model=ANTHROPIC_MODEL,
+        model=model or ANTHROPIC_MODEL,
         max_tokens=max_tokens,
         messages=[{"role": "user", "content": prompt}],
     ) as stream:
@@ -46,22 +50,25 @@ def _via_anthropic(prompt: str, max_tokens: int) -> str:
     return "".join(b.text for b in message.content if b.type == "text")
 
 
-def _via_openai(prompt: str, max_tokens: int) -> str:
+def _via_openai(prompt: str, max_tokens: int, model: str | None = None) -> str:
     from openai import OpenAI
     client = OpenAI()  # reads OPENAI_API_KEY from env
     resp = client.chat.completions.create(
-        model=OPENAI_MODEL,
+        model=model or OPENAI_MODEL,
         max_tokens=max_tokens,
         messages=[{"role": "user", "content": prompt}],
     )
     return resp.choices[0].message.content or ""
 
 
-def generate(prompt: str, max_tokens: int = 32000) -> str:
-    """Generate text from the configured provider."""
+def generate(prompt: str, max_tokens: int = 32000, model: str | None = None) -> str:
+    """Generate text from the configured provider. `model` optionally
+    overrides the configured model for this one call (e.g. CLASSIFY_MODEL
+    for a small, fast, latency-sensitive call) — every existing caller that
+    doesn't pass it gets today's exact behavior."""
     if PROVIDER == "openai":
-        return _via_openai(prompt, max_tokens)
-    return _via_anthropic(prompt, max_tokens)
+        return _via_openai(prompt, max_tokens, model)
+    return _via_anthropic(prompt, max_tokens, model)
 
 
 def active_model() -> str:

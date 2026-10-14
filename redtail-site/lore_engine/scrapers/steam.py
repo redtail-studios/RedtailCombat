@@ -9,27 +9,44 @@ from scrapers import score, save
 
 STEAMSPY = "https://steamspy.com/api.php"
 REVIEWS  = "https://store.steampowered.com/appreviews"
+TIME_BUDGET_SECONDS = 720  # stop starting new apps past this; the worker Lambda's hard
+                            # timeout is 900s and a killed invocation returns nothing and
+                            # never gets deleted off SQS, so leaving no margin here is what
+                            # caused reddit.py to retry forever once (see SCRAPING_ARCHITECTURE.md
+                            # §5) — same risk here now that discovery can return far more apps.
 
 
-def _top_games(tag: str, n: int = 10) -> dict:
+def _top_games(tag: str, n: int | None = None) -> dict:
+    """SteamSpy's tag-browse endpoint already returns its FULL result in one
+    response (confirmed live) — `n`, when given, is a pure in-memory slice
+    applied after that complete data is already downloaded, not a smaller
+    request. Defaulting to no slice costs zero extra network traffic and
+    avoids silently excluding a real match that just doesn't rank in the
+    top N by whatever order SteamSpy happens to return (popularity) —
+    important once results feed an intersection, where narrowing is
+    supposed to happen via the intersection itself, not pre-truncation."""
     try:
         r = requests.get(STEAMSPY, params={"request": "tag", "tag": tag}, timeout=15)
         r.raise_for_status()
-        return dict(list(r.json().items())[:n])
+        items = list(r.json().items())
+        return dict(items[:n] if n else items)
     except Exception:
         return {}
 
 
-def _niche_discovery(combos: list, n: int = 150) -> dict:
+def _niche_discovery(combos: list) -> dict:
     """app_id -> sorted list of which combo's tags matched. Each combo is a
     list of tags that must ALL match (set intersection); an app can satisfy
-    more than one combo. A courtesy sleep between SteamSpy calls — this is
-    only ever called from the weekly cron, never from a live request."""
+    more than one combo. Intersects over each tag's FULL result (see
+    _top_games) — narrowing happens via the intersection, never via
+    pre-truncating an individual tag's list first. A courtesy sleep between
+    SteamSpy calls — this is only ever called from the weekly cron, never
+    from a live request."""
     matched = {}
     for combo in combos:
         app_sets = []
         for tag in combo:
-            app_sets.append(set(_top_games(tag, n)))
+            app_sets.append(set(_top_games(tag)))
             time.sleep(0.3)
         if not app_sets:
             continue
@@ -127,8 +144,24 @@ def run(year: int | None = None, log=print, since=None) -> list:
     log(f"[steam] scraping {len(app_genre)} apps across genres={ACTIVE_GENRES} "
         f"(year={year}, since={since})")
 
+    # Removing _top_games'/_niche_discovery's old pre-truncation (see their
+    # docstrings) means a genuinely accurate intersection can legitimately
+    # discover hundreds more real apps than before (verified live: the
+    # fighting genre alone went from 53 to 692) — a real correctness win,
+    # but each one still costs a real per-app review-fetch below. Apps that
+    # matched more niche tags are a stronger, free-to-compute fit signal, so
+    # they're processed first; if the time budget below ever cuts a run
+    # short, it's the long tail of weaker/unmatched candidates that's
+    # dropped, not the apps most likely to matter.
+    ordered = sorted(app_genre.items(), key=lambda kv: -len(matched_tags.get(kv[0], [])))
+    start = time.monotonic()
     records = []
-    for app_id, genre in app_genre.items():
+    for app_id, genre in ordered:
+        if time.monotonic() - start > TIME_BUDGET_SECONDS:
+            log(f"  [steam] time budget ({TIME_BUDGET_SECONDS}s) reached — "
+                f"returning {len(records)} records collected so far instead of "
+                f"risking the Lambda timeout")
+            break
         d = _details(app_id)
         revs = []
         for rv in _reviews(app_id, STEAM_REVIEWS_PER_APP, year, since=since):
