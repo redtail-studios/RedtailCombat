@@ -7,7 +7,7 @@ avoid HTTP timeouts).
 
 Switch provider/model with env vars:
   LLM_PROVIDER = anthropic | openai     (default anthropic)
-  ANTHROPIC_MODEL = claude-opus-4-8     (default)
+  ANTHROPIC_MODEL = claude-opus-5       (default)
   OPENAI_MODEL    = gpt-4o              (default, only if provider=openai)
 """
 import os
@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 PROVIDER        = os.getenv("LLM_PROVIDER", "anthropic").lower()
-ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-opus-4-8")
+ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-opus-5")
 OPENAI_MODEL    = os.getenv("OPENAI_MODEL", "gpt-4o")
 # Optional override for small, cheap, latency-sensitive calls (e.g. a quick
 # genre classification) — defaults to the same model as everything else, so
